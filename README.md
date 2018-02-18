@@ -1,3 +1,3 @@
 # scottdb.net
 
-Simple personal website
+A collection of websites created by Scott Brown
