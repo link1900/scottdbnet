@@ -1,0 +1,12 @@
+[ignore]
+.*/node_modules/react-event-listener/.*
+.*/node_modules/material-ui/.*
+.*/node_modules/jss/.*
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
