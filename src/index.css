@@ -4,3 +4,20 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: #9E9E9E;
 }
+
+.centerParent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.centerChild {
+    align-self: center;
+    margin: auto;
+}
+
+.textLink {
+    color: inherit;
+    text-decoration: inherit;
+}

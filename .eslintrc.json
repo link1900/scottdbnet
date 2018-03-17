@@ -1,8 +1,12 @@
 {
     "parser": "babel-eslint",
+    "plugins": [
+        "flowtype"
+    ],
     "extends": [
       "airbnb",
-      "prettier"
+      "prettier",
+      "plugin:flowtype/recommended"
     ],
     "env": {
         "mocha": true,
@@ -43,6 +47,7 @@
         "prefer-destructuring": 0,
         "react/jsx-closing-tag-location": 0,
         "jsx-a11y/anchor-is-valid": 0,
-        "react/jsx-curly-brace-presence": 0
+        "react/jsx-curly-brace-presence": 0,
+        "flowtype/require-valid-file-annotation": 1
     }
 }

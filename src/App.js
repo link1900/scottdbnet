@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import { Avatar, Card, CardContent, Divider, List, ListItem, ListItemText } from 'material-ui';
 import siteIcon from './icon.png';
@@ -14,8 +15,8 @@ class App extends Component {
 
     render() {
         return (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-                <Card style={{ alignSelf: 'center', margin: 'auto' }}>
+            <div className="fullPage centerParent">
+                <Card className="centerChild">
                     <CardContent>
                         <List>
                             <ListItem>
