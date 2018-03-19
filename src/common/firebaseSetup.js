@@ -13,7 +13,6 @@ export default firebase.initializeApp({
 });
 
 const rrfConfig = {
-    userProfile: 'users'
 };
 
 const createStoreWithFirebase = compose(

@@ -7,15 +7,15 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import Tipping from './tipping/Tipping';
 import { firebaseStore } from './common/firebaseSetup';
-import SignInScreen from './common/SignInScreen';
+import Login from './common/Login';
 
 ReactDOM.render(
     <Router>
         <Provider store={firebaseStore}>
-            <div>
+            <div className="fullPage">
                 <Route exact path="/" component={App} />
                 <Route path="/tipping" component={Tipping} />
-                <Route path="/signIn" component={SignInScreen} />
+                <Route path="/login" component={Login} />
             </div>
         </Provider>
     </Router>,

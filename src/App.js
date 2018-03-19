@@ -8,8 +8,8 @@ import githubLogo from './github.png';
 import mailIcon from './mailIcon.png';
 import diceIcon from './diceIcon.png';
 
-class App extends Component {
-    navigateTo(url) {
+class App extends Component<*,*> {
+    navigateTo(url: string) {
         window.location.href = url;
     }
 

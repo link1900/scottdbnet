@@ -256,7 +256,7 @@ declare class $npm$firebase$auth$GithubAuthProvider extends $npm$firebase$auth$A
 }
 
 declare class $npm$firebase$auth$GoogleAuthProvider extends $npm$firebase$auth$AuthProvider {
-  PROVIDER_ID: string;
+  static PROVIDER_ID: string;
   credential(
     idToken?: string,
     accessToken?: string

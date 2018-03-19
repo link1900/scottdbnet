@@ -1,7 +1,7 @@
 [ignore]
 .*/node_modules/react-event-listener/.*
-.*/node_modules/material-ui/.*
 .*/node_modules/jss/.*
+.*/node_modules/protobufjs/src/.*
 
 [include]
 
@@ -10,3 +10,6 @@
 [lints]
 
 [options]
+module.system=haste
+
+munge_underscores=true
