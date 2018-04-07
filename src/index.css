@@ -21,3 +21,7 @@ body {
     color: inherit;
     text-decoration: inherit;
 }
+
+.topSpace {
+    padding-top: 40px;
+}
