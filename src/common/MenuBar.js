@@ -5,7 +5,6 @@ import { Avatar, IconButton, Menu, MenuItem } from 'material-ui';
 import { compose, withState } from 'recompose';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
 import { withFirebase } from 'react-redux-firebase';
 import { connect } from 'react-redux';
 import { getViewerFromAuth } from '../common/authHelper';
@@ -24,7 +23,7 @@ const styles = {
 };
 
 type Props = {
-    title: string,
+    title: Object,
     classes: Object,
     logout: Function,
     viewer: Object,
@@ -38,20 +37,16 @@ function MenuBar(props: Props) {
     return (
         <AppBar position="static" className={classes.appBar}>
             <Toolbar>
-                <Typography variant="title" color="inherit" className={classes.flex}>
-                    {title}
-                </Typography>
+                {title}
                 {viewer ? (
-                    <div>
-                        <IconButton
-                            aria-owns={anchorEl ? 'user-menu' : null}
-                            aria-haspopup="true"
-                            onClick={event => setAnchorEl(event.currentTarget)}
-                            color="inherit"
-                        >
-                            {viewer.imageUrl ? <Avatar alt={viewer.name} src={viewer.imageUrl} /> : viewer.name}
-                        </IconButton>
-                    </div>
+                    <IconButton
+                        aria-owns={anchorEl ? 'user-menu' : null}
+                        aria-haspopup="true"
+                        onClick={event => setAnchorEl(event.currentTarget)}
+                        color="inherit"
+                    >
+                        {viewer.imageUrl ? <Avatar alt={viewer.name} src={viewer.imageUrl} /> : viewer.name}
+                    </IconButton>
                 ) : loginButton }
                 <Menu id="user-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
                     <MenuItem onClick={() => logout()}>Logout</MenuItem>

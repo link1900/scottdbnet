@@ -25,3 +25,7 @@ body {
 .topSpace {
     padding-top: 40px;
 }
+
+.flex {
+    flex: 1
+}

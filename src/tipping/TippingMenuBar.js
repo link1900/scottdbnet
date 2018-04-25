@@ -1,17 +1,26 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from 'material-ui';
+import { Button, Typography } from 'material-ui';
 import MenuBar from '../common/MenuBar';
 
 function TippingMenuBar() {
     return (
         <MenuBar
-            title="Tipstar"
+            title={
+                <Typography variant="title" color="inherit" className="flex">
+                    <Link to={'/tipping'} className="textLink">Tipstar</Link>
+                </Typography>
+            }
             loginButton={
-                <Button component={Link} to={{ pathname: '/tipping/login' }} color="inherit">
-                    Login
-                </Button>
+                <div>
+                    <Button component={Link} to={{ pathname: '/tipping/signup' }} color="inherit">
+                        Sign up
+                    </Button>
+                    <Button component={Link} to={{ pathname: '/tipping/login' }} color="inherit">
+                        Login
+                    </Button>
+                </div>
             }
         />
     );
