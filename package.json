@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "firebase": "^4.11.0",
+    "lodash": "^4.17.10",
     "material-ui": "^1.0.0-beta.33",
     "material-ui-icons": "^1.0.0-beta.36",
     "react": "^16.2.0",
@@ -14,7 +15,9 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.1",
     "recompose": "^0.26.0",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "styled-components": "^3.2.6",
+    "tinycolor2": "^1.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -30,9 +33,6 @@
     "cert": "set CI=true && yarn lint && yarn flow-check && yarn test"
   },
   "devDependencies": {
-    "jest-cli": "^22.2.2",
-    "prettier": "^1.10.2",
-    "flow-bin": "^0.68.0",
     "babel-cli": "^6.22.2",
     "babel-eslint": "^8.2.1",
     "eslint": "^4.16.0",
@@ -41,6 +41,9 @@
     "eslint-plugin-flowtype": "^2.41.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.5.1"
+    "eslint-plugin-react": "^7.5.1",
+    "flow-bin": "^0.68.0",
+    "jest-cli": "^22.2.2",
+    "prettier": "^1.10.2"
   }
 }
