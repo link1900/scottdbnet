@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Avatar, Card, CardContent, Divider, Grid, List, ListItem, ListItemText } from 'material-ui';
 import siteIcon from './icon.png';
 import gcaIcon from './gcaLogo.png';
@@ -15,7 +16,7 @@ class App extends Component<*, *> {
 
     render() {
         return (
-            <Grid container spacing={40} justify="center" className="topSpace">
+            <Grid container spacing={0} justify="center" style={{ paddingTop: '40px', height: '100vh', backgroundColor: '#9E9E9E' }}>
                 <Grid item xs={10} sm={6} md={4} lg={3} xl={2}>
                     <Card>
                         <CardContent>
@@ -25,13 +26,12 @@ class App extends Component<*, *> {
                                     <ListItemText primary="Scott Brown" />
                                 </ListItem>
                                 <Divider />
-                                <ListItem
-                                    button
-                                    onClick={() => this.navigateTo('https://linkin-games.firebaseapp.com/')}
-                                >
-                                    <Avatar src={diceIcon} alt={'dice icon'} />
-                                    <ListItemText primary="Games" />
-                                </ListItem>
+                                <Link to={'/games'} className="textLink">
+                                    <ListItem button>
+                                        <Avatar src={diceIcon} alt={'dice icon'} />
+                                        <ListItemText primary="Games" />
+                                    </ListItem>
+                                </Link>
                                 <ListItem button onClick={() => this.navigateTo('https://agra-ranker.herokuapp.com')}>
                                     <Avatar src={gcaIcon} alt={'gca logo'} />
                                     <ListItemText primary="Greyhound Rankings" />

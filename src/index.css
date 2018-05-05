@@ -2,7 +2,6 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #9E9E9E;
 }
 
 .centerParent {
@@ -20,10 +19,6 @@ body {
 .textLink {
     color: inherit;
     text-decoration: inherit;
-}
-
-.topSpace {
-    padding-top: 40px;
 }
 
 .flex {

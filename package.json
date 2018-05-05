@@ -22,15 +22,15 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "unit-test": "react-scripts test",
+    "test": "set CI=true && yarn lint && yarn flow-check && yarn unit-test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.js\"",
     "flow": "flow",
     "flow-check": "flow check",
     "lint": "eslint ./src",
     "lint-fix": "eslint --fix ./src",
-    "flow-update": "flow-typed install",
-    "cert": "set CI=true && yarn lint && yarn flow-check && yarn test"
+    "flow-update": "flow-typed install"
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",

@@ -7,6 +7,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import Tipping from './tipping/Tipping';
 import { firebaseStore } from './common/firebaseSetup';
+import Games from './games/Games';
 
 ReactDOM.render(
     <Router>
@@ -14,6 +15,7 @@ ReactDOM.render(
             <div>
                 <Route exact path="/" component={App} />
                 <Route path="/tipping" component={Tipping} />
+                <Route path="/games" component={Games} />
             </div>
         </Provider>
     </Router>,
