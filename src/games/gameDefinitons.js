@@ -1,3 +1,4 @@
+// @flow
 import SimpleTennis from './simpleTennis/SimpleTennis';
 import tennisPreview from './simpleTennis/tennisPreview.png';
 
@@ -22,8 +23,4 @@ export const gameInfos = [
 
 export function getGameList() {
     return gameInfos.filter(() => true);
-}
-
-export function getGameDefinition(gameType) {
-    return gameInfos.find(gd => gd.name === gameType);
 }

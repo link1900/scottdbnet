@@ -18,7 +18,7 @@ function Games() {
                 <Grid item xs={12}>
                     <Route exact path="/games" component={GamesHome} />
                     {gameInfoList.map(gameInfo => (
-                        <Route path={`/games/${gameInfo.name}`} component={gameInfo.component} />
+                        <Route key={gameInfo.name} path={`/games/${gameInfo.name}`} component={gameInfo.component} />
                     ))}
                 </Grid>
             </Grid>
