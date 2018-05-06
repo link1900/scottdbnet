@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { Avatar, Card, CardContent, Divider, Grid, List, ListItem, ListItemText } from 'material-ui';
 import siteIcon from './icon.png';
 import gcaIcon from './gcaLogo.png';
@@ -8,6 +7,7 @@ import linkedinLogo from './linkedin.png';
 import githubLogo from './github.png';
 import mailIcon from './mailIcon.png';
 import diceIcon from './diceIcon.png';
+import { FlatLink } from "./UI/FlatLink";
 
 class App extends Component<*, *> {
     navigateTo(url: string) {
@@ -26,12 +26,12 @@ class App extends Component<*, *> {
                                     <ListItemText primary="Scott Brown" />
                                 </ListItem>
                                 <Divider />
-                                <Link to={'/games'} className="textLink">
+                                <FlatLink to={'/games'}>
                                     <ListItem button>
                                         <Avatar src={diceIcon} alt={'dice icon'} />
                                         <ListItemText primary="Games" />
                                     </ListItem>
-                                </Link>
+                                </FlatLink>
                                 <ListItem button onClick={() => this.navigateTo('https://agra-ranker.herokuapp.com')}>
                                     <Avatar src={gcaIcon} alt={'gca logo'} />
                                     <ListItemText primary="Greyhound Rankings" />

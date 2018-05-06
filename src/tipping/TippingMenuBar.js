@@ -3,13 +3,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Typography } from 'material-ui';
 import MenuBar from '../menu/MenuBar';
+import { FlatLink } from "../UI/FlatLink";
 
 function TippingMenuBar() {
     return (
         <MenuBar
             title={
                 <Typography variant="title" color="inherit" className="flex">
-                    <Link to={'/tipping'} className="textLink">Tipstar</Link>
+                    <FlatLink to={'/tipping'}>Tipstar</FlatLink>
                 </Typography>
             }
             loginButton={

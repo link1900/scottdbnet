@@ -5,6 +5,7 @@ import { compose, withState } from "recompose";
 import { Typography, List, ListItem, ListItemText, Drawer } from 'material-ui';
 import MenuBar from '../menu/MenuBar';
 import { getGameList } from "./gameDefinitons";
+import { FlatLink } from "../UI/FlatLink";
 
 type Props = {
     menuOpen: boolean,
@@ -21,9 +22,9 @@ function GamesMenuBar(props: Props) {
             <MenuBar
                 title={
                     <Typography variant="title" color="inherit" className="flex">
-                        <Link to={'/games'} className="textLink">
+                        <FlatLink to={'/games'}>
                             ScottDB Games
-                        </Link>
+                        </FlatLink>
                     </Typography>
                 }
                 showMenu
