@@ -7,7 +7,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import { withFirebase } from 'react-redux-firebase';
 import { connect } from 'react-redux';
-import { getViewerFromAuth } from '../common/authHelper';
+import { getViewerFromAuth } from '../auth/authHelper';
 
 
 const styles = {

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Typography } from 'material-ui';
-import MenuBar from '../common/MenuBar';
+import MenuBar from '../menu/MenuBar';
 
 function TippingMenuBar() {
     return (

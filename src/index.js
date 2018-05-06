@@ -6,7 +6,7 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import Tipping from './tipping/Tipping';
-import { firebaseStore } from './common/firebaseSetup';
+import { firebaseStore } from './firebase/firebaseSetup';
 import Games from './games/Games';
 
 ReactDOM.render(

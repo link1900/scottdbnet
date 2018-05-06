@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { compose, withState } from "recompose";
 import { Typography, List, ListItem, ListItemText, Drawer } from 'material-ui';
-import MenuBar from '../common/MenuBar';
+import MenuBar from '../menu/MenuBar';
 import { getGameList } from "./gameDefinitons";
 
 type Props = {

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Grid } from "material-ui";
-import Login from '../common/Login';
+import Login from '../auth/Login';
 
 function TippingLogin() {
     return (
