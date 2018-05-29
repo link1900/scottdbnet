@@ -1,30 +1,27 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { compose, withState } from "recompose";
+import { compose, withState } from 'recompose';
 import { Typography, List, ListItem, ListItemText, Drawer } from 'material-ui';
 import MenuBar from '../menu/MenuBar';
-import { getGameList } from "./gameDefinitons";
-import { FlatLink } from "../UI/FlatLink";
+import { gameDefinitions } from './gameDefinitons';
+import { FlatLink } from '../UI/FlatLink';
 
 type Props = {
     menuOpen: boolean,
-    setMenuOpen: Function,
+    setMenuOpen: Function
 };
 
 function GamesMenuBar(props: Props) {
-    const gameInfoList = getGameList();
-    const homeInfo = {name: '', title: 'Home'};
-    const {menuOpen, setMenuOpen } = props;
+    const homeInfo = { name: '', title: 'Home' };
+    const { menuOpen, setMenuOpen } = props;
 
     return (
         <div>
             <MenuBar
                 title={
                     <Typography variant="title" color="inherit" className="flex">
-                        <FlatLink to={'/games'}>
-                            ScottDB Games
-                        </FlatLink>
+                        <FlatLink to={'/games'}>ScottDB Games</FlatLink>
                     </Typography>
                 }
                 showMenu
@@ -32,8 +29,14 @@ function GamesMenuBar(props: Props) {
             />
             <Drawer key="draw" open={menuOpen} onClose={() => setMenuOpen(false)}>
                 <List>
-                    {[homeInfo].concat(gameInfoList).map(gameInfo => (
-                        <ListItem key={gameInfo.name} onClick={() => setMenuOpen(false)} button component={Link} to={`/games/${gameInfo.name}`}>
+                    {[homeInfo].concat(gameDefinitions).map(gameInfo => (
+                        <ListItem
+                            key={gameInfo.name}
+                            onClick={() => setMenuOpen(false)}
+                            button
+                            component={Link}
+                            to={`/games/${gameInfo.name}`}
+                        >
                             <ListItemText primary={gameInfo.title} />
                         </ListItem>
                     ))}
@@ -43,7 +46,4 @@ function GamesMenuBar(props: Props) {
     );
 }
 
-export default compose(
-    withState('menuOpen', 'setMenuOpen', false),
-)(GamesMenuBar);
-
+export default compose(withState('menuOpen', 'setMenuOpen', false))(GamesMenuBar);

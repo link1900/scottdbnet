@@ -4,11 +4,9 @@ import { Route } from 'react-router-dom';
 import { Grid } from 'material-ui';
 import GamesMenuBar from './GamesMenuBar';
 import GamesHome from './GamesHome';
-import { getGameList } from "./gameDefinitons";
+import { gameDefinitions } from "./gameDefinitons";
 
 function Games() {
-    const gameInfoList = getGameList();
-
     return (
         <div>
             <Grid container justify="center" spacing={0}>
@@ -17,7 +15,7 @@ function Games() {
                 </Grid>
                 <Grid item xs={12}>
                     <Route exact path="/games" component={GamesHome} />
-                    {gameInfoList.map(gameInfo => (
+                    {gameDefinitions.map(gameInfo => (
                         <Route key={gameInfo.name} path={`/games/${gameInfo.name}`} component={gameInfo.component} />
                     ))}
                 </Grid>

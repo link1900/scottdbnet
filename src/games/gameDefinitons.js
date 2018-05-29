@@ -1,13 +1,10 @@
 // @flow
 import SimpleTennis from './simpleTennis/SimpleTennis';
 import tennisPreview from './simpleTennis/tennisPreview.png';
+import LightOn from './lightOn/LightOn';
+import lightonPreview from './lightOn/lightonPreview.png';
 
-export const GAME_STATES = {
-    ALPHA: 'ALPHA',
-    COMPLETE: 'COMPLETE'
-};
-
-export const gameInfos = [
+export const gameDefinitions = [
     {
         name: 'simpleTennis',
         title: 'Simple Tennis',
@@ -16,11 +13,17 @@ export const gameInfos = [
         year: '2017',
         image: tennisPreview,
         component: SimpleTennis,
-        author: 'Scott Brown',
-        state: GAME_STATES.COMPLETE
+        author: 'Scott Brown'
+    },
+    {
+        name: 'lightOn',
+        title: 'Light On',
+        desc: 'Year: 2005. Original language: Java. Original framework: Swing',
+        originalFramework: 'Swing',
+        originalLanguage: 'Java',
+        year: '2005',
+        image: lightonPreview,
+        component: LightOn,
+        author: 'Scott Brown'
     }
 ];
-
-export function getGameList() {
-    return gameInfos.filter(() => true);
-}

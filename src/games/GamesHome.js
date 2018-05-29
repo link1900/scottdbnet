@@ -2,11 +2,9 @@
 import React from 'react';
 import { Grid, Typography, GridList, GridListTile, GridListTileBar } from 'material-ui';
 import { Link } from 'react-router-dom';
-import { getGameList } from './gameDefinitons';
+import { gameDefinitions } from './gameDefinitons';
 
 function GamesHome() {
-    const gameInfoList = getGameList();
-
     return (
         <Grid container justify="center" spacing={0}>
             <Grid item xs={10}>
@@ -15,7 +13,7 @@ function GamesHome() {
                         <Typography variant="headline">Click on a game to play!</Typography>
                     </div>
                     <GridList cols={3}>
-                        {gameInfoList.map(gameInfo => (
+                        {gameDefinitions.map(gameInfo => (
                             <GridListTile key={gameInfo.name} component={Link} to={`games/${gameInfo.name}`}>
                                 <img src={gameInfo.image} alt={gameInfo.name} />
                                 <GridListTileBar title={gameInfo.title} subtitle={<span>{gameInfo.year}</span>} />
