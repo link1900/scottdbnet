@@ -7,7 +7,6 @@ import linkedinLogo from './linkedin.png';
 import githubLogo from './github.png';
 import mailIcon from './mailIcon.png';
 import diceIcon from './diceIcon.png';
-import { FlatLink } from "./UI/FlatLink";
 
 class App extends Component<*, *> {
     navigateTo(url: string) {
@@ -26,12 +25,13 @@ class App extends Component<*, *> {
                                     <ListItemText primary="Scott Brown" />
                                 </ListItem>
                                 <Divider />
-                                <FlatLink to={'/games'}>
-                                    <ListItem button>
-                                        <Avatar src={diceIcon} alt={'dice icon'} />
-                                        <ListItemText primary="Games" />
-                                    </ListItem>
-                                </FlatLink>
+                                <ListItem
+                                    button
+                                    onClick={() => this.navigateTo('https://linkin-games.firebaseapp.com/')}
+                                >
+                                    <Avatar src={diceIcon} alt={'dice icon'} />
+                                    <ListItemText primary="Games" />
+                                </ListItem>
                                 <ListItem button onClick={() => this.navigateTo('https://agra-ranker.herokuapp.com')}>
                                     <Avatar src={gcaIcon} alt={'gca logo'} />
                                     <ListItemText primary="Greyhound Rankings" />

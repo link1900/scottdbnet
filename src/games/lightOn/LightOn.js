@@ -3,7 +3,6 @@ import { Button, Select, MenuItem } from 'material-ui';
 import _ from 'lodash';
 import SimpleCanvas from '../simpleCanvas/SimpleCanvas';
 import LightOnRect from './LightOnRect';
-import CanvasText from "../simpleCanvas/CanvasText";
 
 export default class LightOn extends React.Component {
     constructor(props) {
