@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { Grid } from 'material-ui';
+import { Grid } from '@material-ui/core';
 import TippingMenuBar from './TippingMenuBar';
 import TippingLogin from './TippingLogin';
 import TippingHome from './TippingHome';

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { Grid } from 'material-ui';
+import { Grid } from '@material-ui/core';
 import GamesMenuBar from './GamesMenuBar';
 import GamesHome from './GamesHome';
 import { gameDefinitions } from "./gameDefinitons";

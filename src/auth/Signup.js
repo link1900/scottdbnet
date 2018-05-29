@@ -4,7 +4,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase';
 import { compose } from 'redux';
 import { withFirebase } from 'react-redux-firebase';
-import { Card, CardContent, Typography } from 'material-ui';
+import { Card, CardContent, Typography } from '@material-ui/core';
 
 type Props = {
     successUrl: string

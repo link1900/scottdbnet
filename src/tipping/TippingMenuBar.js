@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Typography } from 'material-ui';
+import { Button, Typography } from '@material-ui/core';
 import MenuBar from '../menu/MenuBar';
 import { FlatLink } from "../UI/FlatLink";
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Select, MenuItem } from 'material-ui';
+import { Button, Select, MenuItem } from '@material-ui/core';
 import _ from 'lodash';
 import SimpleCanvas from '../simpleCanvas/SimpleCanvas';
 import LightOnRect from './LightOnRect';

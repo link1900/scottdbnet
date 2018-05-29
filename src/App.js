@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Avatar, Card, CardContent, Divider, Grid, List, ListItem, ListItemText } from 'material-ui';
+import { Avatar, Card, CardContent, Divider, Grid, List, ListItem, ListItemText } from '@material-ui/core';
 import siteIcon from './icon.png';
 import gcaIcon from './gcaLogo.png';
 import linkedinLogo from './linkedin.png';

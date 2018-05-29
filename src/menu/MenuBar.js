@@ -1,10 +1,8 @@
 // @flow
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
-import { Avatar, IconButton, Menu, MenuItem, Icon } from 'material-ui';
+import { withStyles } from '@material-ui/core/styles';
+import { Avatar, IconButton, Menu, MenuItem, Icon, AppBar, Toolbar } from '@material-ui/core';
 import { compose, withState } from 'recompose';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
 import { withFirebase } from 'react-redux-firebase';
 import { connect } from 'react-redux';
 import { getViewerFromAuth } from '../auth/authHelper';

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { compose, withState } from 'recompose';
-import { Typography, List, ListItem, ListItemText, Drawer } from 'material-ui';
+import { Typography, List, ListItem, ListItemText, Drawer } from '@material-ui/core';
 import MenuBar from '../menu/MenuBar';
 import { gameDefinitions } from './gameDefinitons';
 import { FlatLink } from '../UI/FlatLink';
