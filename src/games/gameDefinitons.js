@@ -1,4 +1,3 @@
-// @flow
 import SimpleTennis from './simpleTennis/SimpleTennis';
 import tennisPreview from './simpleTennis/tennisPreview.png';
 import LightOn from './lightOn/LightOn';
