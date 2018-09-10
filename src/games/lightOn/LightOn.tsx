@@ -1,60 +1,68 @@
-import React from 'react';
+import * as React from 'react';
 import { Button, Select, MenuItem } from '@material-ui/core';
-import _ from 'lodash';
 import SimpleCanvas from '../simpleCanvas/SimpleCanvas';
 import LightOnRect from './LightOnRect';
 
-export default class LightOn extends React.Component {
-    constructor(props) {
+interface State {
+    grid: boolean[];
+    gridSize: number;
+    value: string;
+    clicks: number;
+    hasWon: boolean;
+}
+
+interface Props {}
+
+export default class LightOn extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         const gridSize = 3;
         this.state = {
             grid: new Array(gridSize * gridSize).fill(false),
             gridSize,
-            value: 1,
+            value: 'easy',
             clicks: 0,
             hasWon: false
         };
     }
 
-    handleSizeChange = event => {
+    public handleSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
         this.setState({ value });
         let gridSize = 3;
-        if (value === 1) {
+        if (value === 'easy') {
             gridSize = 3;
         }
-        if (value === 2) {
+        if (value === 'medium') {
             gridSize = 4;
         }
-        if (value === 3) {
+        if (value === 'hard') {
             gridSize = 5;
         }
         this.setState({ gridSize });
         this.restart(gridSize);
     };
 
-    handleClick(x, y) {
-        const updatedGrid = _.cloneDeep(this.state.grid);
-        const indexesToUpdate = [];
-        indexesToUpdate.push(this.gridCoordinatesToIndex(x, y));
-        indexesToUpdate.push(this.gridCoordinatesToIndex(x - 1, y));
-        indexesToUpdate.push(this.gridCoordinatesToIndex(x + 1, y));
-        indexesToUpdate.push(this.gridCoordinatesToIndex(x, y - 1));
-        indexesToUpdate.push(this.gridCoordinatesToIndex(x, y + 1));
-        indexesToUpdate.filter(i => i);
-        console.log(indexesToUpdate);
-        indexesToUpdate.forEach(indexToUpdate => {
-            updatedGrid[indexToUpdate] = !updatedGrid[indexToUpdate];
-        });
-        this.setState({
-            grid: updatedGrid,
-            clicks: this.state.clicks + 1,
-            hasWon: _.every(updatedGrid)
-        });
-    }
+    // public handleClick(x: number, y: number) {
+    //     const updatedGrid = cloneDeep(this.state.grid);
+    //     const indexesToUpdate = [];
+    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x, y));
+    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x - 1, y));
+    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x + 1, y));
+    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x, y - 1));
+    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x, y + 1));
+    //     indexesToUpdate.filter(i => i);
+    //     indexesToUpdate.forEach(indexToUpdate => {
+    //         updatedGrid[indexToUpdate] = !updatedGrid[indexToUpdate];
+    //     });
+    //     this.setState({
+    //         grid: updatedGrid,
+    //         clicks: this.state.clicks + 1,
+    //         hasWon: every(updatedGrid)
+    //     });
+    // }
 
-    gridCoordinatesToIndex(x, y) {
+    public gridCoordinatesToIndex(x: number, y: number) {
         if (x >= 0 && x < this.state.gridSize && y >= 0 && y < this.state.gridSize) {
             const result = x + this.state.gridSize * y;
             return result >= 0 && result < this.state.grid.length ? result : null;
@@ -63,13 +71,13 @@ export default class LightOn extends React.Component {
         }
     }
 
-    calculateScore() {
-        const base = this.state.value * 10;
-        const clicksOffPar = this.state.clicks - 5;
-        return base - clicksOffPar;
-    }
+    // public calculateScore() {
+    //     const base = this.state.value * 10;
+    //     const clicksOffPar = this.state.clicks - 5;
+    //     return base - clicksOffPar;
+    // }
 
-    restart(gridSize) {
+    public restart(gridSize: number) {
         this.setState({
             grid: new Array(gridSize * gridSize).fill(false),
             clicks: 0,
@@ -77,7 +85,7 @@ export default class LightOn extends React.Component {
         });
     }
 
-    render() {
+    public render() {
         const size = 100;
         const elements = [];
         const canvasWidth = 100 * 4;
@@ -133,15 +141,11 @@ export default class LightOn extends React.Component {
                             }}
                         >
                             <Select value={this.state.value} onChange={this.handleSizeChange}>
-                                <MenuItem value={1}>Easy</MenuItem>
-                                <MenuItem value={2}>Medium</MenuItem>
-                                <MenuItem value={3}>Hard</MenuItem>
+                                <MenuItem value={'easy'}>Easy</MenuItem>
+                                <MenuItem value={'medium'}>Medium</MenuItem>
+                                <MenuItem value={'hard'}>Hard</MenuItem>
                             </Select>
-                            <SimpleCanvas
-                                width={canvasWidth}
-                                height={canvasHeight}
-                                elements={elements}
-                            />
+                            <SimpleCanvas width={canvasWidth} height={canvasHeight} elements={elements} />
                             <Button
                                 variant="raised"
                                 color="primary"

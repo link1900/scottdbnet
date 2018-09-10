@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import './index.css';
-import App from './App';
+import Home from './home/Home';
 import registerServiceWorker from './registerServiceWorker';
 import Tipping from './tipping/Tipping';
 import { firebaseStore } from './firebase/firebaseSetup';
@@ -13,7 +13,7 @@ ReactDOM.render(
     <Router>
         <Provider store={firebaseStore}>
             <div>
-                <Route exact path="/" component={App} />
+                <Route exact path="/" component={Home} />
                 <Route path="/tipping" component={Tipping} />
                 <Route path="/games" component={Games} />
             </div>

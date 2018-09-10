@@ -1,7 +1,7 @@
 import SimpleTennis from './simpleTennis/SimpleTennis';
 import tennisPreview from './simpleTennis/tennisPreview.png';
 import LightOn from './lightOn/LightOn';
-import lightonPreview from './lightOn/lightonPreview.png';
+import lightOnPreview from './lightOn/lightOnPreview.png';
 
 export const gameDefinitions = [
     {
@@ -21,7 +21,7 @@ export const gameDefinitions = [
         originalFramework: 'Swing',
         originalLanguage: 'Java',
         year: '2005',
-        image: lightonPreview,
+        image: lightOnPreview,
         component: LightOn,
         author: 'Scott Brown'
     }

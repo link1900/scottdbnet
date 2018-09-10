@@ -1,14 +1,18 @@
-import React from 'react';
+import * as React from 'react';
 import SimpleTennisGame from './SimpleTennisGame';
 
-export default class SimpleTennis extends React.Component {
-    componentDidMount() {
+interface Props {}
+
+interface State {}
+
+export default class SimpleTennis extends React.Component<Props, State> {
+    public componentDidMount() {
         const canvas = this.refs.gameCanvas;
         const gameState = new SimpleTennisGame(canvas);
         gameState.start();
     }
 
-    render() {
+    public render() {
         return (
             <div
                 style={{

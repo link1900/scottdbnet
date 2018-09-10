@@ -10,7 +10,9 @@
         "no-empty": false,
         "jsx-boolean-value": false,
         "member-ordering": false,
-        "jsx-no-string-ref": false
+        "jsx-no-string-ref": false,
+        "no-empty-interface": false,
+        "jsx-no-lambda": false
     },
     "jsRules": {
         "object-literal-sort-keys": false,
