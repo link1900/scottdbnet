@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { compose, withState } from 'recompose';
@@ -7,12 +6,7 @@ import MenuBar from '../menu/MenuBar';
 import { gameDefinitions } from './gameDefinitons';
 import { FlatLink } from '../UI/FlatLink';
 
-type Props = {
-    menuOpen: boolean,
-    setMenuOpen: Function
-};
-
-function GamesMenuBar(props: Props) {
+function GamesMenuBar(props) {
     const homeInfo = { name: '', title: 'Home' };
     const { menuOpen, setMenuOpen } = props;
 

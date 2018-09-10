@@ -1,4 +1,3 @@
-// @flow
 import React from 'react';
 import { Grid, Typography, GridList, GridListTile, GridListTileBar } from '@material-ui/core';
 import { Link } from 'react-router-dom';
