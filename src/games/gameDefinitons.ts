@@ -3,7 +3,19 @@ import tennisPreview from './simpleTennis/tennisPreview.png';
 import LightOn from './lightOn/LightOn';
 import lightOnPreview from './lightOn/lightOnPreview.png';
 
-export const gameDefinitions = [
+export interface GameDefinition {
+    name?: string;
+    title?: string;
+    desc?: string;
+    originalFramework?: string;
+    originalLanguage?: string;
+    year?: string;
+    image?: any;
+    component?: any;
+    author?: string;
+}
+
+export const gameDefinitions: GameDefinition[] = [
     {
         name: 'simpleTennis',
         title: 'Simple Tennis',

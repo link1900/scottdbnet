@@ -12,7 +12,10 @@
         "member-ordering": false,
         "jsx-no-string-ref": false,
         "no-empty-interface": false,
-        "jsx-no-lambda": false
+        "jsx-no-lambda": false,
+        "no-console": {
+            "severity": "warn"
+        }
     },
     "jsRules": {
         "object-literal-sort-keys": false,
