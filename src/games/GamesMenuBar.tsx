@@ -3,6 +3,7 @@ import { List, ListItem, ListItemText, Drawer, AppBar, Toolbar, Icon, IconButton
 import { GameDefinition, gameDefinitions } from './gameDefinitons';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { HeadlineSix } from '../UI/HeadlineSix';
 
 interface Props extends RouteComponentProps<any> {}
 
@@ -61,6 +62,7 @@ class GamesMenuBar extends React.Component<Props, State> {
                         >
                             <Icon>menu</Icon>
                         </IconButton>
+                        <HeadlineSix>Linkin Games</HeadlineSix>
                     </Toolbar>
                 </AppBar>
                 <Drawer key="draw" open={menuOpen} onClose={this.closeMenu}>

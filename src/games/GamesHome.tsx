@@ -43,7 +43,7 @@ export default class GamesHome extends React.Component<Props, State> {
         const { match } = this.props;
         return (
             <PageFlow>
-                <PageTitle style={{ paddingTop: '20px', paddingBottom: '20px' }}>
+                <PageTitle>
                     <Typography variant="headline">Click on a game to play!</Typography>
                 </PageTitle>
                 <GameTileContainer>
