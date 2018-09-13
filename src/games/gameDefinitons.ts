@@ -4,6 +4,7 @@ import LightOn from './lightOn/LightOn';
 import lightOnPreview from './lightOn/lightOnPreview.png';
 import prisonBreakPreview from './prisonBreak/prisonBreakPreview.png';
 import PrisonBreak from './prisonBreak/PrisonBreak';
+import Guesser from './guesser/Guesser';
 
 export interface GameDefinition {
     name?: string;
@@ -47,6 +48,17 @@ export const gameDefinitions: GameDefinition[] = [
         year: '2007',
         image: prisonBreakPreview,
         component: PrisonBreak,
+        author: 'Scott Brown'
+    },
+    {
+        name: 'guesser',
+        title: 'Guess the number',
+        originalFramework: 'TI-86 Calculator',
+        originalLanguage: 'Basic',
+        image: prisonBreakPreview,
+        year: '2002',
+        desc: 'Year: 2002. Original language: Basic. Original framework: TI-86 Calculator',
+        component: Guesser,
         author: 'Scott Brown'
     }
 ];
