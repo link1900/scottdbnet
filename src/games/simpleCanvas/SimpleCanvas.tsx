@@ -25,11 +25,11 @@ export default class SimpleCanvas extends React.Component<Props, State> {
     }
 
     public simulate() {
-        this.props.elements.forEach(element => element._simulate(this.props.elements));
+        this.props.elements.forEach(element => element._simulate && element._simulate(this.props.elements));
     }
 
     public draw(canvas: HTMLCanvasElement) {
-        this.props.elements.forEach(element => element._draw(canvas));
+        this.props.elements.forEach(element => element._draw && element._draw(canvas));
     }
 
     public start(canvas: HTMLCanvasElement) {

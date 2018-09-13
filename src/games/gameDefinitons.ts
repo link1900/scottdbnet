@@ -2,6 +2,8 @@ import SimpleTennis from './simpleTennis/SimpleTennis';
 import tennisPreview from './simpleTennis/tennisPreview.png';
 import LightOn from './lightOn/LightOn';
 import lightOnPreview from './lightOn/lightOnPreview.png';
+import prisonBreakPreview from './prisonBreak/prisonBreakPreview.png';
+import PrisonBreak from './prisonBreak/PrisonBreak';
 
 export interface GameDefinition {
     name?: string;
@@ -35,6 +37,16 @@ export const gameDefinitions: GameDefinition[] = [
         year: '2005',
         image: lightOnPreview,
         component: LightOn,
+        author: 'Scott Brown'
+    },
+    {
+        name: 'prisonBreak',
+        title: 'Prison Break',
+        desc: 'Year: 2007. Original language: C++',
+        originalLanguage: 'C++',
+        year: '2007',
+        image: prisonBreakPreview,
+        component: PrisonBreak,
         author: 'Scott Brown'
     }
 ];
