@@ -1,5 +1,5 @@
 import { Card, CardContent, Typography } from '@material-ui/core';
-import * as firebase from 'firebase';
+import { firebase } from '../firebase/firebaseSetup';
 import * as React from 'react';
 // @ts-ignore
 import * as StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';

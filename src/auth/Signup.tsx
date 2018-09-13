@@ -1,7 +1,7 @@
 import * as React from 'react';
 // @ts-ignore
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import * as firebase from 'firebase';
+import { firebase } from '../firebase/firebaseSetup';
 import { compose } from 'redux';
 import { withFirebase } from 'react-redux-firebase';
 import { Card, CardContent, Typography } from '@material-ui/core';

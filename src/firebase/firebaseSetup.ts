@@ -1,8 +1,10 @@
-import * as firebase from 'firebase/app';
+import * as firebaseApp from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 import { createStore, combineReducers, compose } from 'redux';
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase';
 
-export default firebase.initializeApp({
+export default firebaseApp.initializeApp({
     apiKey: process.env.REACT_APP_FIREBASE_WEB_API_KEY,
     authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
     databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
@@ -13,7 +15,7 @@ export default firebase.initializeApp({
 
 const rrfConfig = {};
 
-const createStoreWithFirebase = compose(reactReduxFirebase(firebase, rrfConfig))(createStore);
+const createStoreWithFirebase = compose(reactReduxFirebase(firebaseApp, rrfConfig))(createStore);
 
 const rootReducer = combineReducers({
     firebase: firebaseReducer
@@ -21,3 +23,4 @@ const rootReducer = combineReducers({
 
 const initialState = {};
 export const firebaseStore = createStoreWithFirebase(rootReducer, initialState);
+export const firebase = firebaseApp;

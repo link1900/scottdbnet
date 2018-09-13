@@ -48,8 +48,8 @@ export default class GamesHome extends React.Component<Props, State> {
                 </PageTitle>
                 <GameTileContainer>
                     {gameDefinitions.map(gameInfo => (
-                        <FlatLink to={`${match.url}/${gameInfo.name}`}>
-                            <GameTileCard key={gameInfo.name}>
+                        <FlatLink key={gameInfo.name} to={`${match.url}/${gameInfo.name}`}>
+                            <GameTileCard>
                                 <GameTileCardMedia image={gameInfo.image} title={gameInfo.title} />
                                 <CardContent>
                                     <SubtitleText>{gameInfo.title}</SubtitleText>
