@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText, Drawer, AppBar, Toolbar, Icon, IconButton
 import { GameDefinition, gameDefinitions } from './gameDefinitons';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { HeadlineSix } from '../UI/HeadlineSix';
+import { HeadlineSmall } from '../UI/HeadlineSmall';
 
 interface Props extends RouteComponentProps<any> {}
 
@@ -37,8 +37,13 @@ class GamesMenuBar extends React.Component<Props, State> {
         const { match } = this.props;
         const linkTo = gameInfo.name ? `${match.url}/${gameInfo.name}` : match.url;
         return (
-            <Link to={linkTo} onClick={() => this.setMenuOpen(false)} style={{ textDecoration: 'none' }}>
-                <ListItem key={gameInfo.name}>
+            <Link
+                key={gameInfo.title}
+                to={linkTo}
+                onClick={() => this.setMenuOpen(false)}
+                style={{ textDecoration: 'none' }}
+            >
+                <ListItem>
                     <ListItemText primary={gameInfo.title} />
                 </ListItem>
             </Link>
@@ -62,7 +67,7 @@ class GamesMenuBar extends React.Component<Props, State> {
                         >
                             <Icon>menu</Icon>
                         </IconButton>
-                        <HeadlineSix>Linkin Games</HeadlineSix>
+                        <HeadlineSmall>Linkin Games</HeadlineSmall>
                     </Toolbar>
                 </AppBar>
                 <Drawer key="draw" open={menuOpen} onClose={this.closeMenu}>

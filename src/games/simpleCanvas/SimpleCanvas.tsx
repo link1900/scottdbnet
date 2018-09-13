@@ -7,7 +7,9 @@ export interface Props {
     height: number;
 }
 
-export default class SimpleCanvas extends React.Component<Props, object> {
+interface State {}
+
+export default class SimpleCanvas extends React.Component<Props, State> {
     public componentDidMount() {
         const canvas: any = this.refs.gameCanvas;
         canvas.addEventListener('mousedown', (event: any) => {

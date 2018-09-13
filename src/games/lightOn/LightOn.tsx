@@ -1,10 +1,17 @@
 import * as React from 'react';
-import { Button, Select, MenuItem } from '@material-ui/core';
+import { every } from 'lodash';
+import { Button, MenuItem, Select } from '@material-ui/core';
 import SimpleCanvas from '../simpleCanvas/SimpleCanvas';
 import LightOnRect from './LightOnRect';
+import PageFlow from '../../UI/PageFlow';
+import Spacing from '../../UI/Spacing';
+import Row from '../../UI/Row';
+import Text from '../../UI/Text';
+import HeadlineLarge from '../../UI/HeadlineLarge';
+import DoubleSpacing from '../../UI/DoubleSpacing';
 
 interface State {
-    grid: boolean[];
+    gridElements: LightOnRect[];
     gridSize: number;
     value: string;
     clicks: number;
@@ -13,12 +20,14 @@ interface State {
 
 interface Props {}
 
+const CANVAS_SIZE = 300;
+
 export default class LightOn extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         const gridSize = 3;
         this.state = {
-            grid: new Array(gridSize * gridSize).fill(false),
+            gridElements: this.generateLightOnRectArray(gridSize),
             gridSize,
             value: 'easy',
             clicks: 0,
@@ -43,34 +52,6 @@ export default class LightOn extends React.Component<Props, State> {
         this.restart(gridSize);
     };
 
-    // public handleClick(x: number, y: number) {
-    //     const updatedGrid = cloneDeep(this.state.grid);
-    //     const indexesToUpdate = [];
-    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x, y));
-    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x - 1, y));
-    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x + 1, y));
-    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x, y - 1));
-    //     indexesToUpdate.push(this.gridCoordinatesToIndex(x, y + 1));
-    //     indexesToUpdate.filter(i => i);
-    //     indexesToUpdate.forEach(indexToUpdate => {
-    //         updatedGrid[indexToUpdate] = !updatedGrid[indexToUpdate];
-    //     });
-    //     this.setState({
-    //         grid: updatedGrid,
-    //         clicks: this.state.clicks + 1,
-    //         hasWon: every(updatedGrid)
-    //     });
-    // }
-
-    public gridCoordinatesToIndex(x: number, y: number) {
-        if (x >= 0 && x < this.state.gridSize && y >= 0 && y < this.state.gridSize) {
-            const result = x + this.state.gridSize * y;
-            return result >= 0 && result < this.state.grid.length ? result : null;
-        } else {
-            return null;
-        }
-    }
-
     // public calculateScore() {
     //     const base = this.state.value * 10;
     //     const clicksOffPar = this.state.clicks - 5;
@@ -79,19 +60,31 @@ export default class LightOn extends React.Component<Props, State> {
 
     public restart(gridSize: number) {
         this.setState({
-            grid: new Array(gridSize * gridSize).fill(false),
             clicks: 0,
-            hasWon: false
+            hasWon: false,
+            gridElements: this.generateLightOnRectArray(gridSize)
         });
     }
 
-    public render() {
-        const size = 100;
+    public actionTaken = () => {
+        const hasWon = every(this.state.gridElements, 'lit');
+        if (hasWon) {
+            this.state.gridElements.forEach(gridElement => {
+                gridElement.active = false;
+            });
+        }
+
+        this.setState({
+            clicks: this.state.clicks + 1,
+            hasWon
+        });
+    };
+
+    public generateLightOnRectArray = (gridSize: number) => {
+        const size = CANVAS_SIZE / gridSize;
         const elements = [];
-        const canvasWidth = 100 * 4;
-        const canvasHeight = 100 * 3;
-        for (let y = 0; y < this.state.gridSize; y += 1) {
-            for (let x = 0; x < this.state.gridSize; x += 1) {
+        for (let y = 0; y < gridSize; y += 1) {
+            for (let x = 0; x < gridSize; x += 1) {
                 elements.push(
                     new LightOnRect({
                         name: `${x}-${y}`,
@@ -101,68 +94,47 @@ export default class LightOn extends React.Component<Props, State> {
                         height: size,
                         fillColor: '#FFFFFF',
                         gridx: x,
-                        gridy: y
+                        gridy: y,
+                        onChange: this.actionTaken
                     })
                 );
             }
         }
+        return elements;
+    };
 
-        // elements.push(
-        //     new CanvasText({
-        //         name: 'playerScore',
-        //         x: 330,
-        //         y: 30,
-        //         text: "Hello There",
-        //         fontSize: 20
-        //     })
-        // );
-        //
-        // elements.push(
-        //     new CanvasText({
-        //         name: 'winText',
-        //         size: 20,
-        //         x: 330,
-        //         y: 40,
-        //         text: 'You win! Click to continue!',
-        //         visible: false
-        //     })
-        // );
-
+    public render() {
         return (
-            <div className="top-margin aligner">
-                <div className="aligner-item">
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <div style={{ width: '400px' }} />
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                paddingRight: '100px'
-                            }}
-                        >
-                            <Select value={this.state.value} onChange={this.handleSizeChange}>
-                                <MenuItem value={'easy'}>Easy</MenuItem>
-                                <MenuItem value={'medium'}>Medium</MenuItem>
-                                <MenuItem value={'hard'}>Hard</MenuItem>
-                            </Select>
-                            <SimpleCanvas width={canvasWidth} height={canvasHeight} elements={elements} />
-                            <Button
-                                variant="raised"
-                                color="primary"
-                                style={{ marginTop: '10px' }}
-                                onClick={() => this.restart(this.state.gridSize)}
-                            >
-                                {this.state.hasWon ? 'Again?' : 'Restart'}
-                            </Button>
-                            {this.state.hasWon ? (
-                                <span style={{ paddingTop: '10px' }}> You won in {this.state.clicks} clicks</span>
-                            ) : (
-                                <span style={{ paddingTop: '10px' }}> Clicks: {this.state.clicks}</span>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <PageFlow>
+                <Spacing />
+                <Row>
+                    <HeadlineLarge>Light On</HeadlineLarge>
+                </Row>
+                <DoubleSpacing />
+                <SimpleCanvas width={CANVAS_SIZE} height={CANVAS_SIZE} elements={this.state.gridElements} />
+                <DoubleSpacing />
+                <Row>
+                    <Text>Difficultly</Text>
+                    <Spacing />
+                    <Select value={this.state.value} onChange={this.handleSizeChange}>
+                        <MenuItem value={'easy'}>Easy</MenuItem>
+                        <MenuItem value={'medium'}>Medium</MenuItem>
+                        <MenuItem value={'hard'}>Hard</MenuItem>
+                    </Select>
+                </Row>
+                <Spacing />
+                <Row>
+                    <Button variant="raised" color="primary" onClick={() => this.restart(this.state.gridSize)}>
+                        {this.state.hasWon ? 'Again?' : 'Restart'}
+                    </Button>
+                    <Spacing />
+                    {this.state.hasWon ? (
+                        <Text> You won in {this.state.clicks} clicks</Text>
+                    ) : (
+                        <Text> Clicks: {this.state.clicks}</Text>
+                    )}
+                </Row>
+            </PageFlow>
         );
     }
 }
