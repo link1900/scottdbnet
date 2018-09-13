@@ -28,7 +28,8 @@
         "unit-test": "react-scripts-ts test",
         "test": "set CI=true && yarn unit-test",
         "format": "prettier --write \"src/**/*.js\"",
-        "precommit": "pretty-quick --staged && git add",
+        "precommit": "pretty-quick --staged",
+        "postcommit": "git update-index -g",
         "deploy": "yarn build && firebase deploy"
     },
     "devDependencies": {
