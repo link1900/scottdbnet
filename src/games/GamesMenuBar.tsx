@@ -4,6 +4,8 @@ import { GameDefinition, gameDefinitions } from './gameDefinitons';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { HeadlineSmall } from '../UI/HeadlineSmall';
+import FlexExpander from '../UI/FlexExpander';
+import UserProfileButton from '../auth/UserProfileButton';
 
 interface Props extends RouteComponentProps<any> {}
 
@@ -68,6 +70,8 @@ class GamesMenuBar extends React.Component<Props, State> {
                             <Icon>menu</Icon>
                         </IconButton>
                         <HeadlineSmall>Linkin Games</HeadlineSmall>
+                        <FlexExpander />
+                        <UserProfileButton />
                     </Toolbar>
                 </AppBar>
                 <Drawer key="draw" open={menuOpen} onClose={this.closeMenu}>

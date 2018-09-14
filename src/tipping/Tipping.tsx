@@ -4,7 +4,6 @@ import { Grid } from '@material-ui/core';
 import TippingMenuBar from './TippingMenuBar';
 import TippingLogin from './TippingLogin';
 import TippingHome from './TippingHome';
-import TippingSignup from './TippingSignup';
 
 function Tipping() {
     return (
@@ -16,7 +15,6 @@ function Tipping() {
                 <Grid item xs={12}>
                     <Route exact path="/tipping" component={TippingHome} />
                     <Route path="/tipping/login" component={TippingLogin} />
-                    <Route path="/tipping/signup" component={TippingSignup} />
                 </Grid>
             </Grid>
         </div>

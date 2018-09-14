@@ -7,7 +7,14 @@ export interface FirebaseAuth {
     photoURL?: string;
 }
 
-export function getViewerFromAuth(auth: FirebaseAuth) {
+export interface Viewer {
+    id?: string;
+    name?: string;
+    email?: string;
+    imageUrl?: string;
+}
+
+export function getViewerFromAuth(auth: FirebaseAuth): Viewer | null {
     if (!auth.isLoaded || auth.isEmpty) {
         return null;
     }

@@ -9,6 +9,7 @@ import Tipping from './tipping/Tipping';
 import { firebaseStore } from './firebase/firebaseSetup';
 import Games from './games/Games';
 import Director from './Director';
+import LoginPage from './auth/LoginPage';
 
 ReactDOM.render(
     <Router>
@@ -16,6 +17,7 @@ ReactDOM.render(
             <div>
                 <Route exact path="/" component={Director} />
                 <Route path="/home" component={Home} />
+                <Route path="/login" component={LoginPage} />
                 <Route path="/tipping" component={Tipping} />
                 <Route path="/games" component={Games} />
             </div>

@@ -45,7 +45,7 @@ export default class Home extends React.Component<Props, State> {
                             <FlatLink to={'/games'}>
                                 <ListItem button={true}>
                                     <Avatar src={diceIcon} alt={'dice icon'} />
-                                    <ListItemText primary="Games" />
+                                    <ListItemText primary="Linkin Games" />
                                 </ListItem>
                             </FlatLink>
                             <ListItem button={true} onClick={this.navigateOnClick('https://agra-ranker.herokuapp.com')}>
