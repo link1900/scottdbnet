@@ -8,12 +8,14 @@ import registerServiceWorker from './registerServiceWorker';
 import Tipping from './tipping/Tipping';
 import { firebaseStore } from './firebase/firebaseSetup';
 import Games from './games/Games';
+import Director from './Director';
 
 ReactDOM.render(
     <Router>
         <Provider store={firebaseStore}>
             <div>
-                <Route exact path="/" component={Home} />
+                <Route exact path="/" component={Director} />
+                <Route path="/home" component={Home} />
                 <Route path="/tipping" component={Tipping} />
                 <Route path="/games" component={Games} />
             </div>
