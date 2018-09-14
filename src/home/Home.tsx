@@ -6,6 +6,7 @@ import githubLogo from './github.png';
 import siteIcon from './icon.png';
 import linkedinLogo from './linkedin.png';
 import mailIcon from './mailIcon.png';
+import { FlatLink } from '../UI/FlatLink';
 
 interface Props {}
 
@@ -41,13 +42,12 @@ export default class Home extends React.Component<Props, State> {
                                 <ListItemText primary="Scott Brown" />
                             </ListItem>
                             <Divider />
-                            <ListItem
-                                button={true}
-                                onClick={this.navigateOnClick('https://linkin-games.firebaseapp.com/')}
-                            >
-                                <Avatar src={diceIcon} alt={'dice icon'} />
-                                <ListItemText primary="Games" />
-                            </ListItem>
+                            <FlatLink to={'/games'}>
+                                <ListItem button={true}>
+                                    <Avatar src={diceIcon} alt={'dice icon'} />
+                                    <ListItemText primary="Games" />
+                                </ListItem>
+                            </FlatLink>
                             <ListItem button={true} onClick={this.navigateOnClick('https://agra-ranker.herokuapp.com')}>
                                 <Avatar src={gcaIcon} alt={'gca logo'} />
                                 <ListItemText primary="Greyhound Rankings" />
