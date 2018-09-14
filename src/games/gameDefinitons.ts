@@ -5,6 +5,9 @@ import lightOnPreview from './lightOn/lightOnPreview.png';
 import prisonBreakPreview from './prisonBreak/prisonBreakPreview.png';
 import PrisonBreak from './prisonBreak/PrisonBreak';
 import Guesser from './guesser/Guesser';
+import Tic from './tictactoe/Tic';
+import ticPreview from './tictactoe/ticPreview.png';
+import GuesserPreview from './guesser/thinking.jpg';
 
 export interface GameDefinition {
     name?: string;
@@ -55,10 +58,20 @@ export const gameDefinitions: GameDefinition[] = [
         title: 'Guess the number',
         originalFramework: 'TI-86 Calculator',
         originalLanguage: 'Basic',
-        image: prisonBreakPreview,
+        image: GuesserPreview,
         year: '2002',
         desc: 'Year: 2002. Original language: Basic. Original framework: TI-86 Calculator',
         component: Guesser,
+        author: 'Scott Brown'
+    },
+    {
+        name: 'tic',
+        title: 'Noughts and Crosses',
+        originalFramework: 'React',
+        originalLanguage: 'Javascript',
+        year: '2016',
+        component: Tic,
+        image: ticPreview,
         author: 'Scott Brown'
     }
 ];
