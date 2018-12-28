@@ -26,6 +26,7 @@
     "scripts": {
         "start": "react-scripts-ts start",
         "build": "react-scripts-ts build",
+        "analyze": "source-map-explorer build/static/js/main.*",
         "eject": "react-scripts-ts eject",
         "lint": "tsc --noEmit && tslint src/**/*.tsx",
         "unit-test": "react-scripts-ts test",
@@ -51,6 +52,7 @@
         "jest-cli": "23.6.0",
         "prettier": "1.15.3",
         "pretty-quick": "1.8.0",
+        "source-map-explorer": "1.6.0",
         "tslint": "5.12.0",
         "typescript": "3.2.2"
     }
