@@ -1,5 +1,5 @@
 import { Avatar, Card, CardContent, Divider, List, ListItem, ListItemText } from '@material-ui/core';
-import * as React from 'react';
+import React from 'react';
 import diceIcon from './diceIcon.png';
 import gcaIcon from './gcaLogo.png';
 import githubLogo from './github.png';

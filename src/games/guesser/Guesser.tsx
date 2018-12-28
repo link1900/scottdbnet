@@ -8,9 +8,23 @@ import Row from '../../UI/Row';
 
 const chance = new Chance();
 
-export default class Guesser extends React.Component {
-    constructor(props) {
+interface Props {}
+
+interface State {
+    guessCount: number;
+    guessLimit: number;
+    currentGuess: string;
+    finished: boolean;
+    theNumber: number;
+    history: string;
+}
+
+export default class Guesser extends React.Component<Props, State> {
+    private mainCommandInput: any;
+
+    constructor(props: Props) {
         super(props);
+        this.mainCommandInput = null;
         this.state = {
             guessCount: 0,
             guessLimit: 10,
@@ -21,31 +35,29 @@ export default class Guesser extends React.Component {
         };
     }
 
-    componentDidMount() {
+    public componentDidMount() {
         if (this.mainCommandInput) {
             this.mainCommandInput.focus();
         }
     }
 
-    onKeyDown = event => {
+    public onKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
             this.submitGuess();
         }
     };
 
-    mainCommandInput = null;
-
-    handleInputRef = ref => {
+    public handleInputRef = (ref: any) => {
         this.mainCommandInput = ref;
     };
 
-    handleChange = event => {
+    public handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             currentGuess: event.target.value
         });
     };
 
-    restart() {
+    public restart() {
         this.setState({
             guessCount: 0,
             guessLimit: 10,
@@ -56,7 +68,7 @@ export default class Guesser extends React.Component {
         });
     }
 
-    submitGuess() {
+    public submitGuess() {
         const textGuess = this.state.currentGuess;
         const answer = this.state.theNumber;
         try {
@@ -102,7 +114,7 @@ export default class Guesser extends React.Component {
         }
     }
 
-    render() {
+    public render() {
         return (
             <PageFlow>
                 <Spacing />

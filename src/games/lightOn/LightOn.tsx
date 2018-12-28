@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { every } from 'lodash';
 import { Button, MenuItem, Select } from '@material-ui/core';
 import SimpleCanvas from '../simpleCanvas/SimpleCanvas';

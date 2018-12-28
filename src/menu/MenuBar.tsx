@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Avatar, IconButton, Menu, MenuItem, Icon, AppBar, Toolbar } from '@material-ui/core';
 import { compose, withState } from 'recompose';

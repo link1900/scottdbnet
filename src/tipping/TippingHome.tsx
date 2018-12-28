@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Grid, Paper, Typography } from '@material-ui/core';
 
 function TippingHome() {

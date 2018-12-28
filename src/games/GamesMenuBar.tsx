@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { List, ListItem, ListItemText, Drawer, AppBar, Toolbar, Icon, IconButton } from '@material-ui/core';
 import { GameDefinition, gameDefinitions } from './gameDefinitons';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Card, CardContent, CardMedia, Typography } from '@material-ui/core';
 import styled from 'styled-components';

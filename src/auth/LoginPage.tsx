@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { firebase, firebaseUI } from '../firebase/firebaseSetup';
 import { withFirebase } from 'react-redux-firebase';
 import { compose } from 'redux';

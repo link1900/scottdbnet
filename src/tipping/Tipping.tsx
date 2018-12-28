@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import TippingMenuBar from './TippingMenuBar';
