@@ -8,6 +8,8 @@ import Guesser from './guesser/Guesser';
 import Tic from './tictactoe/Tic';
 import ticPreview from './tictactoe/ticPreview.png';
 import GuesserPreview from './guesser/thinking.jpg';
+import GuesserAIPreview from './guesser-ai/thinkingAI.png';
+import GuesserAI from './guesser-ai/GuesserAI';
 
 export interface GameDefinition {
     name?: string;
@@ -25,7 +27,6 @@ export const gameDefinitions: GameDefinition[] = [
     {
         name: 'simpleTennis',
         title: 'Simple Tennis',
-        desc: 'Year: 2017. Original language: Javascript. Simple Tennis Game',
         originalLanguage: 'Javascript',
         year: '2017',
         image: tennisPreview,
@@ -35,7 +36,6 @@ export const gameDefinitions: GameDefinition[] = [
     {
         name: 'lightOn',
         title: 'Light On',
-        desc: 'Year: 2005. Original language: Java. Original framework: Swing',
         originalFramework: 'Swing',
         originalLanguage: 'Java',
         year: '2005',
@@ -60,8 +60,16 @@ export const gameDefinitions: GameDefinition[] = [
         originalLanguage: 'Basic',
         image: GuesserPreview,
         year: '2002',
-        desc: 'Year: 2002. Original language: Basic. Original framework: TI-86 Calculator',
         component: Guesser,
+        author: 'Scott Brown'
+    },
+    {
+        name: 'guesser-ai',
+        title: 'Guess the number AI',
+        originalLanguage: 'Javascript',
+        image: GuesserAIPreview,
+        year: '2018',
+        component: GuesserAI,
         author: 'Scott Brown'
     },
     {
