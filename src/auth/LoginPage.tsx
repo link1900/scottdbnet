@@ -7,7 +7,6 @@ import Spacing from '../UI/Spacing';
 import HeadlineLarge from '../UI/HeadlineLarge';
 import 'firebaseui/dist/firebaseui.css';
 import { RouteComponentProps, withRouter } from 'react-router';
-import * as queryString from 'query-string';
 import { CircularProgress } from '@material-ui/core';
 
 interface Props extends RouteComponentProps<any> {}
@@ -26,9 +25,10 @@ class LoginPage extends React.Component<Props, State> {
 
     public componentDidMount() {
         const { location } = this.props;
-        const parsed = queryString.parse(location.search);
+        const urlSearchParams = new URLSearchParams(location.search);
+        const from: string | null = urlSearchParams.get('from');
         const uiConfig = {
-            signInSuccessUrl: parsed.from ? parsed.from : '/',
+            signInSuccessUrl: from ? from : '/',
             signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
         };
         if (firebaseUI.isPendingRedirect()) {
