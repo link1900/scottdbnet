@@ -1,5 +1,4 @@
 import React from 'react';
-import Chance from 'chance';
 import { includes, first, find, filter, intersection, isNil, tail, isEmpty } from 'lodash';
 import './commandLine.css';
 import CommandRef from './CommandRef';
@@ -7,8 +6,7 @@ import { convertToDirection, flipDirection } from './Location';
 import { createWorld, itemsAtLocation, monstersAtLocation } from './World';
 import { equipmentTypes } from './Item';
 import { getPlayerLocation, getPlayer, getPlayerScore } from './Player';
-
-const chance = new Chance();
+import { randomInteger } from '../../utils/randomHelper';
 
 const commandList = [
     { keys: ['look', 'l', 'where', 'ls'], action: look },
@@ -106,7 +104,8 @@ export function look(state, command) {
         command,
         <span>
             You are located at <b>{playerLocation.name}</b>. {playerLocation.description} <br />
-            Looking around you see:<br />
+            Looking around you see:
+            <br />
             {possibleDirections(state, playerLocation)}
             {itemLook(state, playerLocation)}
             {monsterLook(state, playerLocation)}
@@ -183,8 +182,10 @@ export function help(state, command) {
         command,
         <span>
             To play this game you enter your actions by typing in the command such as
-            <CommandRef command="north" /> to move north or <CommandRef command="look" /> to look around.<br />
-            Here is the list of valid commands:<br />
+            <CommandRef command="north" /> to move north or <CommandRef command="look" /> to look around.
+            <br />
+            Here is the list of valid commands:
+            <br />
             <ul>
                 {commandKeys.sort().map(key => {
                     return (
@@ -426,7 +427,8 @@ function status(state, command) {
         state,
         command,
         <span>
-            My current status is:<br />
+            My current status is:
+            <br />
             {stats.map(stat => (
                 <span key={stat.name}>
                     {stat.name}: {` ${stat.value}`}
@@ -743,9 +745,8 @@ export function battle(state, command, creature1, creature2) {
     updateState = updateLogDirect(
         updateState,
         <span>
-            {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs. {fighter2.name} HP: {fighter2.currentHP}/{
-                fighter2.maxHP
-            }
+            {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs. {fighter2.name} HP: {fighter2.currentHP}/
+            {fighter2.maxHP}
         </span>
     );
     // check for win/loss condition
@@ -764,16 +765,15 @@ export function battle(state, command, creature1, creature2) {
     return updateLogDirect(
         updateState,
         <span>
-            {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs. {fighter2.name} HP: {fighter2.currentHP}/{
-                fighter2.maxHP
-            }
+            {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs. {fighter2.name} HP: {fighter2.currentHP}/
+            {fighter2.maxHP}
         </span>
     );
 }
 
 export function damage(state, creature1, creature2) {
     const attackBoost = Math.round(creature1.attack * 0.25);
-    const att = creature1.attack + attackBoost + chance.natural({ min: 0, max: attackBoost });
+    const att = creature1.attack + attackBoost + randomInteger(0, attackBoost);
     const damageAmount = att - creature2.defence;
     creature2.currentHP -= damageAmount;
     if (creature2.currentHP < 0) {

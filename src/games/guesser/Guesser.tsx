@@ -1,12 +1,10 @@
 import React from 'react';
 import { Button, TextField } from '@material-ui/core';
-import Chance from 'chance';
 import thinkingImage from './thinking.jpg';
 import PageFlow from '../../UI/PageFlow';
 import Spacing from '../../UI/Spacing';
 import Row from '../../UI/Row';
-
-const chance = new Chance();
+import { randomInteger } from '../../utils/randomHelper';
 
 interface Props {}
 
@@ -30,7 +28,7 @@ export default class Guesser extends React.Component<Props, State> {
             guessLimit: 10,
             currentGuess: '',
             finished: false,
-            theNumber: chance.natural({ min: 1, max: 100 }),
+            theNumber: randomInteger(1, 100),
             history: ''
         };
     }
@@ -63,7 +61,7 @@ export default class Guesser extends React.Component<Props, State> {
             guessLimit: 10,
             currentGuess: '',
             finished: false,
-            theNumber: chance.natural({ min: 1, max: 100 }),
+            theNumber: randomInteger(1, 100),
             history: ''
         });
     }
