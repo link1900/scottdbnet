@@ -6,6 +6,7 @@ import { HeadlineSmall } from '../UI/HeadlineSmall';
 import FlexExpander from '../UI/FlexExpander';
 import UserProfileButton from '../auth/UserProfileButton';
 import Spacing from '../UI/Spacing';
+import gcaLogo from './GCA-logo.png';
 
 interface Props extends RouteComponentProps<any> {}
 
@@ -37,9 +38,9 @@ class RankerMenuBar extends React.Component<Props, State> {
 
         return (
             <div>
-                <AppBar key="appBar" position="static" style={{ backgroundColor: '#692020' }}>
+                <AppBar key="appBar" position="static">
                     <Toolbar>
-                        <HeadlineSmall>GCA Ranker</HeadlineSmall>
+                        <img src={gcaLogo} alt="gca logo" style={{ width: '117px', height: '57px' }} />
                         <Spacing />
                         <Tabs value={this.getHighlight(history.location.pathname)}>
                             <Tab label="Rankings" onClick={() => this.navTo('/ranker')} />
