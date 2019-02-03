@@ -1,7 +1,12 @@
-import { DefineModelAttributes, Options } from 'sequelize';
+import { DefineModelAttributes, Options, DefineOptions } from 'sequelize';
+
+export type TableSchemaDefinition = {
+  fields: DefineModelAttributes<any>;
+  options: DefineOptions<any>;
+};
 
 export type DatabaseSchemaDefinition = {
-  [key: string]: DefineModelAttributes<any>;
+  [key: string]: TableSchemaDefinition;
 };
 
 export type DatabaseConnection = {

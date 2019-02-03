@@ -27,7 +27,7 @@ export async function defineDatabaseModels(sequelize: Seq, schemaDefinition: Dat
   return Promise.all(
     Object.keys(schemaDefinition).map(tableName => {
       const definition = schemaDefinition[tableName];
-      return sequelize.define(tableName, definition);
+      return sequelize.define(tableName, definition.fields, definition.options);
     })
   );
 }
