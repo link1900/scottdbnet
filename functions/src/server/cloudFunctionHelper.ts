@@ -6,7 +6,7 @@ import logger from '../logging/logger';
 
 export function getApolloServer() {
   const graphqlSchemaParts = createGraphqlSchemaParts(graphqlSchemaDefinition);
-  logger.info('created apollo server');
+  logger.info('creating apollo server');
   return new ApolloServer({
     typeDefs: graphqlSchemaParts.typeDefs,
     resolvers: graphqlSchemaParts.resolvers,

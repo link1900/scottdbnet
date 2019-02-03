@@ -1,6 +1,8 @@
 import InternalServerError from '../error/InternalServerError';
+import logger from '../logging/logger';
 
 export enum ExecutionEnvironment {
+  BASE = 'base',
   LOCAL_TEST = 'local-test',
   LOCAL_DEV = 'local-dev',
   DEV = 'dev',
@@ -72,5 +74,29 @@ export function getExecutionEnvironment(): ExecutionEnvironment {
       return ExecutionEnvironment.PRODUCTION;
     default:
       return ExecutionEnvironment.LOCAL_DEV;
+  }
+}
+
+export function loadConfigFile(environment: ExecutionEnvironment): boolean {
+  const fileToLoad = `../config/env-${environment}.json`;
+  try {
+    const configToLoad = require(fileToLoad);
+    logger.trace(`Loading environment variables from config file ${fileToLoad}`);
+    Object.keys(configToLoad).forEach(key => {
+      setVariable(key, configToLoad[key]);
+    });
+    return true;
+  } catch (error) {
+    logger.warn(`Unable to load config file ${fileToLoad}`);
+    return false;
+  }
+}
+
+export function loadEnvironmentVariablesFromConfig() {
+  const executionEnvironment = getExecutionEnvironment();
+  logger.info(`Loading environment variables for environment ${executionEnvironment}`);
+  loadConfigFile(ExecutionEnvironment.BASE);
+  if (executionEnvironment) {
+    loadConfigFile(executionEnvironment);
   }
 }
