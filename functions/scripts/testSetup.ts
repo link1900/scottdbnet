@@ -1,1 +1,1 @@
-process.env.DEPLOYMENT_ENV = 'local-test';
+process.env.EXECUTION_ENVIRONMENT = 'local-test';

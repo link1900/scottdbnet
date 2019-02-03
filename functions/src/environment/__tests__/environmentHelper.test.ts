@@ -10,7 +10,7 @@ import { ErrorCode } from '../../error/ErrorCode';
 
 describe('environmentHelper', () => {
   afterAll(() => {
-    process.env.DEPLOYMENT_ENV = ExecutionEnvironment.LOCAL_TEST;
+    process.env.EXECUTION_ENVIRONMENT = ExecutionEnvironment.LOCAL_TEST;
   });
 
   describe('#getVariable', () => {
@@ -129,7 +129,7 @@ describe('environmentHelper', () => {
       { value: 'dev', expected: ExecutionEnvironment.DEV },
       { value: 'test', expected: ExecutionEnvironment.TEST },
       { value: 'staging', expected: ExecutionEnvironment.STAGING },
-      { value: 'prod', expected: ExecutionEnvironment.PRODUCTION }
+      { value: 'production', expected: ExecutionEnvironment.PRODUCTION }
     ];
 
     afterEach(() => {
@@ -137,8 +137,8 @@ describe('environmentHelper', () => {
     });
 
     testCases.forEach(testCase => {
-      it(`gets the deployment environment ${testCase.expected} for value '${testCase.value}'`, () => {
-        process.env.DEPLOYMENT_ENV = testCase.value;
+      it(`gets the execution environment ${testCase.expected} for value '${testCase.value}'`, () => {
+        process.env.EXECUTION_ENVIRONMENT = testCase.value;
         expect(getExecutionEnvironment()).toEqual(testCase.expected);
       });
     });
