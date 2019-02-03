@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { isString } from 'lodash';
+import { isString } from '../util/stringHelper';
 
 export interface StringValidationOptions {
     min?: number;

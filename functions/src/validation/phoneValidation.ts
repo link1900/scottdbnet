@@ -1,4 +1,4 @@
-import { isString } from 'lodash';
+import { isString } from '../util/stringHelper';
 
 export function isPhone(value?: string) {
     if (!isString(value)) {

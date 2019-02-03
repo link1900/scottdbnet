@@ -1,5 +1,7 @@
 import { isArray, isString, isEmpty, isObject } from 'lodash';
 
+export { isString };
+
 export function arrayToString(fields: Array<string | null | undefined> = [], separator: string = ' ') {
     if (!isArray(fields)) {
         return '';

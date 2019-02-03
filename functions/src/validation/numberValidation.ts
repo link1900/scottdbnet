@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { isNumber } from 'lodash';
+import { isNumber } from '../util/numberHelper';
 
 export interface NumberValidationOptions {
     min?: number;

@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { isString } from 'lodash';
+import { isString } from '../util/stringHelper';
 
 export function isEmail(value?: any) {
     if (!isString(value)) {

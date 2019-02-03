@@ -1,6 +1,8 @@
 import Decimal from 'decimal.js';
-import { isFinite } from 'lodash';
+import { isFinite, isNumber } from 'lodash';
 import { isValidString } from '../validation/stringValidation';
+
+export { isNumber };
 
 /**
  * Finds the item closest to the goal from the list of items.
