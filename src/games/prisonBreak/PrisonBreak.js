@@ -12,32 +12,32 @@ import Row from '../../UI/Row';
 const store = createStore(PrisonBreakRootReducer, undefined, compose(autoRehydrate()));
 
 export default class PrisonBreak extends React.Component {
-    constructor() {
-        super();
-        this.state = { loaded: false };
-    }
+  constructor() {
+    super();
+    this.state = { loaded: false };
+  }
 
-    componentWillMount() {
-        persistStore(store, { keyPrefix: 'prisonBreak_', whitelist: ['world'] }, () => {
-            this.setState({ loaded: true });
-            store.dispatch(createActionCommandSelected('load'));
-        });
-    }
+  componentWillMount() {
+    persistStore(store, { keyPrefix: 'prisonBreak_', whitelist: ['world'] }, () => {
+      this.setState({ loaded: true });
+      store.dispatch(createActionCommandSelected('load'));
+    });
+  }
 
-    render() {
-        if (!this.state.loaded) {
-            return <div>Loading...</div>;
-        }
-        return (
-            <Provider store={store}>
-                <PageFlow>
-                    <Spacing />
-                    <Row>
-                        <MapContainer />
-                        <PrisonBreakContainer name="Prison Break" />
-                    </Row>
-                </PageFlow>
-            </Provider>
-        );
+  render() {
+    if (!this.state.loaded) {
+      return <div>Loading...</div>;
     }
+    return (
+      <Provider store={store}>
+        <PageFlow>
+          <Spacing />
+          <Row>
+            <MapContainer />
+            <PrisonBreakContainer name="Prison Break" />
+          </Row>
+        </PageFlow>
+      </Provider>
+    );
+  }
 }

@@ -4,27 +4,27 @@ import { createActionInputChanged, createActionKeyPressed } from './PrisonBreakR
 import { logViewProcessor } from './commandProcessor';
 
 const mapStateToProps = state => {
-    const log = state.log.map(logItem => logViewProcessor(logItem));
-    return {
-        log,
-        currentInput: state.currentInput
-    };
+  const log = state.log.map(logItem => logViewProcessor(logItem));
+  return {
+    log,
+    currentInput: state.currentInput
+  };
 };
 
 const mapDispatchToProps = dispatch => {
-    return {
-        onChange: event => {
-            dispatch(createActionInputChanged(event.target.value));
-        },
-        onKeyDown: event => {
-            dispatch(createActionKeyPressed(event.key));
-        }
-    };
+  return {
+    onChange: event => {
+      dispatch(createActionInputChanged(event.target.value));
+    },
+    onKeyDown: event => {
+      dispatch(createActionKeyPressed(event.key));
+    }
+  };
 };
 
 const CommandLineContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(CommandLine);
 
 export default CommandLineContainer;

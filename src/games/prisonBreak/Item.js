@@ -5,5 +5,5 @@ export const itemTypes = ['item', 'equipment', 'consumable', 'key', 'weapon', 's
 export const equipmentTypes = ['weapon', 'shield'];
 
 export function isItem(type) {
-    return includes(itemTypes, type);
+  return includes(itemTypes, type);
 }
