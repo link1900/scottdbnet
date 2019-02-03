@@ -1,4 +1,6 @@
 import * as functions from 'firebase-functions';
-import { getApolloServer } from './server/serverHelper';
+import { getApolloServer } from './server/cloudFunctionHelper';
 
-export const graphql = functions.https.onRequest(getApolloServer().createHandler());
+const apolloServer = getApolloServer();
+
+export const graphql = functions.https.onRequest(apolloServer.createHandler());

@@ -6,11 +6,11 @@ export enum ExecutionEnvironment {
   DEV = 'dev',
   TEST = 'test',
   STAGING = 'staging',
-  PROD = 'prod'
+  PRODUCTION = 'production'
 }
 
 export enum EnvironmentVariable {
-  DEPLOYMENT_ENVIRONMENT = 'DEPLOYMENT_ENV'
+  EXECUTION_ENVIRONMENT = 'EXECUTION_ENVIRONMENT'
 }
 
 export function findVariable(key: string): string | undefined {
@@ -55,7 +55,7 @@ export function setVariable(envVarName: string, envVarValue: string, allowOverri
 }
 
 export function getExecutionEnvironment(): ExecutionEnvironment {
-  const executionEnvironment = findVariable(EnvironmentVariable.DEPLOYMENT_ENVIRONMENT);
+  const executionEnvironment = findVariable(EnvironmentVariable.EXECUTION_ENVIRONMENT);
 
   switch (executionEnvironment) {
     case ExecutionEnvironment.LOCAL_TEST:
@@ -68,8 +68,8 @@ export function getExecutionEnvironment(): ExecutionEnvironment {
       return ExecutionEnvironment.TEST;
     case ExecutionEnvironment.STAGING:
       return ExecutionEnvironment.STAGING;
-    case ExecutionEnvironment.PROD:
-      return ExecutionEnvironment.PROD;
+    case ExecutionEnvironment.PRODUCTION:
+      return ExecutionEnvironment.PRODUCTION;
     default:
       return ExecutionEnvironment.LOCAL_DEV;
   }

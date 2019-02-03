@@ -129,7 +129,7 @@ describe('environmentHelper', () => {
       { value: 'dev', expected: ExecutionEnvironment.DEV },
       { value: 'test', expected: ExecutionEnvironment.TEST },
       { value: 'staging', expected: ExecutionEnvironment.STAGING },
-      { value: 'prod', expected: ExecutionEnvironment.PROD }
+      { value: 'prod', expected: ExecutionEnvironment.PRODUCTION }
     ];
 
     afterEach(() => {
