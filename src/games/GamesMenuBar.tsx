@@ -10,76 +10,71 @@ import UserProfileButton from '../auth/UserProfileButton';
 interface Props extends RouteComponentProps<any> {}
 
 interface State {
-    menuOpen: boolean;
+  menuOpen: boolean;
 }
 
 const homeInfo: GameDefinition = { title: 'Home' };
 
 class GamesMenuBar extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            menuOpen: false
-        };
-    }
-
-    public toggleMenu = () => {
-        this.setMenuOpen(!this.state.menuOpen);
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      menuOpen: false
     };
+  }
 
-    public closeMenu = () => {
-        this.setMenuOpen(false);
-    };
+  public toggleMenu = () => {
+    this.setMenuOpen(!this.state.menuOpen);
+  };
 
-    public setMenuOpen = (menuOpen: boolean) => {
-        this.setState({ menuOpen });
-    };
+  public closeMenu = () => {
+    this.setMenuOpen(false);
+  };
 
-    public getMenuLinkFromGameInfo = (gameInfo: GameDefinition) => {
-        const { match } = this.props;
-        const linkTo = gameInfo.name ? `${match.url}/${gameInfo.name}` : match.url;
-        return (
-            <Link
-                key={gameInfo.title}
-                to={linkTo}
-                onClick={() => this.setMenuOpen(false)}
-                style={{ textDecoration: 'none' }}
+  public setMenuOpen = (menuOpen: boolean) => {
+    this.setState({ menuOpen });
+  };
+
+  public getMenuLinkFromGameInfo = (gameInfo: GameDefinition) => {
+    const { match } = this.props;
+    const linkTo = gameInfo.name ? `${match.url}/${gameInfo.name}` : match.url;
+    return (
+      <Link key={gameInfo.title} to={linkTo} onClick={() => this.setMenuOpen(false)} style={{ textDecoration: 'none' }}>
+        <ListItem>
+          <ListItemText primary={gameInfo.title} />
+        </ListItem>
+      </Link>
+    );
+  };
+
+  public render() {
+    const { menuOpen } = this.state;
+    return (
+      <div>
+        <AppBar key="appBar" position="static" style={{ backgroundColor: '#004caf' }}>
+          <Toolbar>
+            <IconButton
+              onClick={this.toggleMenu}
+              style={{
+                marginLeft: -12,
+                marginRight: 20
+              }}
+              color="inherit"
+              aria-label="Menu"
             >
-                <ListItem>
-                    <ListItemText primary={gameInfo.title} />
-                </ListItem>
-            </Link>
-        );
-    };
-
-    public render() {
-        const { menuOpen } = this.state;
-        return (
-            <div>
-                <AppBar key="appBar" position="static" style={{ backgroundColor: '#004caf' }}>
-                    <Toolbar>
-                        <IconButton
-                            onClick={this.toggleMenu}
-                            style={{
-                                marginLeft: -12,
-                                marginRight: 20
-                            }}
-                            color="inherit"
-                            aria-label="Menu"
-                        >
-                            <Icon>menu</Icon>
-                        </IconButton>
-                        <HeadlineSmall>Linkin Games</HeadlineSmall>
-                        <FlexExpander />
-                        <UserProfileButton />
-                    </Toolbar>
-                </AppBar>
-                <Drawer key="draw" open={menuOpen} onClose={this.closeMenu}>
-                    <List>{[homeInfo].concat(gameDefinitions).map(this.getMenuLinkFromGameInfo)}</List>
-                </Drawer>
-            </div>
-        );
-    }
+              <Icon>menu</Icon>
+            </IconButton>
+            <HeadlineSmall>Linkin Games</HeadlineSmall>
+            <FlexExpander />
+            <UserProfileButton />
+          </Toolbar>
+        </AppBar>
+        <Drawer key="draw" open={menuOpen} onClose={this.closeMenu}>
+          <List>{[homeInfo].concat(gameDefinitions).map(this.getMenuLinkFromGameInfo)}</List>
+        </Drawer>
+      </div>
+    );
+  }
 }
 
 export default compose(withRouter)(GamesMenuBar);

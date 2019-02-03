@@ -1,5 +1,5 @@
 export const style = {
-    padding: 8
+  padding: 8
 };
 
 export default style;

@@ -4,11 +4,11 @@ import { HttpStatusCode } from '../api/HttpStatusCode';
 import { InvalidFieldReason } from './InvalidFieldReason';
 
 export default class UserInputError extends ServerError {
-    public invalidField: string;
-    public invalidReason: string;
-    constructor(message: string, invalidField: string, invalidReason: InvalidFieldReason) {
-        super(message, ErrorCode.USER_INPUT_ERROR, HttpStatusCode.BAD_REQUEST_400);
-        this.invalidField = invalidField;
-        this.invalidReason = invalidReason;
-    }
+  public invalidField: string;
+  public invalidReason: string;
+  constructor(message: string, invalidField: string, invalidReason: InvalidFieldReason) {
+    super(message, ErrorCode.USER_INPUT_ERROR, HttpStatusCode.BAD_REQUEST_400);
+    this.invalidField = invalidField;
+    this.invalidReason = invalidReason;
+  }
 }

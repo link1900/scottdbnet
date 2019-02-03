@@ -13,18 +13,18 @@ import LoginPage from './auth/LoginPage';
 import Ranker from './ranker/Ranker';
 
 ReactDOM.render(
-    <Router>
-        <Provider store={firebaseStore}>
-            <div>
-                <Route exact path="/" component={Director} />
-                <Route path="/home" component={Home} />
-                <Route path="/login" component={LoginPage} />
-                <Route path="/ranker" component={Ranker} />
-                <Route path="/tipping" component={Tipping} />
-                <Route path="/games" component={Games} />
-            </div>
-        </Provider>
-    </Router>,
-    document.getElementById('root')
+  <Router>
+    <Provider store={firebaseStore}>
+      <div>
+        <Route exact path="/" component={Director} />
+        <Route path="/home" component={Home} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/ranker" component={Ranker} />
+        <Route path="/tipping" component={Tipping} />
+        <Route path="/games" component={Games} />
+      </div>
+    </Provider>
+  </Router>,
+  document.getElementById('root')
 );
 registerServiceWorker();

@@ -11,49 +11,49 @@ import gcaLogo from './GCA-logo.png';
 interface Props extends RouteComponentProps<any> {}
 
 interface State {
-    menuOpen: boolean;
+  menuOpen: boolean;
 }
 
 class RankerMenuBar extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-    }
+  constructor(props: Props) {
+    super(props);
+  }
 
-    public getHighlight(url: string): number {
-        if (url.includes('greyhounds')) {
-            return 1;
-        }
-        if (url.includes('races')) {
-            return 2;
-        }
-        return 0;
+  public getHighlight(url: string): number {
+    if (url.includes('greyhounds')) {
+      return 1;
     }
-
-    public navTo(url: string) {
-        this.props.history.push(url);
+    if (url.includes('races')) {
+      return 2;
     }
+    return 0;
+  }
 
-    public render() {
-        const { history } = this.props;
+  public navTo(url: string) {
+    this.props.history.push(url);
+  }
 
-        return (
-            <div>
-                <AppBar key="appBar" position="static">
-                    <Toolbar>
-                        <img src={gcaLogo} alt="gca logo" style={{ width: '117px', height: '57px' }} />
-                        <Spacing />
-                        <Tabs value={this.getHighlight(history.location.pathname)}>
-                            <Tab label="Rankings" onClick={() => this.navTo('/ranker')} />
-                            <Tab label="Greyhounds" onClick={() => this.navTo('/ranker/greyhounds')} />
-                            <Tab label="Races" onClick={() => this.navTo('/ranker/races')} />
-                        </Tabs>
-                        <FlexExpander />
-                        <UserProfileButton />
-                    </Toolbar>
-                </AppBar>
-            </div>
-        );
-    }
+  public render() {
+    const { history } = this.props;
+
+    return (
+      <div>
+        <AppBar key="appBar" position="static">
+          <Toolbar>
+            <img src={gcaLogo} alt="gca logo" style={{ width: '117px', height: '57px' }} />
+            <Spacing />
+            <Tabs value={this.getHighlight(history.location.pathname)}>
+              <Tab label="Rankings" onClick={() => this.navTo('/ranker')} />
+              <Tab label="Greyhounds" onClick={() => this.navTo('/ranker/greyhounds')} />
+              <Tab label="Races" onClick={() => this.navTo('/ranker/races')} />
+            </Tabs>
+            <FlexExpander />
+            <UserProfileButton />
+          </Toolbar>
+        </AppBar>
+      </div>
+    );
+  }
 }
 
 export default compose(withRouter)(RankerMenuBar);
