@@ -113,14 +113,3 @@ export class Logger {
 const logger = new Logger();
 
 export default logger;
-
-// import {Logger} from '@origin-digital/node-logger';
-//
-// const logger = new Logger();
-//
-// export function logError(message: string, error?: Error) {
-//   const errorPart = error ? `${error.toString()} ${error.stack}` : '';
-//   logger.error(`${message} ${errorPart}`);
-// }
-//
-// export default logger;

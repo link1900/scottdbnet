@@ -1,5 +1,5 @@
 import { DocumentNode, GraphQLSchema } from 'graphql';
-import { gql } from './graphqlTools';
+import { gql, makeExecutableSchema } from './graphqlTools';
 import {
   ContextGeneratorFunction,
   EnumOptions,
@@ -172,4 +172,12 @@ export function createGraphqlSchemaParts(graphqlSchemaDefinition: GraphqlSchemaD
     typeDefs,
     resolvers
   };
+}
+
+export function getGraphqlSchemaFromDefinition(graphqlSchemaDefinition: GraphqlSchemaDefinition): GraphQLSchema {
+  const graphqlSchemaParts = createGraphqlSchemaParts(graphqlSchemaDefinition);
+  return makeExecutableSchema({
+    typeDefs: graphqlSchemaParts.typeDefs,
+    resolvers: graphqlSchemaParts.resolvers
+  });
 }
