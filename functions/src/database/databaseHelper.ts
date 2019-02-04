@@ -1,6 +1,6 @@
-import Sequelize, { Sequelize as Seq } from 'sequelize';
+import Sequelize, { Sequelize as Seq, Model } from 'sequelize';
 import logger from '../logging/logger';
-import { DatabaseConnection, DatabaseSchemaDefinition } from './databaseTypes';
+import { DatabaseConnection, TableSchemaDefinition } from './databaseTypes';
 
 export async function connectToDatabase(databaseConnection: DatabaseConnection): Promise<Seq | undefined> {
   try {
@@ -23,13 +23,10 @@ export async function connectToDatabase(databaseConnection: DatabaseConnection):
   }
 }
 
-export async function defineDatabaseModels(sequelize: Seq, schemaDefinition: DatabaseSchemaDefinition): Promise<any[]> {
-  return Promise.all(
-    Object.keys(schemaDefinition).map(tableName => {
-      const definition = schemaDefinition[tableName];
-      return sequelize.define(tableName, definition.fields, definition.options);
-    })
-  );
+export async function createModel<T>(sequelize: Seq, schemaDef: TableSchemaDefinition<T>): Promise<Model<T, any>> {
+  const model = await sequelize.define<T, any>(schemaDef.name, schemaDef.fields, schemaDef.options);
+
+  return (model as any) as Model<T, any>;
 }
 
 export async function syncSchema(sequelize: Seq) {
