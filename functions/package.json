@@ -21,6 +21,7 @@
     "apollo-server-cloud-functions": "2.3.3",
     "apollo-server-express": "2.3.3",
     "bluebird": "3.5.3",
+    "dataloader": "1.4.0",
     "decimal.js": "10.0.2",
     "express": "4.16.4",
     "firebase-admin": "7.0.0",
