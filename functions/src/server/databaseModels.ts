@@ -1,9 +1,9 @@
-import { Sequelize as Seq, Model } from 'sequelize';
-import { GreyhoundModelInstance, greyhoundSchema } from '../ranker/greyhound/greyhoundSchema';
+import { Sequelize as Seq, Model, Instance } from 'sequelize';
+import { GreyhoundAttributes, greyhoundSchema } from '../ranker/greyhound/greyhoundSchema';
 import { createModel } from '../database/databaseHelper';
 
 export type DatabaseModels = {
-  greyhound: Model<GreyhoundModelInstance, any>;
+  greyhound: Model<Instance<GreyhoundAttributes>, GreyhoundAttributes>;
 };
 
 export async function createModels(seq: Seq): Promise<DatabaseModels> {

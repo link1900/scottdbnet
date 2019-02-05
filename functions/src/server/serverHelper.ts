@@ -4,13 +4,23 @@ import { connectToDatabase } from '../database/databaseHelper';
 import { Sequelize as Seq } from 'sequelize';
 import { createModels, DatabaseModels } from './databaseModels';
 
+let database: Seq | undefined;
+let models: DatabaseModels | undefined;
+
 export async function setupDatabaseConnection(): Promise<{ database: Seq; models: DatabaseModels }> {
+  if (database && models) {
+    return {
+      database,
+      models
+    };
+  }
+
   const databaseName = getVariable('DATABASE_NAME');
   const username = getVariable('DATABASE_USERNAME');
   const password = getVariable('DATABASE_PASSWORD');
   const host = getVariable('DATABASE_HOST');
 
-  const database = await connectToDatabase({
+  database = await connectToDatabase({
     database: databaseName,
     username,
     password,
@@ -28,7 +38,7 @@ export async function setupDatabaseConnection(): Promise<{ database: Seq; models
     throw new InternalServerError('Unable to create database connection');
   }
 
-  const models = await createModels(database);
+  models = await createModels(database);
 
   return {
     database,

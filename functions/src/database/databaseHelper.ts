@@ -1,10 +1,10 @@
-import Sequelize, { Sequelize as Seq, Model } from 'sequelize';
+import Sequelize, { Sequelize as Seq, Model, Instance } from 'sequelize';
 import logger from '../logging/logger';
-import { DatabaseConnection, TableSchemaDefinition } from './databaseTypes';
+import { BaseAttributes, DatabaseConnection, TableSchemaDefinition } from './databaseTypes';
 
 export async function connectToDatabase(databaseConnection: DatabaseConnection): Promise<Seq | undefined> {
   try {
-    logger.info('connecting to database');
+    logger.info(`connecting to database ${databaseConnection.database}`);
     const sequelize = new Sequelize(
       databaseConnection.database,
       databaseConnection.username,
@@ -14,19 +14,21 @@ export async function connectToDatabase(databaseConnection: DatabaseConnection):
 
     // log on to database
     await sequelize.authenticate();
-    logger.info('connected to database');
+    logger.info(`connected to database ${databaseConnection.database}`);
 
     return sequelize;
   } catch (e) {
-    logger.error('error connecting to database', {}, e);
+    logger.error(`error connecting to database ${databaseConnection.database}`, {}, e);
     return undefined;
   }
 }
 
-export async function createModel<T>(sequelize: Seq, schemaDef: TableSchemaDefinition<T>): Promise<Model<T, any>> {
-  const model = await sequelize.define<T, any>(schemaDef.name, schemaDef.fields, schemaDef.options);
-
-  return (model as any) as Model<T, any>;
+export async function createModel<ModelInstance extends Instance<BaseAttributes>>(
+  sequelize: Seq,
+  schemaDef: TableSchemaDefinition<ModelInstance>
+): Promise<Model<ModelInstance, BaseAttributes>> {
+  const model = await sequelize.define<ModelInstance, any>(schemaDef.name, schemaDef.fields, schemaDef.options);
+  return (model as any) as Model<ModelInstance, any>;
 }
 
 export async function syncSchema(sequelize: Seq) {

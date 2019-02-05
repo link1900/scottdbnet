@@ -1,9 +1,10 @@
 import { SqlDataLoader } from '../database/SqlDataLoader';
 import { DatabaseModels } from './databaseModels';
-import { GreyhoundModelInstance } from '../ranker/greyhound/greyhoundSchema';
+import { Instance } from 'sequelize';
+import { GreyhoundAttributes } from '../ranker/greyhound/greyhoundSchema';
 
 export type DataLoaders = {
-  greyhound: SqlDataLoader<GreyhoundModelInstance>;
+  greyhound: SqlDataLoader<Instance<GreyhoundAttributes>>;
 };
 
 export async function createDataLoaders(models: DatabaseModels): Promise<DataLoaders> {

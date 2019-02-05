@@ -1,17 +1,16 @@
-import Sequelize from 'sequelize';
-import { TableSchemaDefinition } from '../../database/databaseTypes';
+import Sequelize, { Instance } from 'sequelize';
+import { BaseAttributes, TableSchemaDefinition } from '../../database/databaseTypes';
 
-export type GreyhoundModelInstance = {
-  id: string;
+export interface GreyhoundAttributes extends BaseAttributes {
   name: string;
   sireId: string;
   damId: string;
   color: string;
   gender: string;
   dateOfBirth: Date;
-};
+}
 
-export const greyhoundSchema: TableSchemaDefinition<GreyhoundModelInstance> = {
+export const greyhoundSchema: TableSchemaDefinition<Instance<GreyhoundAttributes>> = {
   name: 'greyhound',
   fields: {
     id: { type: Sequelize.UUID, primaryKey: true, defaultValue: Sequelize.UUIDV4 },

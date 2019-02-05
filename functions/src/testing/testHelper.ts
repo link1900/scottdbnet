@@ -2,13 +2,12 @@ import assert from 'assert';
 import { DocumentNode, ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { getGraphqlSchemaFromDefinition } from '../graphql/graphqlSchemaBuilders';
-import { graphqlSchemaDefinition } from '../server/graphqlSchema';
-import ServerContext from '../server/ServerContext';
+import { createBaseContext, graphqlSchemaDefinition } from '../server/graphqlSchema';
 
 let schema: GraphQLSchema | undefined;
 
-export function getTestGraphqlContext() {
-  return new ServerContext();
+export async function getTestGraphqlContext() {
+  return await createBaseContext();
 }
 
 export function getSchema(): GraphQLSchema {
