@@ -21,7 +21,10 @@ describe('#isValidNumber', () => {
     { value: 5, options: { min: 5, max: 8 }, expectedResult: true },
     { value: 6, options: { min: 5, max: 8 }, expectedResult: true },
     { value: 8, options: { min: 5, max: 8 }, expectedResult: true },
-    { value: 9, options: { min: 5, max: 8 }, expectedResult: false }
+    { value: 9, options: { min: 5, max: 8 }, expectedResult: false },
+
+    { value: 9, options: { isOnly: [5] }, expectedResult: false },
+    { value: 9, options: { isOnly: [9] }, expectedResult: true }
   ];
 
   testCases.forEach(testcase => {
