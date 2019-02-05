@@ -15,6 +15,15 @@ describe('fileHelper', () => {
       const contents = await readFileFromDisk(readFilePath);
       expect(contents).toEqual('read test file contents\n');
     });
+
+    it('throws an exception when file cannot be read', async () => {
+      try {
+        await readFileFromDisk('no');
+        expect(true).toEqual(false);
+      } catch (e) {
+        expect(e.message).toContain('ENOENT');
+      }
+    });
   });
 
   describe('#writeFileToDisk', () => {
@@ -23,6 +32,16 @@ describe('fileHelper', () => {
       expect(result).toBeTruthy();
       const contents = await readFileFromDisk(writeFilePath);
       expect(contents).toEqual('write test file contents');
+    });
+
+    it('throws an exception when file cannot be written', async () => {
+      try {
+        // @ts-ignore
+        await writeFileToDisk(5, 5);
+        expect(true).toEqual(false);
+      } catch (e) {
+        expect(e.message).toContain('EBADF');
+      }
     });
   });
 });

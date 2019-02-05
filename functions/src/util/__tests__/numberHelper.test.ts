@@ -5,7 +5,8 @@ import {
   inRange,
   inRanges,
   parseNumber,
-  sumNumbers
+  sumNumbers,
+  toPlaces
 } from '../numberHelper';
 
 describe('numberHelper', () => {
@@ -90,6 +91,7 @@ describe('numberHelper', () => {
   describe('#generateNumberRange', () => {
     const testCases = [
       { start: 1, end: 10, step: 1, expected: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+      { start: 1, end: 10, expected: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
       { start: 0, end: 10, step: 2, expected: [0, 2, 4, 6, 8, 10] },
       { start: 1, end: 10, step: 3, expected: [1, 4, 7, 10] },
       { start: 0, end: 1000, step: 100, expected: [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000] }
@@ -118,6 +120,21 @@ describe('numberHelper', () => {
     testCases.forEach(testCase => {
       it(`averages ${testCase.value} to ${testCase.expected}`, () => {
         expect(averageNumbers(testCase.value)).toEqual(testCase.expected);
+      });
+    });
+  });
+
+  describe('#toPlaces', () => {
+    const testCases = [
+      { value: 1, expected: 1.0 },
+      { value: 1.333, expected: 1.33 },
+      { value: 1.339, expected: 1.34 },
+      { value: 1.339, places: 3, expected: 1.339 }
+    ];
+
+    testCases.forEach(testCase => {
+      it(`rounds number to specific number of places ${testCase.value} to ${testCase.expected}`, () => {
+        expect(toPlaces(testCase.value, testCase.places)).toEqual(testCase.expected);
       });
     });
   });

@@ -2,7 +2,7 @@ import { isArray, isString, isEmpty, isObject } from 'lodash';
 
 export { isString };
 
-export function arrayToString(fields: Array<string | null | undefined> = [], separator: string = ' ') {
+export function arrayToString(fields: Array<string | null | undefined> = [], separator: string = ' '): string {
   if (!isArray(fields)) {
     return '';
   }
@@ -22,14 +22,10 @@ export function filterForOnlyLetters(value?: string, regex?: string | RegExp): s
   return value.replace(/[^a-zA-Z\s]/g, '');
 }
 
-export function objectToString(object: any) {
+export function objectToString(object: any): string {
   if (!isObject(object)) {
     return '';
   }
 
-  try {
-    return JSON.stringify(object);
-  } catch (error) {
-    return '';
-  }
+  return JSON.stringify(object);
 }
