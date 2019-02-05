@@ -1,3 +1,4 @@
+import { argv } from 'yargs';
 import moment from 'moment-timezone';
 import { loadEnvironmentVariablesFromConfig } from '../src/environment/environmentHelper';
 
@@ -32,7 +33,7 @@ export function runScript(scriptFunction: () => Promise<any>) {
 }
 
 async function scriptSetup() {
-  // any setup
-  process.env.EXECUTION_ENVIRONMENT = 'local-dev';
+  // @ts-ignore
+  process.env.EXECUTION_ENVIRONMENT = argv.env || 'local-dev';
   loadEnvironmentVariablesFromConfig();
 }
