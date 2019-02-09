@@ -4,6 +4,7 @@
     "lint": "tslint --project tsconfig.json && tsc --noEmit",
     "coverage": "jest --coverage",
     "test": "yarn lint && yarn coverage",
+    "test:watch": "yarn jest --watch",
     "build": "tsc",
     "dev": "ts-node scripts/runLocalServer.ts",
     "serve": "npm run build && firebase serve --only functions",

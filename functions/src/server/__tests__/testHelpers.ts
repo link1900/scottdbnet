@@ -1,13 +1,14 @@
 import assert from 'assert';
 import { DocumentNode, ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 import { ExecutionResultDataDefault } from 'graphql/execution/execute';
-import { getGraphqlSchemaFromDefinition } from '../graphql/graphqlSchemaBuilders';
-import { createBaseContext, graphqlSchemaDefinition } from '../server/graphqlSchema';
+import { getGraphqlSchemaFromDefinition } from '../../graphql/graphqlSchemaBuilders';
+import { createBaseContext, graphqlSchemaDefinition } from '../graphqlSchema';
+import { Context } from '../../graphql/graphqlSchemaTypes';
 
 let schema: GraphQLSchema | undefined;
 
-export async function getTestGraphqlContext() {
-  return await createBaseContext();
+export async function getTestGraphqlContext(): Promise<Context> {
+  return {};
 }
 
 export function getSchema(): GraphQLSchema {
@@ -80,3 +81,10 @@ export async function callGraphql(
 
   return result;
 }
+
+describe('testHelpers', () => {
+  it('#getTestGraphqlContext', async () => {
+    const context = await getTestGraphqlContext();
+    expect(context).toBeTruthy();
+  });
+});

@@ -1,4 +1,4 @@
-import { callGraphql } from '../../testing/testHelper';
+import { callGraphql } from '../../server/__tests__/testHelpers';
 import { gql } from '../../graphql/graphqlTools';
 
 describe('applicationConfigType tests', () => {
