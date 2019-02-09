@@ -4,9 +4,13 @@ import {
   getVariable,
   getVariableAsInteger,
   isVariableEnabled,
+  loadConfigFile,
   setVariable
 } from '../environmentHelper';
 import { ErrorCode } from '../../error/ErrorCode';
+import { writeFileToDisk } from '../../util/fileHelper';
+import path from 'path';
+import fs from 'fs';
 
 describe('environmentHelper', () => {
   afterAll(() => {
@@ -129,7 +133,8 @@ describe('environmentHelper', () => {
       { value: 'dev', expected: ExecutionEnvironment.DEV },
       { value: 'test', expected: ExecutionEnvironment.TEST },
       { value: 'staging', expected: ExecutionEnvironment.STAGING },
-      { value: 'production', expected: ExecutionEnvironment.PRODUCTION }
+      { value: 'production', expected: ExecutionEnvironment.PRODUCTION },
+      { value: undefined, expected: ExecutionEnvironment.LOCAL_DEV }
     ];
 
     afterEach(() => {
@@ -141,6 +146,22 @@ describe('environmentHelper', () => {
         process.env.EXECUTION_ENVIRONMENT = testCase.value;
         expect(getExecutionEnvironment()).toEqual(testCase.expected);
       });
+    });
+  });
+
+  describe('#loadConfigFile', () => {
+    const writeFilePath = path.join(__dirname, '..', '..', 'config', 'env-local-test-example.json');
+
+    afterAll(() => {
+      fs.unlinkSync(writeFilePath);
+      delete process.env.exampleVar;
+    });
+
+    it('loads a test config file into environment variables', async () => {
+      const data = JSON.stringify({ exampleVar: 'exampleVarValue' });
+      await writeFileToDisk(writeFilePath, data);
+      loadConfigFile('local-test-example');
+      expect(process.env.exampleVar).toEqual('exampleVarValue');
     });
   });
 });

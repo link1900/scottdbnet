@@ -77,7 +77,7 @@ export function getExecutionEnvironment(): ExecutionEnvironment {
   }
 }
 
-export function loadConfigFile(environment: ExecutionEnvironment): boolean {
+export function loadConfigFile(environment: string): boolean {
   const fileToLoad = `../config/env-${environment}.json`;
   try {
     const configToLoad = require(fileToLoad);
