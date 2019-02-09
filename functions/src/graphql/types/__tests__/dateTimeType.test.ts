@@ -11,8 +11,6 @@ describe('date time type tests', () => {
     name: 'DateTime',
     typeDefinition: dateTimeDefinition,
     typeResolver: dateTimeResolver,
-    queryResult: baseDate,
-    mutationResult: baseDate,
     inputTests: [
       {
         valid: true,
@@ -25,25 +23,22 @@ describe('date time type tests', () => {
         valid: true,
         queryType: 'Query',
         inputType: 'JSON',
-        input: baseDate,
-        expected: baseDateString,
-        queryResultOverride: momentDate
+        input: momentDate,
+        expected: baseDateString
       },
       {
         valid: true,
         queryType: 'Query',
         inputType: 'JSON',
-        input: baseDate,
-        expected: baseDateString,
-        queryResultOverride: baseDate.toISOString()
+        input: baseDate.toISOString(),
+        expected: baseDateString
       },
       {
         valid: false,
         queryType: 'Query',
         inputType: 'JSON',
-        input: baseDate,
-        expected: null,
-        queryResultOverride: 'bad'
+        input: 'bad',
+        expected: null
       },
       {
         valid: true,

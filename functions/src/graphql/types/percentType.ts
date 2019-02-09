@@ -6,7 +6,7 @@ export const percentDefinition = gql`
   scalar Percent
 `;
 
-export const percentResolver = new CustomFloatType('Percent', 'A float between 0 and 100', { min: 0, max: 100 });
+export const percentResolver = new CustomFloatType('Percent', 'A float between 0 and 1', { min: 0, max: 1 });
 
 export const percentType = createScalar({
   name: 'Percent',

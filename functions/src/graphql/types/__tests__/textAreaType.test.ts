@@ -1,46 +1,44 @@
-import { emailDefinition, emailResolver } from '../emailType';
 import { runTypeTest } from './typeTestHelper';
+import { textAreaDefinition, textAreaResolver } from '../textAreaType';
 
-describe('emailType tests', () => {
+describe('text area type tests', () => {
   runTypeTest({
-    name: 'Email',
-    typeDefinition: emailDefinition,
-    typeResolver: emailResolver,
+    name: 'TextArea',
+    typeDefinition: textAreaDefinition,
+    typeResolver: textAreaResolver,
     inputTests: [
       {
         valid: true,
         queryType: 'Query',
         inputType: 'JSON',
-        input: 'test@originenergy.com.au',
-        expected: 'test@originenergy.com.au'
+        input: 'some text',
+        expected: 'some text'
       },
       {
         valid: true,
         queryType: 'Mutation',
         inputType: 'JSON',
-        input: 'test@originenergy.com.au',
-        expected: 'test@originenergy.com.au'
+        input: 'some text',
+        expected: 'some text'
       },
       {
         valid: true,
         queryType: 'Mutation',
         inputType: 'Literal',
-        input: '"test@originenergy.com.au"',
-        expected: 'test@originenergy.com.au'
+        input: '"some text"',
+        expected: 'some text'
       },
       {
         valid: false,
         queryType: 'Mutation',
         inputType: 'JSON',
-        input: '@@@',
-        expected: '@@@'
+        input: 1
       },
       {
         valid: false,
         queryType: 'Mutation',
         inputType: 'Literal',
-        input: '"@@@"',
-        expected: '@@@'
+        input: '1'
       }
     ]
   });

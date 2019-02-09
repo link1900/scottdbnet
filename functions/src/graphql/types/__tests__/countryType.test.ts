@@ -6,14 +6,12 @@ describe('country type tests', () => {
     name: 'Country',
     typeDefinition: countryDefinition,
     typeResolver: countryResolver,
-    queryResult: 'AU',
-    mutationResult: 'AU',
     inputTests: [
       {
         valid: true,
         queryType: 'Query',
         inputType: 'JSON',
-        input: 'AUSTRALIA',
+        input: 'AU',
         expected: 'AUSTRALIA'
       },
       {

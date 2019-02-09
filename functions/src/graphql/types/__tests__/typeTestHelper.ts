@@ -6,8 +6,6 @@ export type GraphqlTypeTestOptions = {
   name: string;
   typeDefinition: DocumentNode;
   typeResolver: any;
-  queryResult: any;
-  mutationResult: any;
   inputTests: GraphqlTypeTestInputOptions[];
 };
 
@@ -15,15 +13,14 @@ export type GraphqlTypeTestInputOptions = {
   valid: boolean;
   queryType: 'Mutation' | 'Query';
   inputType: 'JSON' | 'Literal';
-  input: any;
-  expected: any;
-  queryResultOverride?: any;
+  input?: any;
+  expected?: any;
 };
 
 export function runTypeTestCase(options: GraphqlTypeTestOptions, testcase: GraphqlTypeTestInputOptions) {
-  const { valid, inputType, queryType, expected, input, queryResultOverride } = testcase;
-  const { name, queryResult, mutationResult, typeResolver, typeDefinition } = options;
-  const schema = getTestSchema(name, typeDefinition, typeResolver, queryResultOverride || queryResult, mutationResult);
+  const { valid, inputType, queryType, expected, input } = testcase;
+  const { name, typeResolver, typeDefinition } = options;
+  const schema = getTestSchema(name, typeDefinition, typeResolver, input);
   if (queryType === 'Query') {
     if (valid) {
       runValidQueryTestCase(schema, expected);
@@ -50,7 +47,7 @@ export function runTypeTestCase(options: GraphqlTypeTestOptions, testcase: Graph
 }
 
 export function runValidQueryTestCase(schema: any, queryExpected: any) {
-  it('run query  correctly', async () => {
+  it(`runs query expecting to get ${queryExpected}`, async () => {
     const query = gql`
       query Test {
         getTest {
@@ -85,7 +82,7 @@ export function runInvalidQueryTestCase(schema: any) {
 }
 
 export function runValidVarsMutationTestCase(schema: any, input: any, expected: any) {
-  it('runs the mutation with vars correctly', async () => {
+  it(`runs the mutation with vars input of ${input} expecting to get ${expected}`, async () => {
     const query = gql`
       mutation Test($input: TestInput!) {
         updateTest(input: $input) {
@@ -106,7 +103,7 @@ export function runValidVarsMutationTestCase(schema: any, input: any, expected: 
 }
 
 export function runValidLiteralMutationTestCase(schema: any, input: any, expected: any) {
-  it('runs the mutation with literals correctly', async () => {
+  it(`runs the mutation with literals input of ${input} expecting to get get ${expected}`, async () => {
     const query = gql`
       mutation Test {
         updateTest(input: { field: ${input} }) {
@@ -123,7 +120,7 @@ export function runValidLiteralMutationTestCase(schema: any, input: any, expecte
 }
 
 export function runInvalidVarsMutationTestCase(schema: any, input: any) {
-  it('errors for mutation when vars input is invalid', async () => {
+  it(`errors for mutation when vars input is ${input}`, async () => {
     const query = gql`
       mutation Test($input: TestInput!) {
         updateTest(input: $input) {
@@ -145,7 +142,7 @@ export function runInvalidVarsMutationTestCase(schema: any, input: any) {
 }
 
 export function runInvalidLiteralMutationTestCase(schema: any, input: any) {
-  it('errors when input is invalid as literal', async () => {
+  it(`errors for mutation when literal input is ${input}`, async () => {
     const query = gql`
       mutation Test {
         updateTest(input: { field: ${input} }) {
@@ -162,13 +159,7 @@ export function runInvalidLiteralMutationTestCase(schema: any, input: any) {
   });
 }
 
-export function getTestSchema(
-  name: string,
-  typeDefinition: any,
-  typeResolver: any,
-  queryResult: any,
-  mutationResult: any
-) {
+export function getTestSchema(name: string, typeDefinition: any, typeResolver: any, queryResult: any) {
   const testingDefinition = gql`
     type Testing {
       field: ${name}
@@ -196,9 +187,9 @@ export function getTestSchema(
         }
       },
       Mutation: {
-        updateTest: () => {
+        updateTest: (root: any, args: any) => {
           return {
-            field: mutationResult
+            field: args.input.field
           };
         }
       },
