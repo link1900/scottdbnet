@@ -4,6 +4,7 @@ module.exports = {
     '^.+\\.tsx?$': 'ts-jest'
   },
   globalSetup: './scripts/testSetupBooter.js',
+  globalTeardown: './scripts/testTeardownBooter.js',
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
   coverageDirectory: 'coverage',
   coverageReporters: ['json', 'text-summary', 'lcov', 'html'],

@@ -36,6 +36,7 @@ export async function connectToDatabase(databaseConnection: DatabaseConnection):
 }
 
 export async function closeConnection(connection: Connection) {
+  logger.info(`closing connection to database`);
   if (connection.isConnected) {
     await connection.close();
   }

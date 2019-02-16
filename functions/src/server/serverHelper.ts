@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { getVariable } from '../environment/environmentHelper';
 import InternalServerError from '../error/InternalServerError';
-import { connectToDatabase } from '../database/databaseHelper';
+import { closeConnection, connectToDatabase } from '../database/databaseHelper';
 import { Connection } from 'typeorm';
 
 let connection: Connection | undefined = undefined;
@@ -28,4 +28,11 @@ export async function getDatabaseConnection(): Promise<Connection> {
   }
 
   return connection;
+}
+
+export async function closeDatabaseConnection() {
+  if (connection) {
+    return await closeConnection(connection);
+  }
+  return false;
 }

@@ -1,4 +1,4 @@
-import { getDatabaseConnection } from '../../../server/serverHelper';
+import { closeDatabaseConnection, getDatabaseConnection } from '../../../server/serverHelper';
 import { clearAllEntities } from '../../../database/databaseHelper';
 import { Greyhound } from '../Greyhound';
 import { Repository } from 'typeorm';
@@ -10,6 +10,10 @@ describe('greyhound model tests', () => {
     const connection = await getDatabaseConnection();
     greyhoundRepository = connection.getRepository(Greyhound);
     await clearAllEntities(connection);
+  });
+
+  afterAll(async () => {
+    await closeDatabaseConnection();
   });
 
   describe('model operations', () => {
