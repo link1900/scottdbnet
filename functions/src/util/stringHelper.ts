@@ -29,3 +29,17 @@ export function objectToString(object: any): string {
 
   return JSON.stringify(object);
 }
+
+export function base64Encode(text?: string): string {
+  if (!isString(text)) {
+    return '';
+  }
+  return new Buffer(text, 'ascii').toString('base64');
+}
+
+export function base64Decode(text?: string): string {
+  if (!isString(text)) {
+    return '';
+  }
+  return new Buffer(text, 'base64').toString('ascii');
+}
