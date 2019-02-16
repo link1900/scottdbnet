@@ -14,5 +14,6 @@
     "experimentalDecorators": true
   },
   "compileOnSave": true,
-  "include": ["src", "src/**/*.json"]
+  "include": ["src", "src/**/*.json"],
+  "exclude": ["node_modules", "build", "scripts", "coverage", "lib"]
 }

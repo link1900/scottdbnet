@@ -16,10 +16,18 @@ import {
   ResolverMiddleware,
   ScalarOptions,
   TypeOptions,
-  Context
+  Context,
+  NodeTypes,
+  NodeType,
+  RootResolverType
 } from './graphqlSchemaTypes';
+import { base64Decode, base64Encode } from '../util/stringHelper';
 
 export const rootDefinition = gql`
+  interface Node {
+    id: ID!
+  }
+
   type PageInfo {
     hasNextPage: Boolean!
     hasPreviousPage: Boolean!
@@ -29,6 +37,8 @@ export const rootDefinition = gql`
 
   type Query {
     ping: Boolean!
+    node(id: ID!): Node
+    nodes(ids: [ID]!): [Node]!
   }
 
   type Mutation {
@@ -36,24 +46,71 @@ export const rootDefinition = gql`
   }
 `;
 
-export const rootResolver: rootResolverType = {
+export const rootResolver: RootResolverType = {
   Query: {
-    ping: () => true
+    ping: () => true,
+    node: mainNodeResolver,
+    nodes: nodesResolver
   },
   Mutation: {
     ping: () => true
+  },
+  Node: {
+    __resolveType: nodeTypeResolver
   }
 };
 
-export type rootResolverType = {
-  Query: {
-    [key: string]: any;
+const nodeTypes: NodeTypes = {};
+
+export function addNodeType({ name, type, resolver }: NodeType) {
+  nodeTypes[name] = {
+    name,
+    type,
+    resolver
   };
-  Mutation: {
-    [key: string]: any;
+}
+
+function mainNodeResolver(obj: any, { id }: { id: string }, context: Context, info: any) {
+  return nodeIdFetcher(id, context, info);
+}
+
+function nodesResolver(obj: any, { ids }: { ids: string[] }, context: Context, info: any) {
+  return Promise.all(ids.map(id => Promise.resolve(nodeIdFetcher(id, context, info))));
+}
+
+export function fromGlobalId(globalId: string) {
+  const decodedGlobalId = base64Decode(globalId);
+  const delimiterPos = decodedGlobalId.indexOf(':');
+  return {
+    type: decodedGlobalId.substring(0, delimiterPos),
+    id: decodedGlobalId.substring(delimiterPos + 1)
   };
-  [key: string]: any;
-};
+}
+
+export function toGlobalId(type: string, id: string): string {
+  return base64Encode([type, id].join(':'));
+}
+
+function nodeIdFetcher(globalId: string, context: Context, info: any) {
+  const { type, id } = fromGlobalId(globalId);
+  const nodeType = nodeTypes[type];
+  if (nodeType && nodeType.resolver) {
+    return nodeType.resolver(id, context).then((result: any) => {
+      if (!result) return null;
+      result.graphqlType = type;
+      return result;
+    });
+  } else {
+    return null;
+  }
+}
+
+function nodeTypeResolver(obj: any) {
+  if (obj.graphqlType) {
+    return obj.graphqlType;
+  }
+  return null;
+}
 
 export function createMutation(mutationOptions: MutationOptions): GraphqlTypeDefinition {
   const { name, definition, resolver: mutationFunction } = mutationOptions;
@@ -79,12 +136,13 @@ export function createQuery(queryOptions: QueryOptions): GraphqlTypeDefinition {
 }
 
 export function createType(typeOptions: TypeOptions): GraphqlTypeDefinition {
-  const { name, definition, resolver } = typeOptions;
+  const { name, definition, resolver, nodeResolver } = typeOptions;
   return {
     name,
     kind: GraphqlDefinitionKind.TYPE,
     definition,
-    resolver
+    resolver,
+    nodeResolver
   };
 }
 
@@ -159,8 +217,14 @@ export function createGraphqlSchemaParts(graphqlSchemaDefinition: GraphqlSchemaD
     }
 
     if (graphqlTypeDefinition.kind === GraphqlDefinitionKind.TYPE) {
-      const typeResolver = graphqlTypeDefinition.resolver as ResolverFunction;
-      resolvers[graphqlTypeDefinition.name] = applyMiddlewaresToResolver(typeResolver, resolverMiddlewares);
+      if (graphqlTypeDefinition.nodeResolver) {
+        addNodeType({
+          name: graphqlTypeDefinition.name,
+          type: graphqlTypeDefinition.definition,
+          resolver: graphqlTypeDefinition.nodeResolver
+        });
+      }
+      resolvers[graphqlTypeDefinition.name] = graphqlTypeDefinition.resolver;
     }
   });
   const contextGenerator = (wrapper: { req: Request }): Context => {

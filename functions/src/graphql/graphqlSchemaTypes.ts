@@ -31,6 +31,8 @@ export type DirectResolverFunction = () => any;
 
 export type ResolverFunction = (root: any, args: any, context: any, info: any) => any;
 
+export type NodeResolverFunction = (root: any, context: any, info: any) => any;
+
 export type ResolverMiddleware = (baseResolver: ResolverFunction) => ResolverFunction;
 
 export type ContextGeneratorFunction = (request: Request, context?: Context) => Context;
@@ -39,7 +41,8 @@ export interface GraphqlTypeDefinition {
   name: string;
   kind: GraphqlDefinitionKind;
   definition: DocumentNode;
-  resolver: DirectResolverFunction | ResolverFunction | GraphQLScalarType | IEnumResolver;
+  resolver: DirectResolverFunction | ResolverFunction | GraphQLScalarType | IEnumResolver | IResolvers;
+  nodeResolver?: NodeResolverFunction;
 }
 
 export interface GraphqlSchemaDefinition {
@@ -71,7 +74,8 @@ export interface QueryOptions {
 export interface TypeOptions {
   name: string;
   definition: DocumentNode;
-  resolver: (root: any, args: any, context: any, info: any) => any;
+  resolver: any;
+  nodeResolver?: NodeResolverFunction;
 }
 
 export interface ScalarOptions {
@@ -85,3 +89,23 @@ export interface EnumOptions {
   definition: DocumentNode;
   resolver: IEnumResolver;
 }
+
+export type NodeTypes = {
+  [key: string]: NodeType;
+};
+
+export type NodeType = {
+  name: string;
+  type: any;
+  resolver: any;
+};
+
+export type RootResolverType = {
+  Query: {
+    [key: string]: any;
+  };
+  Mutation: {
+    [key: string]: any;
+  };
+  [key: string]: any;
+};
