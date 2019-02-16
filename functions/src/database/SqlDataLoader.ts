@@ -13,7 +13,8 @@ export class SqlDataLoader<EntityInstance, RepositoryInstance extends Repository
         return [];
       }
 
-      return someRepository.find({ where: { id: In<string>(ids) } });
+      const results: any[] = await someRepository.find({ where: { id: In<string>(ids) } });
+      return ids.map(id => results.find(result => result.id === id));
     });
     this.repository = someRepository;
   }
@@ -31,9 +32,10 @@ export class SqlDataLoader<EntityInstance, RepositoryInstance extends Repository
     return updatedEntity;
   }
 
-  public async delete(entity: EntityInstance): Promise<EntityInstance> {
+  public async delete(entity: EntityInstance): Promise<Boolean> {
     this.evictCachedEntity(entity);
-    return this.repository.remove(entity);
+    await this.repository.remove(entity);
+    return true;
   }
 
   public evictCachedEntity(entity: EntityInstance) {
