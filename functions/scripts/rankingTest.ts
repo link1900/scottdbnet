@@ -1,12 +1,12 @@
 import { runScript } from './scriptHelper';
 import logger from '../src/logging/logger';
-import { setupDatabaseConnection } from '../src/server/serverHelper';
+import { getDatabaseConnection } from '../src/server/serverHelper';
 import { createDataLoaders, DataLoaders } from '../src/server/dataLoaders';
 
 async function main() {
-  logger.info('running database ranking test');
-  const { database, models } = await setupDatabaseConnection();
-  const loaders = createDataLoaders(models);
+  logger.info('running database connection test');
+  const connection = await getDatabaseConnection();
+  const loaders = await createDataLoaders(connection);
   //     await generateGreyhound(1);
   //     await generateGreyhound(2);
   //     await generateGreyhound(3);

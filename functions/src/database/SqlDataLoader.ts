@@ -1,49 +1,54 @@
 import DataLoader from 'dataloader';
-import { Model, Instance } from 'sequelize';
-import { BaseAttributes } from './databaseTypes';
+import { Repository, In } from 'typeorm';
 
-export class SqlDataLoader<ModelInstance extends Instance<BaseAttributes>> extends DataLoader<string, ModelInstance> {
-  public model: Model<ModelInstance, BaseAttributes>;
+export class SqlDataLoader<EntityInstance, RepositoryInstance extends Repository<EntityInstance>> extends DataLoader<
+  string,
+  EntityInstance
+> {
+  public repository: RepositoryInstance;
 
-  constructor(someModel: Model<ModelInstance, any>) {
+  constructor(someRepository: RepositoryInstance) {
     super(async (ids: string[]) => {
       if (!ids || ids.length < 1) {
         return [];
       }
-      return someModel.findAll({ where: { id: { $in: ids } } });
+
+      return someRepository.find({ where: { id: In<string>(ids) } });
     });
-    this.model = someModel;
+    this.repository = someRepository;
   }
 
-  public async create(data: any): Promise<ModelInstance> {
-    const createdEntity = await this.model.create(data);
-    // this.evictCachedEntity(createdEntity);
-    // this.cacheEntity(createdEntity);
-    return createdEntity;
+  public async create(entity: EntityInstance): Promise<EntityInstance> {
+    const newEntity = await this.repository.save(entity);
+    this.cacheEntity(newEntity);
+    return newEntity;
   }
 
-  // public async update(entity: ModelInstance): Promise<ModelInstance> {
-  //   this.evictCachedEntity(entity);
-  //   const updatedEntity = await entity.save();
-  //   this.cacheEntity(updatedEntity);
-  //   return updatedEntity;
-  // }
-  //
-  // public async delete(entity) {
-  //   this.evictCachedEntity(entity);
-  //   return entity.destroy();
-  // }
-  //
-  //
-  // public evictCachedEntity(entity: ModelInstance) {
-  //   if (entity && entity.id) {
-  //     this.clear(entity.id);
-  //   }
-  // }
-  //
-  // public cacheEntity(entity: ModelInstance) {
-  //   if (entity && entity.id) {
-  //     this.prime(entity.id, entity);
-  //   }
-  // }
+  public async update(entity: EntityInstance): Promise<EntityInstance> {
+    this.evictCachedEntity(entity);
+    const updatedEntity = await this.repository.save(entity);
+    this.cacheEntity(updatedEntity);
+    return updatedEntity;
+  }
+
+  public async delete(entity: EntityInstance): Promise<EntityInstance> {
+    this.evictCachedEntity(entity);
+    return this.repository.remove(entity);
+  }
+
+  public evictCachedEntity(entity: EntityInstance) {
+    // @ts-ignore
+    if (entity && entity.id) {
+      // @ts-ignore
+      this.clear(entity.id);
+    }
+  }
+
+  public cacheEntity(entity: EntityInstance) {
+    // @ts-ignore
+    if (entity && entity.id) {
+      // @ts-ignore
+      this.prime(entity.id, entity);
+    }
+  }
 }

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { DocumentNode, ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { getGraphqlSchemaFromDefinition } from '../../graphql/graphqlSchemaBuilders';
-import { createBaseContext, graphqlSchemaDefinition } from '../graphqlSchema';
+import { graphqlSchemaDefinition } from '../graphqlSchema';
 import { Context } from '../../graphql/graphqlSchemaTypes';
 
 let schema: GraphQLSchema | undefined;

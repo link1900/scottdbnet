@@ -1,14 +1,13 @@
 import { SqlDataLoader } from '../database/SqlDataLoader';
-import { DatabaseModels } from './databaseModels';
-import { Instance } from 'sequelize';
-import { GreyhoundAttributes } from '../ranker/greyhound/greyhoundSchema';
+import { Greyhound } from '../ranker/greyhound/Greyhound';
+import { Repository, Connection } from 'typeorm';
 
 export type DataLoaders = {
-  greyhound: SqlDataLoader<Instance<GreyhoundAttributes>>;
+  greyhound: SqlDataLoader<Greyhound, Repository<Greyhound>>;
 };
 
-export async function createDataLoaders(models: DatabaseModels): Promise<DataLoaders> {
+export async function createDataLoaders(connection: Connection): Promise<DataLoaders> {
   return {
-    greyhound: new SqlDataLoader(models.greyhound)
+    greyhound: new SqlDataLoader<Greyhound, Repository<Greyhound>>(connection.getRepository(Greyhound))
   };
 }

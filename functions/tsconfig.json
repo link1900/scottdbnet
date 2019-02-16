@@ -9,7 +9,9 @@
     "strict": true,
     "target": "es2015",
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "compileOnSave": true,
   "include": ["src", "src/**/*.json"]

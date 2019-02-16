@@ -1,18 +1,14 @@
+import 'reflect-metadata';
 import { getVariable } from '../environment/environmentHelper';
 import InternalServerError from '../error/InternalServerError';
 import { connectToDatabase } from '../database/databaseHelper';
-import { Sequelize as Seq } from 'sequelize';
-import { createModels, DatabaseModels } from './databaseModels';
+import { Connection } from 'typeorm';
 
-let database: Seq | undefined;
-let models: DatabaseModels | undefined;
+let connection: Connection | undefined = undefined;
 
-export async function setupDatabaseConnection(): Promise<{ database: Seq; models: DatabaseModels }> {
-  if (database && models) {
-    return {
-      database,
-      models
-    };
+export async function getDatabaseConnection(): Promise<Connection> {
+  if (connection) {
+    return connection;
   }
 
   const databaseName = getVariable('DATABASE_NAME');
@@ -20,28 +16,16 @@ export async function setupDatabaseConnection(): Promise<{ database: Seq; models
   const password = getVariable('DATABASE_PASSWORD');
   const host = getVariable('DATABASE_HOST');
 
-  database = await connectToDatabase({
+  connection = await connectToDatabase({
     database: databaseName,
     username,
     password,
-    options: {
-      host,
-      dialect: 'postgres',
-      operatorsAliases: false,
-      pool: {
-        max: 1
-      }
-    }
+    host
   });
 
-  if (!database) {
+  if (!connection) {
     throw new InternalServerError('Unable to create database connection');
   }
 
-  models = await createModels(database);
-
-  return {
-    database,
-    models
-  };
+  return connection;
 }

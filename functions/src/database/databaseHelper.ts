@@ -1,37 +1,59 @@
-import Sequelize, { Sequelize as Seq, Model, Instance } from 'sequelize';
+import { createConnection, Connection, EntityMetadata } from 'typeorm';
 import logger from '../logging/logger';
-import { BaseAttributes, DatabaseConnection, TableSchemaDefinition } from './databaseTypes';
+import { Greyhound } from '../ranker/greyhound/Greyhound';
+import InternalServerError from '../error/InternalServerError';
 
-export async function connectToDatabase(databaseConnection: DatabaseConnection): Promise<Seq | undefined> {
+export type DatabaseConnection = {
+  database: string;
+  username: string;
+  password: string;
+  host: string;
+};
+
+export async function connectToDatabase(databaseConnection: DatabaseConnection): Promise<Connection | undefined> {
   try {
     logger.info(`connecting to database ${databaseConnection.database}`);
-    const sequelize = new Sequelize(
-      databaseConnection.database,
-      databaseConnection.username,
-      databaseConnection.password,
-      databaseConnection.options
-    );
+    const connection = await createConnection({
+      type: 'postgres',
+      ...databaseConnection,
+      extra: {
+        pool: {
+          max: 1
+        }
+      },
+      entities: [Greyhound],
+      synchronize: true,
+      logging: false
+    });
 
-    // log on to database
-    await sequelize.authenticate();
     logger.info(`connected to database ${databaseConnection.database}`);
 
-    return sequelize;
+    return connection;
   } catch (e) {
     logger.error(`error connecting to database ${databaseConnection.database}`, {}, e);
     return undefined;
   }
 }
 
-export async function createModel<ModelInstance extends Instance<BaseAttributes>>(
-  sequelize: Seq,
-  schemaDef: TableSchemaDefinition<ModelInstance>
-): Promise<Model<ModelInstance, BaseAttributes>> {
-  const model = await sequelize.define<ModelInstance, any>(schemaDef.name, schemaDef.fields, schemaDef.options);
-  return (model as any) as Model<ModelInstance, any>;
+export async function closeConnection(connection: Connection) {
+  if (connection.isConnected) {
+    await connection.close();
+  }
 }
 
-export async function syncSchema(sequelize: Seq) {
-  logger.info('syncing database schema');
-  return sequelize.sync();
+export function getEntities(connection: Connection): EntityMetadata[] {
+  return connection.entityMetadatas;
+}
+
+export async function clearAllEntities(connection: Connection) {
+  const entities = getEntities(connection);
+  try {
+    await Promise.all(
+      entities.map(entity => {
+        return connection.query(`DELETE FROM ${entity.tableName};`);
+      })
+    );
+  } catch (error) {
+    throw new InternalServerError(`ERROR: Cleaning test db: ${error}`);
+  }
 }
