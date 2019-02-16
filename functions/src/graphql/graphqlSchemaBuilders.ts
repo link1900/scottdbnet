@@ -1,5 +1,6 @@
 import { DocumentNode, GraphQLSchema } from 'graphql';
-import { gql, makeExecutableSchema } from './graphqlTools';
+import { gql } from 'apollo-server-core';
+import { makeExecutableSchema } from './graphqlTools';
 import {
   ContextGeneratorFunction,
   EnumOptions,

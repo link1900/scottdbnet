@@ -1,4 +1,4 @@
-import { gql } from '../graphqlTools';
+import { gql } from 'apollo-server-core';
 import { GraphQLError, GraphQLScalarType, Kind } from 'graphql';
 import { isString } from 'lodash';
 import { createScalar } from '../graphqlSchemaBuilders';

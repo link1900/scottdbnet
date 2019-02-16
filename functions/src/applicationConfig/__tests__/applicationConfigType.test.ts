@@ -1,5 +1,5 @@
 import { callGraphql } from '../../server/__tests__/testHelpers';
-import { gql } from '../../graphql/graphqlTools';
+import { gql } from 'apollo-server-core';
 
 describe('applicationConfigType tests', () => {
   it('return query application config correctly', async () => {

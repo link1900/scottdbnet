@@ -1,4 +1,4 @@
-import { gql } from '../../graphql/graphqlTools';
+import { gql } from 'apollo-server-core';
 import { createType, toGlobalId } from '../../graphql/graphqlSchemaBuilders';
 import { Greyhound } from './Greyhound';
 import ServerContext from '../../server/ServerContext';

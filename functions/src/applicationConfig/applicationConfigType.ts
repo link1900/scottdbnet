@@ -1,4 +1,4 @@
-import { gql } from '../graphql/graphqlTools';
+import { gql } from 'apollo-server-core';
 import { createQuery } from '../graphql/graphqlSchemaBuilders';
 
 const applicationConfigDefinition = gql`

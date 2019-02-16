@@ -1,4 +1,4 @@
-import { gql } from '../graphqlTools';
+import { gql } from 'apollo-server-core';
 import CustomStringType from './customStringType';
 import { createScalar } from '../graphqlSchemaBuilders';
 

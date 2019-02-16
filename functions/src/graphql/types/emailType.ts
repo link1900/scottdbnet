@@ -1,4 +1,4 @@
-import { gql } from '../graphqlTools';
+import { gql } from 'apollo-server-core';
 import { GraphQLError, GraphQLScalarType, GraphQLString } from 'graphql';
 import { isEmail } from '../../validation/emailValidation';
 import { createScalar } from '../graphqlSchemaBuilders';

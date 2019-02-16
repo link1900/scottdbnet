@@ -1,4 +1,4 @@
-import { gql } from '../graphqlTools';
+import { gql } from 'apollo-server-core';
 import { createEnum } from '../graphqlSchemaBuilders';
 
 export const countryDefinition = gql`
