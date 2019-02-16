@@ -7,11 +7,28 @@ export const greyhoundDefinition = gql`
   type Greyhound implements Node {
     id: ID!
     name: String!
+    sire: Greyhound
+    dam: Greyhound
+    color: String
+    gender: String
+    dateOfBirth: DateTime
   }
 `;
 
 export const greyhoundResolver = {
-  id: ({ id }: Greyhound) => toGlobalId('Greyhound', id)
+  id: ({ id }: Greyhound) => toGlobalId('Greyhound', id),
+  sire: ({ sireId }: Greyhound, args: any, context: ServerContext) => {
+    if (!sireId) {
+      return undefined;
+    }
+    return context.loaders.greyhound.load(sireId);
+  },
+  dam: ({ sireId }: Greyhound, args: any, context: ServerContext) => {
+    if (!sireId) {
+      return undefined;
+    }
+    return context.loaders.greyhound.load(sireId);
+  }
 };
 
 export async function greyhoundNodeResolver(id: string, context: ServerContext) {

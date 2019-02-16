@@ -6,6 +6,7 @@ import { createDataLoaders } from './dataLoaders';
 import { applicationConfigType } from '../applicationConfig/applicationConfigType';
 import { greyhoundType } from '../ranker/greyhound/greyhoundType';
 import { testType } from '../ranker/greyhound/testType';
+import { dateTimeType } from '../graphql/types/dateTimeType';
 
 export async function createBaseContext(): Promise<Context> {
   const connection = await getDatabaseConnection();
@@ -23,6 +24,9 @@ export const graphqlSchemaDefinition: GraphqlSchemaDefinition = {
   graphqlTypeDefinitions: [
     // common
     applicationConfigType,
+    dateTimeType,
+
+    // ranker
     greyhoundType,
     testType
   ]
