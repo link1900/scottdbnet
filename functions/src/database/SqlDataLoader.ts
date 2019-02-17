@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader';
-import { Repository, In } from 'typeorm';
+import { Repository } from 'typeorm';
 
 export class SqlDataLoader<EntityInstance, RepositoryInstance extends Repository<EntityInstance>> extends DataLoader<
   string,
@@ -13,7 +13,7 @@ export class SqlDataLoader<EntityInstance, RepositoryInstance extends Repository
         return [];
       }
 
-      const results: any[] = await someRepository.find({ where: { id: In<string>(ids) } });
+      const results: any[] = await someRepository.findByIds(ids);
       return ids.map(id => results.find(result => result.id === id));
     });
     this.repository = someRepository;

@@ -1,5 +1,4 @@
 import { closeDatabaseConnection, getDatabaseConnection } from '../../server/serverHelper';
-import { clearAllEntities } from '../databaseHelper';
 import { Greyhound } from '../../ranker/greyhound/Greyhound';
 import { Repository } from 'typeorm';
 import { SqlDataLoader } from '../SqlDataLoader';
@@ -11,7 +10,6 @@ describe('SqlDataLoader tests', () => {
     const connection = await getDatabaseConnection();
     const greyhoundRepository = connection.getRepository(Greyhound);
     loader = new SqlDataLoader(greyhoundRepository);
-    await clearAllEntities(connection);
   });
 
   afterAll(async () => {
@@ -21,7 +19,7 @@ describe('SqlDataLoader tests', () => {
   describe('loader operations', () => {
     it('#create and #load', async () => {
       // creation test
-      let greyhound = new Greyhound();
+      let greyhound = new Greyhound('test greyhound');
       greyhound.name = 'test greyhound';
       greyhound = await loader.create(greyhound);
       expect(greyhound.name).toEqual('test greyhound');
@@ -36,7 +34,7 @@ describe('SqlDataLoader tests', () => {
 
     it('#update', async () => {
       // creation test
-      let greyhound = new Greyhound();
+      let greyhound = new Greyhound('update greyhound');
       greyhound.name = 'update greyhound';
       greyhound = await loader.create(greyhound);
       expect(greyhound.name).toEqual('update greyhound');
@@ -55,7 +53,7 @@ describe('SqlDataLoader tests', () => {
     });
 
     it('#delete', async () => {
-      let greyhound = new Greyhound();
+      let greyhound = new Greyhound('delete greyhound');
       greyhound.name = 'delete greyhound';
       greyhound = await loader.create(greyhound);
       expect(greyhound.name).toEqual('delete greyhound');

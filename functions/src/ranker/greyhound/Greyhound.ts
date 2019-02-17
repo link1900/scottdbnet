@@ -3,7 +3,11 @@ import { BaseModel } from '../../database/BaseModel';
 
 @Entity()
 export class Greyhound extends BaseModel {
-  // @ts-ignore
+  constructor(name: string) {
+    super();
+    this.name = name;
+  }
+
   @Column() name: string;
 
   @Column({ type: 'uuid', nullable: true })

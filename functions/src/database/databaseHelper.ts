@@ -2,12 +2,18 @@ import { createConnection, Connection, EntityMetadata } from 'typeorm';
 import logger from '../logging/logger';
 import { Greyhound } from '../ranker/greyhound/Greyhound';
 import InternalServerError from '../error/InternalServerError';
+import { Race } from '../ranker/race/Race';
+import { Placing } from '../ranker/placing/Placing';
+import { Score } from '../ranker/score/Score';
 
 export type DatabaseConnection = {
   database: string;
   username: string;
   password: string;
   host: string;
+  dropSchema: boolean;
+  synchronize: boolean;
+  logging: boolean;
 };
 
 export async function connectToDatabase(databaseConnection: DatabaseConnection): Promise<Connection | undefined> {
@@ -21,9 +27,7 @@ export async function connectToDatabase(databaseConnection: DatabaseConnection):
           max: 1
         }
       },
-      entities: [Greyhound],
-      synchronize: true,
-      logging: false
+      entities: [Greyhound, Race, Placing, Score]
     });
 
     logger.info(`connected to database ${databaseConnection.database}`);
@@ -39,22 +43,5 @@ export async function closeConnection(connection: Connection) {
   logger.info(`closing connection to database`);
   if (connection.isConnected) {
     await connection.close();
-  }
-}
-
-export function getEntities(connection: Connection): EntityMetadata[] {
-  return connection.entityMetadatas;
-}
-
-export async function clearAllEntities(connection: Connection) {
-  const entities = getEntities(connection);
-  try {
-    await Promise.all(
-      entities.map(entity => {
-        return connection.query(`DELETE FROM ${entity.tableName};`);
-      })
-    );
-  } catch (error) {
-    throw new InternalServerError(`ERROR: Cleaning test db: ${error}`);
   }
 }

@@ -34,12 +34,12 @@ export function base64Encode(text?: string): string {
   if (!isString(text)) {
     return '';
   }
-  return new Buffer(text, 'ascii').toString('base64');
+  return Buffer.from(text, 'ascii').toString('base64');
 }
 
 export function base64Decode(text?: string): string {
   if (!isString(text)) {
     return '';
   }
-  return new Buffer(text, 'base64').toString('ascii');
+  return Buffer.from(text, 'base64').toString('ascii');
 }

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { getVariable } from '../environment/environmentHelper';
+import { getVariable, isVariableEnabled } from '../environment/environmentHelper';
 import InternalServerError from '../error/InternalServerError';
 import { closeConnection, connectToDatabase } from '../database/databaseHelper';
 import { Connection } from 'typeorm';
@@ -15,12 +15,18 @@ export async function getDatabaseConnection(): Promise<Connection> {
   const username = getVariable('DATABASE_USERNAME');
   const password = getVariable('DATABASE_PASSWORD');
   const host = getVariable('DATABASE_HOST');
+  const dropSchema = isVariableEnabled('DATABASE_DROP_ON_START');
+  const synchronize = isVariableEnabled('DATABASE_SYNC');
+  const logging = isVariableEnabled('DATABASE_LOGGING');
 
   connection = await connectToDatabase({
     database: databaseName,
     username,
     password,
-    host
+    host,
+    dropSchema,
+    synchronize,
+    logging
   });
 
   if (!connection) {
@@ -30,9 +36,10 @@ export async function getDatabaseConnection(): Promise<Connection> {
   return connection;
 }
 
-export async function closeDatabaseConnection() {
+export async function closeDatabaseConnection(): Promise<boolean> {
   if (connection) {
-    return await closeConnection(connection);
+    await closeConnection(connection);
+    return true;
   }
   return false;
 }

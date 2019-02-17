@@ -1,5 +1,4 @@
 import { closeDatabaseConnection, getDatabaseConnection } from '../../../server/serverHelper';
-import { clearAllEntities } from '../../../database/databaseHelper';
 import { Greyhound } from '../Greyhound';
 import { Repository } from 'typeorm';
 
@@ -9,7 +8,6 @@ describe('greyhound model tests', () => {
   beforeAll(async () => {
     const connection = await getDatabaseConnection();
     greyhoundRepository = connection.getRepository(Greyhound);
-    await clearAllEntities(connection);
   });
 
   afterAll(async () => {
@@ -19,8 +17,7 @@ describe('greyhound model tests', () => {
   describe('model operations', () => {
     it('creates and reads entity correctly', async () => {
       // creation test
-      let greyhound = new Greyhound();
-      greyhound.name = 'test greyhound';
+      let greyhound = new Greyhound('test greyhound');
       greyhound = await greyhoundRepository.save(greyhound);
       expect(greyhound.name).toEqual('test greyhound');
 
@@ -45,8 +42,9 @@ describe('greyhound model tests', () => {
       expect(lookupUpdatedGreyhound.version).toEqual(2);
 
       // delete test
-      const deletedGreyhound = await greyhoundRepository.remove(lookupUpdatedGreyhound);
-      const lookupDeleteGreyhound = await greyhoundRepository.findOne(deletedGreyhound.id);
+      const deletedId = lookupUpdatedGreyhound.id;
+      await greyhoundRepository.remove(lookupUpdatedGreyhound);
+      const lookupDeleteGreyhound = await greyhoundRepository.findOne(deletedId);
       expect(lookupDeleteGreyhound).toBeFalsy();
     });
   });
