@@ -1,4 +1,20 @@
-import { arrayToString, base64Decode, base64Encode, filterForOnlyLetters, objectToString } from '../stringHelper';
+import {
+  anyToString,
+  arrayToString,
+  base64Decode,
+  base64Encode,
+  deserializeFromString,
+  filterForOnlyLetters,
+  getHash,
+  getHashForString,
+  isString,
+  objectToString,
+  serializeToString,
+  stringToAny,
+  unzipStringToString,
+  zipStringToString
+} from '../stringHelper';
+import exampleJson from './exampleJson.json';
 
 describe('stringHelper', () => {
   describe('#arrayToString', () => {
@@ -92,6 +108,69 @@ describe('stringHelper', () => {
     it('can base64 encode undefined', () => {
       const input = undefined;
       expect(base64Decode(input)).toEqual('');
+    });
+  });
+
+  describe('#getHashForString', () => {
+    it('get a hash of a string', () => {
+      const result = getHashForString('someString');
+      expect(result).not.toEqual('someString');
+    });
+  });
+
+  describe('#getHash', () => {
+    const inputs = [
+      { value: 'Scott Brown' },
+      { value: null },
+      { value: { test: 'object' } },
+      { value: ['value1', 'value2'] }
+    ];
+
+    inputs.forEach(input => {
+      it(`converts value ${input.value} to hash string`, () => {
+        const hash1 = getHash(input.value);
+        const hash2 = getHash(input.value);
+        expect(hash1.length > 0).toEqual(true);
+        expect(hash1).toEqual(hash2);
+      });
+    });
+  });
+
+  describe('#anyToString and #stringToAny', () => {
+    const inputs = [
+      { value: 'Scott Brown', expected: '{"value":"Scott Brown"}' },
+      { value: null, expected: '{"value":null}' },
+      { value: undefined, expected: '{}' },
+      { value: { test: 'object' }, expected: '{"value":{"test":"object"}}' },
+      { value: ['value1', 'value2'], expected: '{"value":["value1","value2"]}' }
+    ];
+
+    inputs.forEach(input => {
+      it(`converts value ${input.value} to string ${input.expected}`, () => {
+        const stringResult = anyToString(input.value);
+        expect(stringResult).toEqual(input.expected);
+        expect(stringToAny(stringResult)).toEqual(input.value);
+      });
+    });
+  });
+
+  describe('#zipStringToString and #unzipStringToString', () => {
+    it('zips the string correctly', async () => {
+      const bigString = JSON.stringify(exampleJson);
+      const zipResult = await zipStringToString(bigString);
+      expect(zipResult.length < bigString.length).toEqual(true);
+      const unzipResult = await unzipStringToString(zipResult);
+      expect(unzipResult).toEqual(bigString);
+    });
+  });
+
+  describe('#serializeToString and #deserializeFromString', () => {
+    it('serialize the object to string correctly and then deserialize back to object', async () => {
+      const bigObject = exampleJson;
+      const sResult = await serializeToString(bigObject);
+      expect(isString(sResult)).toEqual(true);
+      const dsResult = await deserializeFromString(sResult);
+      expect(dsResult).toEqual(bigObject);
     });
   });
 });
