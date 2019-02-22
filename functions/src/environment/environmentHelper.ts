@@ -48,12 +48,13 @@ export function isVariableEnabled(key: string): boolean {
   }
 }
 
-export function setVariable(envVarName: string, envVarValue: string, allowOverride: boolean = false): boolean {
-  if (allowOverride || !process.env[envVarName]) {
-    process.env[envVarName] = envVarValue;
-    return true;
+export function setVariable(envVarName: string, envVarValue: string, disableOverride: boolean = false): boolean {
+  if (process.env[envVarName] !== undefined && disableOverride) {
+    return false;
   }
-  return false;
+
+  process.env[envVarName] = envVarValue;
+  return true;
 }
 
 export function getExecutionEnvironment(): ExecutionEnvironment {
