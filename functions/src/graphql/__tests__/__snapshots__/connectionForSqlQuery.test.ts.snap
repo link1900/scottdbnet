@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`connectionForSqlQuery #runQueryBuilderAsConnection throws an error when first and last is provided 1`] = `[Error: Cannot provide both first and last arguments.]`;
+
+exports[`connectionForSqlQuery #runQueryBuilderAsConnection throws an error when first is negative 1`] = `[Error: args.first must be a positive integer]`;
+
+exports[`connectionForSqlQuery #runQueryBuilderAsConnection throws an error when last is negative 1`] = `[Error: args.last must be a positive integer]`;

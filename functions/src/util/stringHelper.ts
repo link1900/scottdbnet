@@ -32,15 +32,15 @@ export function objectToString(object: any): string {
   return JSON.stringify(object);
 }
 
-export function stringToObject(string: string): any {
+export function stringToObject(string: string): object {
   try {
     const result = JSON.parse(string);
     if (!result) {
-      return null;
+      return {};
     }
     return result;
   } catch (error) {
-    return null;
+    return {};
   }
 }
 
@@ -95,20 +95,24 @@ export async function zipStringToString(string: string): Promise<string> {
   return new Promise((resolve, reject) => {
     zlib.gzip(string, (err, buffer: Buffer) => {
       if (err) {
-        return reject(err);
+        reject(err);
+        return undefined;
       }
-      return resolve(buffer.toString('base64'));
+      resolve(buffer.toString('base64'));
+      return undefined;
     });
   });
 }
 
 export async function unzipStringToString(zipString: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    zlib.gunzip(new Buffer(zipString, 'base64'), (err, buffer) => {
+    zlib.gunzip(Buffer.from(zipString, 'base64'), (err, buffer) => {
       if (err) {
-        return reject(err);
+        reject(err);
+        return undefined;
       }
-      return resolve(buffer.toString());
+      resolve(buffer.toString());
+      return undefined;
     });
   });
 }

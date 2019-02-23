@@ -49,7 +49,7 @@ export function isVariableEnabled(key: string): boolean {
 }
 
 export function setVariable(envVarName: string, envVarValue: string, disableOverride: boolean = false): boolean {
-  if (process.env[envVarName] !== undefined && disableOverride) {
+  if (process.env[envVarName] !== undefined && disableOverride === true) {
     return false;
   }
 

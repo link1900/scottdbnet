@@ -113,14 +113,14 @@ describe('environmentHelper', () => {
 
     it('does not set the environment variable when one is already set', () => {
       process.env.TEMP_TEST_SET_VAR = '456';
-      const result = setVariable('TEMP_TEST_SET_VAR', '789');
+      const result = setVariable('TEMP_TEST_SET_VAR', '789', true);
       expect(result).toEqual(false);
       expect(process.env.TEMP_TEST_SET_VAR).toEqual('456');
     });
 
-    it('sets the environment variable when one is already set when override is true', () => {
+    it('sets the environment variable when one is already set when disable override is false', () => {
       process.env.TEMP_TEST_SET_VAR = '456';
-      const result = setVariable('TEMP_TEST_SET_VAR', '789', true);
+      const result = setVariable('TEMP_TEST_SET_VAR', '789', false);
       expect(result).toEqual(true);
       expect(process.env.TEMP_TEST_SET_VAR).toEqual('789');
     });
