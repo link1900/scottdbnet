@@ -2,7 +2,7 @@ import DataLoader from 'dataloader';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Connection, ConnectionArguments } from '../graphql/graphqlSchemaTypes';
 import { BaseModel } from './BaseModel';
-import { runQueryBuilderAsConnection } from '../graphql/connectionForSqlQuery';
+import { addFunction, runQueryBuilderAsConnection } from '../graphql/connectionForSqlQuery';
 
 export class SqlDataLoader<
   EntityInstance extends BaseModel,
@@ -24,13 +24,17 @@ export class SqlDataLoader<
   }
 
   public async getConnection(connectionArgs: ConnectionArguments): Promise<Connection<EntityInstance>> {
-    const { orderBy } = connectionArgs;
+    const { orderBy, filters } = connectionArgs;
     const qb = this.getQueryBuilder();
     if (orderBy) {
       const [field, direction] = orderBy.split('_');
       if (field && (direction === 'ASC' || direction === 'DESC')) {
         qb.orderBy(`${this.name}.${field}`, direction);
       }
+    }
+
+    if (filters) {
+      addFunction(qb, filters, this.name, 'AND');
     }
 
     return runQueryBuilderAsConnection(qb, connectionArgs);

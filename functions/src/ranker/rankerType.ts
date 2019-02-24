@@ -9,7 +9,14 @@ async function greyhoundsResolve(parent: any, args: ConnectionArguments, context
 
 const rankerTypeDefinition = gql`
   type Ranker {
-    greyhounds(before: String, after: String, first: Int, last: Int, orderBy: GreyhoundOrderBy): GreyhoundConnection
+    greyhounds(
+      before: String
+      after: String
+      first: Int
+      last: Int
+      filters: GreyhoundFilter
+      orderBy: GreyhoundOrderBy
+    ): GreyhoundConnection
   }
 `;
 

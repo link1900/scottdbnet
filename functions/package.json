@@ -2,9 +2,10 @@
   "name": "functions",
   "scripts": {
     "lint": "tslint --project tsconfig.json && tsc --noEmit",
-    "coverage": "jest --coverage",
-    "test": "yarn lint && yarn coverage",
+    "test:unit": "jest --runInBand --coverage",
+    "test:coverage": "jest --runInBand --coverage",
     "test:watch": "yarn jest --watch",
+    "test": "yarn lint && yarn test:coverage",
     "build": "tsc",
     "dev": "ts-node --transpile-only scripts/runLocalServer.ts",
     "serve": "npm run build && firebase serve --only functions",

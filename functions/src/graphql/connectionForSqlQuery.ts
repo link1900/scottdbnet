@@ -195,3 +195,90 @@ export async function runQueryBuilderAsConnection<T extends BaseModel>(
     edges
   };
 }
+
+export function addWhereClause<T>(
+  qb: SelectQueryBuilder<T>,
+  whereFunction: 'andWhere' | 'orWhere',
+  index: number,
+  name: string,
+  key: string,
+  value: string
+) {
+  const [field, type] = key.split('_');
+  const fieldValue = `field${index}`;
+  const fieldName = `${name}.${field}`;
+  if (type === 'equal') {
+    qb[whereFunction](`${fieldName} = :${fieldValue}`, { [fieldValue]: value });
+  }
+
+  if (type === 'not') {
+    qb[whereFunction](`${fieldName} <> :${fieldValue}`, { [fieldValue]: value });
+  }
+
+  if (type === 'in') {
+    qb[whereFunction](`${fieldName} IN (:...${fieldValue})`, { [fieldValue]: value });
+  }
+
+  if (type === 'notIn') {
+    qb[whereFunction](`${fieldName} NOT IN (:...${fieldValue})`, { [fieldValue]: value });
+  }
+
+  if (type === 'lt') {
+    qb[whereFunction](`${fieldName} < :${fieldValue}`, { [fieldValue]: value });
+  }
+
+  if (type === 'lte') {
+    qb[whereFunction](`${fieldName} <= :${fieldValue}`, { [fieldValue]: value });
+  }
+
+  if (type === 'gt') {
+    qb[whereFunction](`${fieldName} > :${fieldValue}`, { [fieldValue]: value });
+  }
+
+  if (type === 'gte') {
+    qb[whereFunction](`${fieldName} >= :${fieldValue}`, { [fieldValue]: value });
+  }
+
+  if (type === 'contains') {
+    qb[whereFunction](`${fieldName} LIKE :${fieldValue}`, { [fieldValue]: `%${value}%` });
+  }
+
+  if (type === 'notContains') {
+    qb[whereFunction](`${fieldName} NOT LIKE :${fieldValue}`, { [fieldValue]: `%${value}%` });
+  }
+
+  if (type === 'startsWith') {
+    qb[whereFunction](`${fieldName} LIKE :${fieldValue}`, { [fieldValue]: `${value}%` });
+  }
+
+  if (type === 'notStartsWith') {
+    qb[whereFunction](`${fieldName} NOT LIKE :${fieldValue}`, { [fieldValue]: `${value}%` });
+  }
+
+  if (type === 'endsWith') {
+    qb[whereFunction](`${fieldName} LIKE :${fieldValue}`, { [fieldValue]: `%${value}` });
+  }
+
+  if (type === 'notEndsWith') {
+    qb[whereFunction](`${fieldName} NOT LIKE :${fieldValue}`, { [fieldValue]: `%${value}` });
+  }
+}
+
+export function addFunction<T>(queryBuilder: SelectQueryBuilder<T>, filters: any, name: string, type: 'AND' | 'OR') {
+  const filterKeys = Object.keys(filters);
+  filterKeys.forEach((key, index) => {
+    const value = filters[key];
+
+    if (key === 'AND' || key === 'OR') {
+      value.forEach((queryPart: any) => addFunction(queryBuilder, queryPart, name, key));
+    }
+
+    if (type === 'AND') {
+      addWhereClause(queryBuilder, 'andWhere', index, name, key, value);
+    }
+
+    if (type === 'OR') {
+      addWhereClause(queryBuilder, 'orWhere', index, name, key, value);
+    }
+  });
+}

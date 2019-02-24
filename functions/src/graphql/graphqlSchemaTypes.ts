@@ -120,6 +120,9 @@ export type ConnectionArguments = {
   first?: number;
   last?: number;
   orderBy?: string;
+  filters?: {
+    [key: string]: any;
+  };
 };
 
 export type PageInfo = {

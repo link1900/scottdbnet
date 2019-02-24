@@ -9,7 +9,7 @@ describe('SqlDataLoader tests', () => {
   beforeAll(async () => {
     const connection = await getDatabaseConnection();
     const greyhoundRepository = connection.getRepository(Greyhound);
-    loader = new SqlDataLoader(greyhoundRepository);
+    loader = new SqlDataLoader(greyhoundRepository, 'greyhound');
   });
 
   afterAll(async () => {

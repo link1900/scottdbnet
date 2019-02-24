@@ -269,6 +269,22 @@ export function createGraphqlSchemaParts(graphqlSchemaDefinition: GraphqlSchemaD
           }
         `;
         typeDefs.push(orderByDefinition);
+
+        // add the filters
+        const filterFieldString = fieldDefinitions
+          .filter(canFilterFieldDefinition)
+          .map(filtersForField)
+          .flat()
+          .join('\n');
+        const filterName = `${graphqlTypeDefinition.name}Filter`;
+        const filterDefinition = gql`
+          input ${filterName} {
+            AND: [${filterName}!]
+            OR: [${filterName}!]
+            ${filterFieldString}
+          }
+        `;
+        typeDefs.push(filterDefinition);
       }
 
       resolvers[graphqlTypeDefinition.name] = graphqlTypeDefinition.resolver;
@@ -311,14 +327,162 @@ function getFieldDefinitionsForObject(node: DocumentNode): ReadonlyArray<FieldDe
   return firstField.fields;
 }
 
+const allowedOrderByTypes = ['String', 'DateTime', 'Boolean', 'ID'];
+
 function canOrderFieldDefinition(fieldDefinition: FieldDefinitionNode): boolean {
   if (fieldDefinition.type.kind === 'NamedType') {
-    return ['String', 'DateTime', 'Boolean', 'ID'].includes(fieldDefinition.type.name.value);
+    return allowedOrderByTypes.includes(fieldDefinition.type.name.value);
   }
+
   if (fieldDefinition.type.kind === 'NonNullType') {
     if (fieldDefinition.type.type.kind === 'NamedType') {
-      return ['String', 'DateTime', 'Boolean', 'ID'].includes(fieldDefinition.type.type.name.value);
+      return allowedOrderByTypes.includes(fieldDefinition.type.type.name.value);
     }
   }
   return false;
+}
+
+const allowedFilterTypes = ['ID', 'String', 'Int', 'Float', 'Boolean', 'DateTime', 'Enum'];
+
+function canFilterFieldDefinition(fieldDefinition: FieldDefinitionNode): boolean {
+  if (fieldDefinition.type.kind === 'NamedType') {
+    return allowedFilterTypes.includes(fieldDefinition.type.name.value);
+  }
+
+  if (fieldDefinition.type.kind === 'NonNullType') {
+    if (fieldDefinition.type.type.kind === 'NamedType') {
+      return allowedFilterTypes.includes(fieldDefinition.type.type.name.value);
+    }
+  }
+  return false;
+}
+
+function getFieldType(fieldDefinition: FieldDefinitionNode): string | undefined {
+  if (fieldDefinition.type.kind === 'NamedType') {
+    return fieldDefinition.type.name.value;
+  }
+
+  if (fieldDefinition.type.kind === 'NonNullType') {
+    if (fieldDefinition.type.type.kind === 'NamedType') {
+      return fieldDefinition.type.type.name.value;
+    }
+  }
+  return undefined;
+}
+
+function getFieldName(fieldDefinition: FieldDefinitionNode): string | undefined {
+  if (fieldDefinition.type.kind === 'NamedType') {
+    return fieldDefinition.name.value;
+  }
+
+  if (fieldDefinition.type.kind === 'NonNullType') {
+    if (fieldDefinition.type.type.kind === 'NamedType') {
+      return fieldDefinition.name.value;
+    }
+  }
+  return undefined;
+}
+
+function filtersForField(fieldDefinition: FieldDefinitionNode): string[] {
+  const fieldName = getFieldName(fieldDefinition);
+  const fieldType = getFieldType(fieldDefinition);
+
+  if (!fieldType) {
+    return [];
+  }
+
+  if (fieldType === 'DateTime') {
+    return [
+      `${fieldName}_equal: DateTime # matches all nodes with exact value`,
+      `${fieldName}_not: DateTime # matches all nodes with different value`,
+      `${fieldName}_in: [DateTime!] # matches all nodes with value in the passed list`,
+      `${fieldName}_notIn: [DateTime!] # matches all nodes with value not in the passed list`,
+      `${fieldName}_lt: DateTime # matches all nodes with lesser value`,
+      `${fieldName}_lte: DateTime # matches all nodes with lesser or equal value`,
+      `${fieldName}_gt: DateTime # matches all nodes with greater value`,
+      `${fieldName}_gte: DateTime # matches all nodes with greater or equal value`
+    ];
+  }
+
+  if (fieldType === 'Float') {
+    return [
+      `${fieldName}_equal: Float # matches all nodes with exact value`,
+      `${fieldName}_not: Float # matches all nodes with different value`,
+      `${fieldName}_in: [Float!] # matches all nodes with value in the passed list`,
+      `${fieldName}_notIn: [Float!] # matches all nodes with value not in the passed list`,
+      `${fieldName}_lt: Float # matches all nodes with lesser value`,
+      `${fieldName}_lte: Float # matches all nodes with lesser or equal value`,
+      `${fieldName}_gt: Float # matches all nodes with greater value`,
+      `${fieldName}_gte: Float # matches all nodes with greater or equal value`
+    ];
+  }
+
+  if (fieldType === 'Integer') {
+    return [
+      `${fieldName}_equal: Integer # matches all nodes with exact value`,
+      `${fieldName}_not: Integer # matches all nodes with different value`,
+      `${fieldName}_in: [Integer!] # matches all nodes with value in the passed list`,
+      `${fieldName}_notIn: [Integer!] # matches all nodes with value not in the passed list`,
+      `${fieldName}_lt: Integer # matches all nodes with lesser value`,
+      `${fieldName}_lte: Integer # matches all nodes with lesser or equal value`,
+      `${fieldName}_gt: Integer # matches all nodes with greater value`,
+      `${fieldName}_gte: Integer # matches all nodes with greater or equal value`
+    ];
+  }
+
+  if (fieldType === 'String') {
+    return [
+      `${fieldName}_equal: String # matches all nodes with exact value`,
+      `${fieldName}_not: String # matches all nodes with different value`,
+      `${fieldName}_in: [String!] # matches all nodes with value in the passed list`,
+      `${fieldName}_notIn: [String!] # matches all nodes with value not in the passed list`,
+      `${fieldName}_lt: String # matches all nodes with lesser value`,
+      `${fieldName}_lte: String # matches all nodes with lesser or equal value`,
+      `${fieldName}_gt: String # matches all nodes with greater value`,
+      `${fieldName}_gte: String # matches all nodes with greater or equal value`,
+      `${fieldName}_contains: String # matches all nodes with a value that contains given substring`,
+      `${fieldName}_notContains: String # matches all nodes with a value that does not contain given substring`,
+      `${fieldName}_startsWith: String # matches all nodes with a value that starts with given substring`,
+      `${fieldName}_notStartsWith: String # matches all nodes with a value that does not start with given substring`,
+      `${fieldName}_endsWith: String # matches all nodes with a value that ends with given substring`,
+      `${fieldName}_notEndsWith: String # matches all nodes with a value that does not end with given substring`
+    ];
+  }
+
+  if (fieldType === 'ID') {
+    return [
+      `${fieldName}_equal: ID # matches all nodes with exact value`,
+      `${fieldName}_not: ID # matches all nodes with different value`,
+      `${fieldName}_in: [ID!] # matches all nodes with value in the passed list`,
+      `${fieldName}_notIn: [ID!] # matches all nodes with value not in the passed list`,
+      `${fieldName}_lt: ID # matches all nodes with lesser value`,
+      `${fieldName}_lte: ID # matches all nodes with lesser or equal value`,
+      `${fieldName}_gt: ID # matches all nodes with greater value`,
+      `${fieldName}_gte: ID # matches all nodes with greater or equal value`,
+      `${fieldName}_contains: ID # matches all nodes with a value that contains given substring`,
+      `${fieldName}_notContains: ID # matches all nodes with a value that does not contain given substring`,
+      `${fieldName}_startsWith: ID # matches all nodes with a value that starts with given substring`,
+      `${fieldName}_notStartsWith: ID # matches all nodes with a value that does not start with given substring`,
+      `${fieldName}_endsWith: ID # matches all nodes with a value that ends with given substring`,
+      `${fieldName}_notEndsWith: ID # matches all nodes with a value that does not end with given substring`
+    ];
+  }
+
+  if (fieldType === 'Enum') {
+    return [
+      `${fieldName}_equal: ${fieldType} # matches all nodes with exact value`,
+      `${fieldName}_not: ${fieldType} # matches all nodes with different value`,
+      `${fieldName}_in: [${fieldType}!] # matches all nodes with value in the passed list`,
+      `${fieldName}_notIn: [${fieldType}!] # matches all nodes with value not in the passed list`
+    ];
+  }
+
+  if (fieldType === 'Boolean') {
+    return [
+      `${fieldName}_equal: Boolean # matches all nodes with exact value`,
+      `${fieldName}_not: Boolean # matches all nodes with different value`
+    ];
+  }
+
+  return [];
 }
