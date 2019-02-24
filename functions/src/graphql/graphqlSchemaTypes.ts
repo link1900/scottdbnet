@@ -43,6 +43,7 @@ export interface GraphqlTypeDefinition {
   definition: DocumentNode;
   resolver: DirectResolverFunction | ResolverFunction | GraphQLScalarType | IEnumResolver | IResolvers;
   nodeResolver?: NodeResolverFunction;
+  hasConnection?: boolean;
 }
 
 export interface GraphqlSchemaDefinition {
@@ -76,6 +77,7 @@ export interface TypeOptions {
   definition: DocumentNode;
   resolver: any;
   nodeResolver?: NodeResolverFunction;
+  hasConnection?: boolean;
 }
 
 export interface ScalarOptions {
@@ -108,4 +110,28 @@ export type RootResolverType = {
     [key: string]: any;
   };
   [key: string]: any;
+};
+
+export type ConnectionCursor = string;
+
+export type ConnectionArguments = {
+  before?: ConnectionCursor;
+  after?: ConnectionCursor;
+  first?: number;
+  last?: number;
+};
+
+export type PageInfo = {
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
+
+export type Connection<T> = {
+  edges: Array<Edge<T>>;
+  pageInfo: PageInfo;
+};
+
+export type Edge<T> = {
+  node: T;
+  cursor: ConnectionCursor;
 };

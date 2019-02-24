@@ -1,6 +1,5 @@
 import { gql } from 'apollo-server-core';
 import { createQuery, createType } from '../../graphql/graphqlSchemaBuilders';
-import { runQueryBuilderAsConnection } from '../../graphql/connectionForSqlQuery';
 import ServerContext from '../../server/ServerContext';
 import { ConnectionArguments } from '../../graphql/graphqlSchemaTypes';
 
@@ -11,8 +10,7 @@ export const testTypeQueryDefinition = gql`
 `;
 
 async function greyhoundsResolve(parent: any, args: ConnectionArguments, context: ServerContext) {
-  const queryBuilder = await context.loaders.greyhound.repository.createQueryBuilder('greyhound');
-  return runQueryBuilderAsConnection(queryBuilder, args);
+  return context.loaders.greyhound.getConnection(args);
 }
 
 const testTypeDefinition = gql`

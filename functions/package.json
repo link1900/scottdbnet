@@ -6,7 +6,7 @@
     "test": "yarn lint && yarn coverage",
     "test:watch": "yarn jest --watch",
     "build": "tsc",
-    "dev": "ts-node scripts/runLocalServer.ts",
+    "dev": "ts-node --transpile-only scripts/runLocalServer.ts",
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "nodemon",

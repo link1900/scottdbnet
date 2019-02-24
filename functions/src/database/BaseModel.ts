@@ -1,4 +1,4 @@
-import { Entity, VersionColumn, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, VersionColumn, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 @Entity()
 export class BaseModel {
@@ -6,10 +6,12 @@ export class BaseModel {
   // @ts-ignore
   public id: string;
 
+  @Index()
   @CreateDateColumn()
   // @ts-ignore
   createdAt: Date;
 
+  @Index()
   @UpdateDateColumn()
   // @ts-ignore
   updatedAt: Date;

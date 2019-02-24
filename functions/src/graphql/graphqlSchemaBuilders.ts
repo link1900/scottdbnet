@@ -137,13 +137,14 @@ export function createQuery(queryOptions: QueryOptions): GraphqlTypeDefinition {
 }
 
 export function createType(typeOptions: TypeOptions): GraphqlTypeDefinition {
-  const { name, definition, resolver, nodeResolver } = typeOptions;
+  const { name, definition, resolver, nodeResolver, hasConnection } = typeOptions;
   return {
     name,
     kind: GraphqlDefinitionKind.TYPE,
     definition,
     resolver,
-    nodeResolver
+    nodeResolver,
+    hasConnection
   };
 }
 
@@ -225,9 +226,34 @@ export function createGraphqlSchemaParts(graphqlSchemaDefinition: GraphqlSchemaD
           resolver: graphqlTypeDefinition.nodeResolver
         });
       }
+      if (graphqlTypeDefinition.hasConnection === true) {
+        const edgeName = `${graphqlTypeDefinition.name}Edge`;
+        const connectionName = `${graphqlTypeDefinition.name}Connection`;
+        const connectionResolver = {};
+        const edgeResolver = {};
+        const connectionDefinition = gql`  
+          type ${connectionName} {
+            pageInfo: PageInfo!
+            edges: [${edgeName}]
+          }
+        `;
+        const edgeDefinition = gql`
+          type ${edgeName} {
+            node: ${graphqlTypeDefinition.name}
+            cursor: String!
+          }
+        `;
+
+        typeDefs.push(connectionDefinition);
+        resolvers[connectionName] = connectionResolver;
+
+        typeDefs.push(edgeDefinition);
+        resolvers[edgeName] = edgeResolver;
+      }
       resolvers[graphqlTypeDefinition.name] = graphqlTypeDefinition.resolver;
     }
   });
+
   const contextGenerator = (wrapper: { req: Request }): Context => {
     return applyGeneratorMiddlewares(contextFromRequestGenerator, contextGeneratorMiddlewares)(wrapper.req);
   };

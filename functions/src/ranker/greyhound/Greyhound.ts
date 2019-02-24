@@ -1,4 +1,4 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, Index } from 'typeorm';
 import { BaseModel } from '../../database/BaseModel';
 
 @Entity()
@@ -8,7 +8,9 @@ export class Greyhound extends BaseModel {
     this.name = name;
   }
 
-  @Column() name: string;
+  @Index()
+  @Column()
+  name: string;
 
   @Column({ type: 'uuid', nullable: true })
   sireId?: string;

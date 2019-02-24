@@ -1,10 +1,13 @@
 import DataLoader from 'dataloader';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Connection, ConnectionArguments } from '../graphql/graphqlSchemaTypes';
+import { BaseModel } from './BaseModel';
+import { runQueryBuilderAsConnection } from '../graphql/connectionForSqlQuery';
 
-export class SqlDataLoader<EntityInstance, RepositoryInstance extends Repository<EntityInstance>> extends DataLoader<
-  string,
-  EntityInstance
-> {
+export class SqlDataLoader<
+  EntityInstance extends BaseModel,
+  RepositoryInstance extends Repository<EntityInstance>
+> extends DataLoader<string, EntityInstance> {
   public repository: RepositoryInstance;
 
   constructor(someRepository: RepositoryInstance) {
@@ -19,7 +22,16 @@ export class SqlDataLoader<EntityInstance, RepositoryInstance extends Repository
     this.repository = someRepository;
   }
 
+  public async getConnection(connectionArgs: ConnectionArguments): Promise<Connection<EntityInstance>> {
+    return runQueryBuilderAsConnection(this.getQueryBuilder(), connectionArgs);
+  }
+
+  public getQueryBuilder(): SelectQueryBuilder<EntityInstance> {
+    return this.repository.createQueryBuilder();
+  }
+
   public async create(entity: EntityInstance): Promise<EntityInstance> {
+    // @ts-ignore
     const newEntity = await this.repository.save(entity);
     this.cacheEntity(newEntity);
     return newEntity;
@@ -27,6 +39,7 @@ export class SqlDataLoader<EntityInstance, RepositoryInstance extends Repository
 
   public async update(entity: EntityInstance): Promise<EntityInstance> {
     this.evictCachedEntity(entity);
+    // @ts-ignore
     const updatedEntity = await this.repository.save(entity);
     this.cacheEntity(updatedEntity);
     return updatedEntity;

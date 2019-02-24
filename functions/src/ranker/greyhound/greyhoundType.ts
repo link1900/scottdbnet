@@ -39,5 +39,6 @@ export const greyhoundType = createType({
   name: 'Greyhound',
   definition: greyhoundDefinition,
   resolver: greyhoundResolver,
-  nodeResolver: greyhoundNodeResolver
+  nodeResolver: greyhoundNodeResolver,
+  hasConnection: true
 });
