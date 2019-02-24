@@ -119,6 +119,7 @@ export type ConnectionArguments = {
   after?: ConnectionCursor;
   first?: number;
   last?: number;
+  orderBy?: string;
 };
 
 export type PageInfo = {

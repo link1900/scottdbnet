@@ -6,6 +6,8 @@ import ServerContext from '../../server/ServerContext';
 export const greyhoundDefinition = gql`
   type Greyhound implements Node {
     id: ID!
+    createdAt: DateTime!
+    updatedAt: DateTime!
     name: String!
     sire: Greyhound
     dam: Greyhound

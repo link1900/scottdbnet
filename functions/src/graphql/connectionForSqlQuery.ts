@@ -53,9 +53,13 @@ function verifyAllOrderBysAreSame<T>(queryBuilder: SelectQueryBuilder<T>): boole
 
 function buildCursorForQueryAndNode<T>(queryBuilder: SelectQueryBuilder<T>, node: any): { [key: string]: any } {
   const orderByKeys = Object.keys(queryBuilder.expressionMap.orderBys);
+  const name = getNameForQueryBuilder(queryBuilder);
   return orderByKeys.reduce((ob, key) => {
-    set(ob, key, get(node, key));
-    return ob;
+    const cleanKey = key.replace(`${name}.`, '');
+    return {
+      ...ob,
+      [cleanKey]: get(node, cleanKey)
+    };
   }, {});
 }
 
@@ -77,12 +81,19 @@ function flippedOrderBy<T>(queryBuilder: SelectQueryBuilder<T>): { [key: string]
   }, {});
 }
 
+function getNameForQueryBuilder<T>(queryBuilder: SelectQueryBuilder<T>): string {
+  if (!queryBuilder.expressionMap.mainAlias) {
+    return '';
+  }
+  return queryBuilder.expressionMap.mainAlias.name;
+}
+
 export async function runQueryBuilderAsConnection<T extends BaseModel>(
   queryBuilder: SelectQueryBuilder<T>,
   args: ConnectionArguments
 ): Promise<Connection<T>> {
   let limit: number = 10;
-  const name = queryBuilder.expressionMap.mainAlias!.name;
+  const name = getNameForQueryBuilder(queryBuilder);
   const hasFirst = !isNil(args.first);
   const hasLast = !isNil(args.last);
   const hasBefore = !isNil(args.before);
@@ -155,6 +166,9 @@ export async function runQueryBuilderAsConnection<T extends BaseModel>(
   // run the constructed query
   // we are fetching one extra edge to see if there are more results
   let entities = await queryBuilder.getMany();
+  if (entities.length === 0) {
+    return emptyConnection;
+  }
 
   const hasMore = limit ? entities.length > limit : false;
   if (hasMore) {

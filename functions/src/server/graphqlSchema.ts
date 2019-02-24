@@ -5,8 +5,8 @@ import { getDatabaseConnection } from './serverHelper';
 import { createDataLoaders } from './dataLoaders';
 import { applicationConfigType } from '../applicationConfig/applicationConfigType';
 import { greyhoundType } from '../ranker/greyhound/greyhoundType';
-import { testType, testTypeQuery } from '../ranker/greyhound/testType';
 import { dateTimeType } from '../graphql/types/dateTimeType';
+import { rankerQuery, rankerType } from '../ranker/rankerType';
 
 export async function createBaseContext(): Promise<ServerContext> {
   const connection = await getDatabaseConnection();
@@ -28,7 +28,7 @@ export const graphqlSchemaDefinition: GraphqlSchemaDefinition = {
 
     // ranker
     greyhoundType,
-    testTypeQuery,
-    testType
+    rankerType,
+    rankerQuery
   ]
 };

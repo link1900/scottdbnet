@@ -9,8 +9,8 @@ export class SqlDataLoader<
   RepositoryInstance extends Repository<EntityInstance>
 > extends DataLoader<string, EntityInstance> {
   public repository: RepositoryInstance;
-
-  constructor(someRepository: RepositoryInstance) {
+  public name: string;
+  constructor(someRepository: RepositoryInstance, name: string) {
     super(async (ids: string[]) => {
       if (!ids || ids.length < 1) {
         return [];
@@ -20,14 +20,24 @@ export class SqlDataLoader<
       return ids.map(id => results.find(result => result.id === id));
     });
     this.repository = someRepository;
+    this.name = name;
   }
 
   public async getConnection(connectionArgs: ConnectionArguments): Promise<Connection<EntityInstance>> {
-    return runQueryBuilderAsConnection(this.getQueryBuilder(), connectionArgs);
+    const { orderBy } = connectionArgs;
+    const qb = this.getQueryBuilder();
+    if (orderBy) {
+      const [field, direction] = orderBy.split('_');
+      if (field && (direction === 'ASC' || direction === 'DESC')) {
+        qb.orderBy(`${this.name}.${field}`, direction);
+      }
+    }
+
+    return runQueryBuilderAsConnection(qb, connectionArgs);
   }
 
   public getQueryBuilder(): SelectQueryBuilder<EntityInstance> {
-    return this.repository.createQueryBuilder();
+    return this.repository.createQueryBuilder(this.name);
   }
 
   public async create(entity: EntityInstance): Promise<EntityInstance> {

@@ -1,4 +1,4 @@
-import { DocumentNode, GraphQLSchema } from 'graphql';
+import { DocumentNode, FieldDefinitionNode, GraphQLSchema } from 'graphql';
 import { gql } from 'apollo-server-core';
 import { makeExecutableSchema } from './graphqlTools';
 import {
@@ -244,12 +244,33 @@ export function createGraphqlSchemaParts(graphqlSchemaDefinition: GraphqlSchemaD
           }
         `;
 
+        // add the connection
         typeDefs.push(connectionDefinition);
         resolvers[connectionName] = connectionResolver;
 
+        // add the definition
         typeDefs.push(edgeDefinition);
         resolvers[edgeName] = edgeResolver;
+
+        const fieldDefinitions = getFieldDefinitionsForObject(graphqlTypeDefinition.definition);
+        const fieldOrderString = fieldDefinitions
+          .filter(canOrderFieldDefinition)
+          .map(fieldDefinition => {
+            return [`${fieldDefinition.name.value}_ASC`, `${fieldDefinition.name.value}_DESC`];
+          })
+          .flat()
+          .join('\n');
+
+        // add the order by enum
+        const orderByName = `${graphqlTypeDefinition.name}OrderBy`;
+        const orderByDefinition = gql`
+          enum ${orderByName} {
+            ${fieldOrderString}
+          }
+        `;
+        typeDefs.push(orderByDefinition);
       }
+
       resolvers[graphqlTypeDefinition.name] = graphqlTypeDefinition.resolver;
     }
   });
@@ -271,4 +292,33 @@ export function getGraphqlSchemaFromDefinition(graphqlSchemaDefinition: GraphqlS
     typeDefs: graphqlSchemaParts.typeDefs,
     resolvers: graphqlSchemaParts.resolvers
   });
+}
+
+function getFieldDefinitionsForObject(node: DocumentNode): ReadonlyArray<FieldDefinitionNode> {
+  if (node.definitions.length === 0) {
+    return [];
+  }
+
+  const firstField = node.definitions[0];
+  if (firstField.kind !== 'ObjectTypeDefinition') {
+    return [];
+  }
+
+  if (!firstField || !firstField.fields) {
+    return [];
+  }
+
+  return firstField.fields;
+}
+
+function canOrderFieldDefinition(fieldDefinition: FieldDefinitionNode): boolean {
+  if (fieldDefinition.type.kind === 'NamedType') {
+    return ['String', 'DateTime', 'Boolean', 'ID'].includes(fieldDefinition.type.name.value);
+  }
+  if (fieldDefinition.type.kind === 'NonNullType') {
+    if (fieldDefinition.type.type.kind === 'NamedType') {
+      return ['String', 'DateTime', 'Boolean', 'ID'].includes(fieldDefinition.type.type.name.value);
+    }
+  }
+  return false;
 }

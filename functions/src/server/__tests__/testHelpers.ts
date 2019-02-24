@@ -47,7 +47,7 @@ export async function callGraphqlWithSchema(
 export async function callGraphql(
   queryDoc: DocumentNode,
   variables: object,
-  context = getTestGraphqlContext(),
+  context: Context = getTestGraphqlContext(),
   expectErrors = false,
   someSchema = getSchema()
 ) {

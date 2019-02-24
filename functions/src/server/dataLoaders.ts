@@ -14,9 +14,9 @@ export type DataLoaders = {
 
 export async function createDataLoaders(connection: Connection): Promise<DataLoaders> {
   return {
-    greyhound: new SqlDataLoader<Greyhound, Repository<Greyhound>>(connection.getRepository(Greyhound)),
-    race: new SqlDataLoader<Race, Repository<Race>>(connection.getRepository(Race)),
-    placing: new SqlDataLoader<Placing, Repository<Placing>>(connection.getRepository(Placing)),
-    score: new SqlDataLoader<Score, Repository<Score>>(connection.getRepository(Score))
+    greyhound: new SqlDataLoader<Greyhound, Repository<Greyhound>>(connection.getRepository(Greyhound), 'greyhound'),
+    race: new SqlDataLoader<Race, Repository<Race>>(connection.getRepository(Race), 'race'),
+    placing: new SqlDataLoader<Placing, Repository<Placing>>(connection.getRepository(Placing), 'placing'),
+    score: new SqlDataLoader<Score, Repository<Score>>(connection.getRepository(Score), 'score')
   };
 }
