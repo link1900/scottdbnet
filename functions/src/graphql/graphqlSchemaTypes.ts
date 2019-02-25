@@ -1,5 +1,6 @@
 import { IResolvers, IEnumResolver } from '../graphql/graphqlTools';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
+import { SchemaDirectiveVisitor } from 'apollo-server-cloud-functions';
 
 export interface GraphqlRoot {}
 
@@ -24,7 +25,8 @@ export enum GraphqlDefinitionKind {
   MUTATION,
   SCALAR,
   ENUM,
-  TYPE
+  TYPE,
+  DIRECTIVE
 }
 
 export type DirectResolverFunction = () => any;
@@ -41,7 +43,13 @@ export interface GraphqlTypeDefinition {
   name: string;
   kind: GraphqlDefinitionKind;
   definition: DocumentNode;
-  resolver: DirectResolverFunction | ResolverFunction | GraphQLScalarType | IEnumResolver | IResolvers;
+  resolver:
+    | DirectResolverFunction
+    | ResolverFunction
+    | GraphQLScalarType
+    | IEnumResolver
+    | IResolvers
+    | SchemaDirectiveVisitor;
   nodeResolver?: NodeResolverFunction;
   hasConnection?: boolean;
 }
@@ -58,6 +66,7 @@ export interface GraphqlSchemaParts {
   contextGenerator: (req: any) => object;
   typeDefs: DocumentNode | DocumentNode[];
   resolvers: IResolvers;
+  directives: Record<string, typeof SchemaDirectiveVisitor>;
 }
 
 export interface MutationOptions {
@@ -90,6 +99,12 @@ export interface EnumOptions {
   name: string;
   definition: DocumentNode;
   resolver: IEnumResolver;
+}
+
+export interface DirectiveOptions {
+  name: string;
+  definition: DocumentNode;
+  resolver: SchemaDirectiveVisitor;
 }
 
 export type NodeTypes = {

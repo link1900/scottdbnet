@@ -20,9 +20,11 @@ import {
   Context,
   NodeTypes,
   NodeType,
-  RootResolverType
+  RootResolverType,
+  DirectiveOptions
 } from './graphqlSchemaTypes';
 import { base64Decode, base64Encode } from '../util/stringHelper';
+import { SchemaDirectiveVisitor } from 'apollo-server-cloud-functions';
 
 export const rootDefinition = gql`
   interface Node {
@@ -60,6 +62,8 @@ export const rootResolver: RootResolverType = {
     __resolveType: nodeTypeResolver
   }
 };
+
+export const rootDirectives: Record<string, typeof SchemaDirectiveVisitor> = {};
 
 const nodeTypes: NodeTypes = {};
 
@@ -168,6 +172,16 @@ export function createEnum(enumOptions: EnumOptions): GraphqlTypeDefinition {
   };
 }
 
+export function createDirective(directiveOptions: DirectiveOptions): GraphqlTypeDefinition {
+  const { name, definition, resolver } = directiveOptions;
+  return {
+    name,
+    kind: GraphqlDefinitionKind.DIRECTIVE,
+    definition,
+    resolver
+  };
+}
+
 export function applyMiddlewaresToResolver(
   resolver: ResolverFunction,
   middlewares: ResolverMiddleware[]
@@ -197,6 +211,7 @@ export function createGraphqlSchemaParts(graphqlSchemaDefinition: GraphqlSchemaD
   } = graphqlSchemaDefinition;
   const typeDefs: DocumentNode[] = [rootDefinition];
   const resolvers = rootResolver;
+  const directives = rootDirectives;
 
   graphqlSchemaDefinition.graphqlTypeDefinitions.forEach(graphqlTypeDefinition => {
     typeDefs.push(graphqlTypeDefinition.definition);
@@ -289,6 +304,11 @@ export function createGraphqlSchemaParts(graphqlSchemaDefinition: GraphqlSchemaD
 
       resolvers[graphqlTypeDefinition.name] = graphqlTypeDefinition.resolver;
     }
+
+    if (graphqlTypeDefinition.kind === GraphqlDefinitionKind.DIRECTIVE) {
+      // @ts-ignore
+      directives[graphqlTypeDefinition.name] = graphqlTypeDefinition.resolver;
+    }
   });
 
   const contextGenerator = (wrapper: { req: Request }): Context => {
@@ -298,7 +318,8 @@ export function createGraphqlSchemaParts(graphqlSchemaDefinition: GraphqlSchemaD
   return {
     contextGenerator,
     typeDefs,
-    resolvers
+    resolvers,
+    directives
   };
 }
 
