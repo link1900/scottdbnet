@@ -37,6 +37,7 @@ export function setupGraphqlEndpointForExpress(expressApp: Express, schema: Grap
   const apolloServer = new ApolloServer({
     typeDefs: graphqlSchemaParts.typeDefs,
     resolvers: graphqlSchemaParts.resolvers,
+    schemaDirectives: graphqlSchemaParts.directives,
     context: graphqlSchemaParts.contextGenerator,
     tracing: true,
     introspection: true,
