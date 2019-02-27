@@ -104,7 +104,7 @@ export interface EnumOptions {
 export interface DirectiveOptions {
   name: string;
   definition: DocumentNode;
-  resolver: SchemaDirectiveVisitor;
+  resolver: any;
 }
 
 export type NodeTypes = {

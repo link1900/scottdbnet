@@ -1,4 +1,4 @@
-import { DocumentNode, FieldDefinitionNode, GraphQLSchema } from 'graphql';
+import { DocumentNode, FieldDefinitionNode, GraphQLSchema, GraphQLNonNull, GraphQLScalarType } from 'graphql';
 import { gql } from 'apollo-server-core';
 import { makeExecutableSchema } from './graphqlTools';
 import {
@@ -506,4 +506,21 @@ function filtersForField(fieldDefinition: FieldDefinitionNode): string[] {
   }
 
   return [];
+}
+
+export function wrapType(field: any, schema: GraphQLSchema, ScalarClass: any) {
+  if (field.type instanceof GraphQLNonNull && field.type.ofType instanceof GraphQLScalarType) {
+    const baseType = new ScalarClass(field.type.ofType);
+    field.type = new GraphQLNonNull(baseType);
+    field.type = baseType;
+    schema.getTypeMap()[baseType.name] = baseType;
+    return field;
+  } else if (field.type instanceof GraphQLScalarType) {
+    const newType = new ScalarClass(field.type);
+    field.type = newType;
+    schema.getTypeMap()[newType.name] = newType;
+    return field;
+  } else {
+    throw new Error(`Not a scalar type: ${field.type}`);
+  }
 }
