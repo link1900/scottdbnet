@@ -15,7 +15,9 @@ describe('connectionForSqlQuery', () => {
     greyhounds = await Promise.all(
       Array(10)
         .fill(0)
-        .map((i, index) => context.loaders.greyhound.create(new Greyhound(`${String.fromCharCode(index + 65)}`)))
+        .map((i, index) =>
+          context.loaders.greyhound.create(new Greyhound({ name: `${String.fromCharCode(index + 65)}` }))
+        )
     );
   });
 
@@ -48,7 +50,9 @@ describe('connectionForSqlQuery', () => {
       await Promise.all(
         Array(2)
           .fill(0)
-          .map((i, index) => context.loaders.greyhound.create(new Greyhound(`${String.fromCharCode(index + 75)}`)))
+          .map((i, index) =>
+            context.loaders.greyhound.create(new Greyhound({ name: `${String.fromCharCode(index + 75)}` }))
+          )
       );
       const args = { first: 10 };
       const { edges, pageInfo } = await runQueryBuilderAsConnection(queryDefinition, args);

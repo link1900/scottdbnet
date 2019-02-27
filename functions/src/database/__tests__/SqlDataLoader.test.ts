@@ -19,7 +19,7 @@ describe('SqlDataLoader tests', () => {
   describe('loader operations', () => {
     it('#create and #load', async () => {
       // creation test
-      let greyhound = new Greyhound('test greyhound');
+      let greyhound = new Greyhound({ name: 'test greyhound' });
       greyhound.name = 'test greyhound';
       greyhound = await loader.create(greyhound);
       expect(greyhound.name).toEqual('test greyhound');
@@ -34,7 +34,7 @@ describe('SqlDataLoader tests', () => {
 
     it('#update', async () => {
       // creation test
-      let greyhound = new Greyhound('update greyhound');
+      let greyhound = new Greyhound({ name: 'update greyhound' });
       greyhound.name = 'update greyhound';
       greyhound = await loader.create(greyhound);
       expect(greyhound.name).toEqual('update greyhound');
@@ -53,7 +53,7 @@ describe('SqlDataLoader tests', () => {
     });
 
     it('#delete', async () => {
-      let greyhound = new Greyhound('delete greyhound');
+      let greyhound = new Greyhound({ name: 'delete greyhound' });
       greyhound.name = 'delete greyhound';
       greyhound = await loader.create(greyhound);
       expect(greyhound.name).toEqual('delete greyhound');

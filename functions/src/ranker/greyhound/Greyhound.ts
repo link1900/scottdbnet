@@ -3,27 +3,27 @@ import { BaseModel } from '../../database/BaseModel';
 
 @Entity()
 export class Greyhound extends BaseModel {
-  constructor(name: string) {
+  constructor(props: Partial<Greyhound>) {
     super();
-    this.name = name;
+    Object.assign(this, props);
   }
 
   @Index()
   @Column()
-  name: string;
+  public name: string;
 
   @Column({ type: 'uuid', nullable: true })
-  sireId?: string;
+  public sireId?: string;
 
   @Column({ type: 'uuid', nullable: true })
-  damId?: string;
+  public damId?: string;
 
   @Column({ nullable: true })
-  color?: string;
+  public color?: string;
 
   @Column({ nullable: true })
-  gender?: string;
+  public gender?: string;
 
   @Column({ nullable: true })
-  dateOfBirth?: Date;
+  public dateOfBirth?: Date;
 }

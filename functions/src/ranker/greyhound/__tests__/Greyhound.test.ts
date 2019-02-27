@@ -17,7 +17,7 @@ describe('greyhound model tests', () => {
   describe('model operations', () => {
     it('creates and reads entity correctly', async () => {
       // creation test
-      let greyhound = new Greyhound('test greyhound');
+      let greyhound = new Greyhound({ name: 'test greyhound' });
       greyhound = await greyhoundRepository.save(greyhound);
       expect(greyhound.name).toEqual('test greyhound');
 

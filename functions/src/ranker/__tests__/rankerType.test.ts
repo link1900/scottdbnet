@@ -11,7 +11,9 @@ describe('rankerType', () => {
     await Promise.all(
       Array(10)
         .fill(0)
-        .map((i, index) => context.loaders.greyhound.create(new Greyhound(`${String.fromCharCode(index + 65)}`)))
+        .map((i, index) =>
+          context.loaders.greyhound.create(new Greyhound({ name: `${String.fromCharCode(index + 65)}` }))
+        )
     );
   });
 
