@@ -1,5 +1,5 @@
 import { callGraphql } from '../../../server/__tests__/testHelpers';
-import { makeExecutableSchema, gql } from 'apollo-server-express';
+import { makeExecutableSchema, gql, SchemaDirectiveVisitor } from 'apollo-server-express';
 import { DocumentNode } from 'graphql';
 
 export type GraphqlTypeTestOptions = {
@@ -7,6 +7,7 @@ export type GraphqlTypeTestOptions = {
   typeDefinition: DocumentNode;
   typeResolver: any;
   inputTests: GraphqlTypeTestInputOptions[];
+  directiveOption?: GraphqlTypeTestDirectiveOptions;
 };
 
 export type GraphqlTypeTestInputOptions = {
@@ -17,10 +18,17 @@ export type GraphqlTypeTestInputOptions = {
   expected?: any;
 };
 
+export type GraphqlTypeTestDirectiveOptions = {
+  name: string;
+  definition: DocumentNode;
+  resolver: typeof SchemaDirectiveVisitor;
+  inputDirectives?: string;
+};
+
 export function runTypeTestCase(options: GraphqlTypeTestOptions, testcase: GraphqlTypeTestInputOptions) {
   const { valid, inputType, queryType, expected, input } = testcase;
-  const { name, typeResolver, typeDefinition } = options;
-  const schema = getTestSchema(name, typeDefinition, typeResolver, input);
+  const { name, typeResolver, typeDefinition, directiveOption } = options;
+  const schema = getTestSchema(name, typeDefinition, typeResolver, input, directiveOption);
   if (queryType === 'Query') {
     if (valid) {
       runValidQueryTestCase(schema, expected);
@@ -159,14 +167,20 @@ export function runInvalidLiteralMutationTestCase(schema: any, input: any) {
   });
 }
 
-export function getTestSchema(name: string, typeDefinition: any, typeResolver: any, queryResult: any) {
+export function getTestSchema(
+  name: string,
+  typeDefinition: any,
+  typeResolver: any,
+  queryResult: any,
+  directiveOption?: GraphqlTypeTestDirectiveOptions
+) {
   const testingDefinition = gql`
     type Testing {
       field: ${name}
     }
 
     input TestInput {
-      field: ${name}
+      field: ${name} ${directiveOption ? directiveOption.inputDirectives : ''}
     }
 
     type Query {
@@ -177,9 +191,14 @@ export function getTestSchema(name: string, typeDefinition: any, typeResolver: a
       updateTest(input: TestInput!): Testing
     }
   `;
-
+  let typeDefs = [testingDefinition, typeDefinition];
+  if (directiveOption) {
+    typeDefs = typeDefs.concat([directiveOption.definition]);
+  }
+  const schemaDirectives = directiveOption ? { [directiveOption.name]: directiveOption.resolver } : undefined;
+  // @ts-ignore
   return makeExecutableSchema({
-    typeDefs: [testingDefinition, typeDefinition],
+    typeDefs,
     resolvers: {
       Query: {
         getTest: () => {
@@ -194,7 +213,8 @@ export function getTestSchema(name: string, typeDefinition: any, typeResolver: a
         }
       },
       [name]: typeResolver
-    }
+    },
+    schemaDirectives
   });
 }
 
