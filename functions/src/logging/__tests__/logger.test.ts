@@ -6,8 +6,6 @@ describe('Logger', () => {
     const mock = jest.spyOn(logger, 'info');
     const result = logger.info('info message', { extra: 'data' });
     expect(result && result.level).toEqual('info');
-    expect(result && result.message).toEqual('info message');
-    expect(result && result.extra).toEqual('data');
     expect(mock).toHaveBeenCalled();
   });
 
@@ -17,8 +15,6 @@ describe('Logger', () => {
     const result = logger.warn('warn message', { extra: 'data' });
     expect(mock).toHaveBeenCalled();
     expect(result && result.level).toEqual('warn');
-    expect(result && result.message).toEqual('warn message');
-    expect(result && result.extra).toEqual('data');
   });
 
   it('logs error correctly', () => {
@@ -27,10 +23,6 @@ describe('Logger', () => {
     const result = logger.error('error message', { extra: 'data' }, new Error('some error'));
     expect(mock).toHaveBeenCalled();
     expect(result && result.level).toEqual('error');
-    expect(result && result.message).toEqual('error message');
-    expect(result && result.extra).toEqual('data');
-    expect(result && result.errorMessage).toEqual('Error: some error');
-    expect(result && result.stacktrace).toBeTruthy();
   });
 
   it('logs error correctly with meta', () => {
@@ -39,7 +31,6 @@ describe('Logger', () => {
     const result = logger.error('error message');
     expect(mock).toHaveBeenCalled();
     expect(result && result.level).toEqual('error');
-    expect(result && result.message).toEqual('error message');
   });
 
   it('logs error correctly without error', () => {
@@ -48,8 +39,6 @@ describe('Logger', () => {
     const result = logger.error('error message', { extra: 'data' });
     expect(mock).toHaveBeenCalled();
     expect(result && result.level).toEqual('error');
-    expect(result && result.message).toEqual('error message');
-    expect(result && result.extra).toEqual('data');
   });
 
   it('logs trace correctly', () => {
@@ -58,8 +47,6 @@ describe('Logger', () => {
     const result = logger.trace('trace message', { extra: 'data' });
     expect(mock).toHaveBeenCalled();
     expect(result && result.level).toEqual('trace');
-    expect(result && result.message).toEqual('trace message');
-    expect(result && result.extra).toEqual('data');
   });
 
   it('logs correctly', () => {
@@ -68,7 +55,6 @@ describe('Logger', () => {
     const result = logger.log('info', 'log message');
     expect(mock).toHaveBeenCalled();
     expect(result && result.level).toEqual('info');
-    expect(result && result.message).toEqual('log message');
     expect(result && result.timestamp).toBeTruthy();
     expect(result && result.trace).toBeFalsy();
   });

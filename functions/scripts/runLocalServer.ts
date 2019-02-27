@@ -12,7 +12,7 @@ startServer()
     logger.info('Server start up is complete');
   })
   .catch((error: Error) => {
-    logger.error(`Error starting server ${error.toString()} ${error.stack}`);
+    logger.error(`Error starting server`, error.toString(), error.stack);
   });
 
 export function setupExpress() {
