@@ -10,6 +10,7 @@ export function getApolloServer() {
   return new ApolloServer({
     typeDefs: graphqlSchemaParts.typeDefs,
     resolvers: graphqlSchemaParts.resolvers,
+    schemaDirectives: graphqlSchemaParts.directives,
     context: graphqlSchemaParts.contextGenerator,
     playground: true,
     introspection: true,
