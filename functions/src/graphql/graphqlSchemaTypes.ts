@@ -1,6 +1,7 @@
 import { IResolvers, IEnumResolver } from '../graphql/graphqlTools';
 import { DocumentNode, GraphQLScalarType } from 'graphql';
 import { SchemaDirectiveVisitor } from 'apollo-server-cloud-functions';
+import { Request } from 'express';
 
 export interface GraphqlRoot {}
 
