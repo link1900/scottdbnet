@@ -1,11 +1,12 @@
 import express, { Express } from 'express';
 import logger from '../src/logging/logger';
-import { loadEnvironmentVariablesFromConfig } from '../src/environment/environmentHelper';
+import { getVariable, loadEnvironmentVariablesFromConfig } from '../src/environment/environmentHelper';
 import { GraphqlSchemaDefinition } from '../src/graphql/graphqlSchemaTypes';
 import { createGraphqlSchemaParts } from '../src/graphql/graphqlSchemaBuilders';
 import { ApolloServer } from 'apollo-server-express';
 import { handleGraphqlError } from '../src/server/graphqlErrorHelper';
 import { graphqlSchemaDefinition } from '../src/server/graphqlSchema';
+import * as admin from 'firebase-admin';
 
 startServer()
   .then(() => {
@@ -49,8 +50,17 @@ export function setupGraphqlEndpointForExpress(expressApp: Express, schema: Grap
   return apolloServer;
 }
 
+export function setupFirebaseAdmin() {
+  const serviceAccount = require(getVariable('FIREBASE_ADMIN_KEY_PATH'));
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: getVariable('FIREBASE_DATABASE_URL')
+  });
+}
+
 export async function setupServer(): Promise<Express> {
   await loadEnvironmentVariablesFromConfig();
+  await setupFirebaseAdmin();
   const expressApp = setupExpress();
   setupGraphqlEndpointForExpress(expressApp, graphqlSchemaDefinition);
   return expressApp;
