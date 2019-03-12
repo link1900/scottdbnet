@@ -13,6 +13,7 @@ export class Logger {
   constructor() {
     this.enabled = true;
     this.logGenerator = createLogger({
+      level: 'info',
       format: (level: LogLevel, event: any) => {
         return JSON.stringify(event);
       }
