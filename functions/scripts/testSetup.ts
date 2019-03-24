@@ -1,4 +1,4 @@
-import { loadEnvironmentVariablesFromConfig } from '../src/environment/environmentHelper';
+import { getVariable, loadEnvironmentVariablesFromConfig } from '../src/environment/environmentHelper';
 import logger from '../src/logging/logger';
 
 export async function testSetup() {
@@ -6,4 +6,5 @@ export async function testSetup() {
   process.env.EXECUTION_ENVIRONMENT = 'local-test';
   logger.enabled = false;
   loadEnvironmentVariablesFromConfig();
+  logger.logLevel = getVariable('LOG_LEVEL');
 }

@@ -60,6 +60,7 @@ export function setupFirebaseAdmin() {
 
 export async function setupServer(): Promise<Express> {
   await loadEnvironmentVariablesFromConfig();
+  logger.logLevel = getVariable('LOG_LEVEL');
   await setupFirebaseAdmin();
   const expressApp = setupExpress();
   setupGraphqlEndpointForExpress(expressApp, graphqlSchemaDefinition);

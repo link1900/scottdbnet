@@ -1,6 +1,7 @@
 import { argv } from 'yargs';
 import moment from 'moment-timezone';
-import { loadEnvironmentVariablesFromConfig } from '../src/environment/environmentHelper';
+import { getVariable, loadEnvironmentVariablesFromConfig } from '../src/environment/environmentHelper';
+import logger from '../src/logging/logger';
 
 const dateTimezone = 'Australia/Sydney';
 const dateFormat = 'YYYY-MMM-DD hh:mm:ss a';
@@ -36,4 +37,5 @@ async function scriptSetup() {
   // @ts-ignore
   process.env.EXECUTION_ENVIRONMENT = argv.env || 'local-dev';
   loadEnvironmentVariablesFromConfig();
+  logger.logLevel = getVariable('LOG_LEVEL');
 }
