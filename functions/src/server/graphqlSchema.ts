@@ -1,22 +1,15 @@
-import ServerContext from './ServerContext';
 import { GraphqlSchemaDefinition } from '../graphql/graphqlSchemaTypes';
 import { relayMutationMiddleware } from '../graphql/graphqlMiddlewares';
-import { getDatabaseConnection } from './serverHelper';
-import { createDataLoaders } from './dataLoaders';
+import { createContextFromRequest } from './serverHelper';
 import { applicationConfigType } from '../applicationConfig/applicationConfigType';
 import { greyhoundType } from '../ranker/greyhound/greyhoundType';
 import { dateTimeType } from '../graphql/types/dateTimeType';
 import { rankerQuery, rankerType } from '../ranker/rankerType';
-
-export async function createBaseContext(): Promise<ServerContext> {
-  const connection = await getDatabaseConnection();
-  const loaders = await createDataLoaders(connection);
-  return new ServerContext(loaders);
-}
-
-export async function createContextFromRequest(): Promise<ServerContext> {
-  return await createBaseContext();
-}
+import { textFieldType } from '../graphql/types/textFieldType';
+import { createGreyhoundMutation } from '../ranker/greyhound/createGreyhoundMutation';
+import { greyhoundGenderType } from '../ranker/greyhound/greyhoundGenderType';
+import { uppercaseDirective } from '../graphql/types/upperCaseDirective';
+import { notEmptyDirective } from '../graphql/types/notEmptyDirective';
 
 export const graphqlSchemaDefinition: GraphqlSchemaDefinition = {
   contextFromRequestGenerator: createContextFromRequest,
@@ -24,11 +17,16 @@ export const graphqlSchemaDefinition: GraphqlSchemaDefinition = {
   graphqlTypeDefinitions: [
     // common
     applicationConfigType,
+    textFieldType,
     dateTimeType,
+    uppercaseDirective,
+    notEmptyDirective,
 
     // ranker
     greyhoundType,
     rankerType,
-    rankerQuery
+    rankerQuery,
+    greyhoundGenderType,
+    createGreyhoundMutation
   ]
 };

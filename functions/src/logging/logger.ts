@@ -2,6 +2,10 @@
 import createLogger from 'log-driver';
 type LogLevel = 'info' | 'warn' | 'error' | 'trace';
 
+function standardFormat(level: LogLevel, event: any) {
+  return JSON.stringify(event);
+}
+
 /**
  * Logging class that provides 4 log levels ('info', 'warn', 'error', 'trace') and
  * automatically logs out in the logging standard.
@@ -10,14 +14,9 @@ export class Logger {
   public enabled: boolean;
   public logGenerator: any;
 
-  constructor(logLevel: string) {
+  constructor(newLogLevel: string) {
     this.enabled = true;
-    this.logGenerator = createLogger({
-      level: logLevel,
-      format: (level: LogLevel, event: any) => {
-        return JSON.stringify(event);
-      }
-    });
+    this.logLevel = newLogLevel;
   }
 
   public info(...messages: any[]) {
@@ -50,7 +49,10 @@ export class Logger {
   }
 
   set logLevel(newLogLevel: string) {
-    this.logGenerator.level = newLogLevel;
+    this.logGenerator = createLogger({
+      level: newLogLevel,
+      format: standardFormat
+    });
   }
 
   get logLevel(): string {

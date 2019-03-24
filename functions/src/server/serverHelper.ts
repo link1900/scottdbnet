@@ -1,6 +1,11 @@
 import 'reflect-metadata';
 import { Connection } from 'typeorm';
-import { getVariable, isVariableEnabled } from '../environment/environmentHelper';
+import {
+  ExecutionEnvironment,
+  getExecutionEnvironment,
+  getVariable,
+  isVariableEnabled
+} from '../environment/environmentHelper';
 import InternalServerError from '../error/InternalServerError';
 import { closeConnection, connectToDatabase } from '../database/databaseHelper';
 import ServerContext from './ServerContext';
@@ -11,8 +16,9 @@ import { Request } from 'express';
 import { IncomingHttpHeaders } from 'http';
 import { User } from './User';
 import * as admin from 'firebase-admin';
-import DecodedIdToken = admin.auth.DecodedIdToken;
 import { Role } from './Role';
+import DecodedIdToken = admin.auth.DecodedIdToken;
+import { base64Decode, stringToObject } from '../util/stringHelper';
 
 let connection: Connection | undefined = undefined;
 
@@ -27,7 +33,7 @@ export async function getDatabaseConnection(): Promise<Connection> {
   const host = getVariable('DATABASE_HOST');
   const dropSchema = isVariableEnabled('DATABASE_DROP_ON_START');
   const synchronize = isVariableEnabled('DATABASE_SYNC');
-  const logging = isVariableEnabled('DATABASE_LOGGING');
+  const logging = logger.logLevel === 'trace';
 
   connection = await connectToDatabase({
     database: databaseName,
@@ -54,27 +60,39 @@ export async function closeDatabaseConnection(): Promise<boolean> {
   return false;
 }
 
-export async function createContextFromRequest(req: Request): Promise<ServerContext> {
+export async function createContextFromRequest(req?: Request): Promise<ServerContext> {
   const currentConnection = await getDatabaseConnection();
   const loaders = await createDataLoaders(currentConnection);
   // create context
   const serverContext = new ServerContext(loaders);
 
   // populate with user credentials
-  const idToken = await getIdTokenFromHeader(req.headers);
-  if (idToken) {
-    try {
-      serverContext.idToken = idToken;
-      const decodedIdToken = await admin.auth().verifyIdToken(idToken);
-      logger.trace('ID Token correctly decoded', decodedIdToken);
-      serverContext.decodedIdToken = decodedIdToken;
-      serverContext.user = getUserFromDecodedIdToken(serverContext.decodedIdToken);
-      serverContext.roles = getRolesForUser(serverContext.user);
-    } catch (error) {
-      logger.error('Error while verifying ID Token:', error);
+  if (req) {
+    const idToken = await getIdTokenFromHeader(req.headers);
+    if (idToken) {
+      try {
+        serverContext.idToken = idToken;
+        logger.trace('ID token found', idToken);
+        const decodedIdToken = await decodeAndVerifyIdToken(idToken);
+        logger.trace('ID token correctly decoded', decodedIdToken);
+        serverContext.decodedIdToken = decodedIdToken;
+        serverContext.user = getUserFromDecodedIdToken(serverContext.decodedIdToken);
+        serverContext.roles = getRolesForUser(serverContext.user);
+      } catch (error) {
+        logger.error('Error while verifying ID Token:', error);
+      }
     }
   }
+
   return serverContext;
+}
+
+export async function decodeAndVerifyIdToken(idToken: string): Promise<admin.auth.DecodedIdToken> {
+  if (getExecutionEnvironment() === ExecutionEnvironment.LOCAL_DEV) {
+    const tokenParts = idToken.split('.');
+    return (stringToObject(base64Decode(tokenParts[1])) as any) as admin.auth.DecodedIdToken;
+  }
+  return await admin.auth().verifyIdToken(idToken);
 }
 
 export async function getIdTokenFromHeader(headers: IncomingHttpHeaders): Promise<string | undefined> {

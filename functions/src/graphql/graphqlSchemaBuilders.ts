@@ -328,7 +328,8 @@ export function getGraphqlSchemaFromDefinition(graphqlSchemaDefinition: GraphqlS
   const graphqlSchemaParts = createGraphqlSchemaParts(graphqlSchemaDefinition);
   return makeExecutableSchema({
     typeDefs: graphqlSchemaParts.typeDefs,
-    resolvers: graphqlSchemaParts.resolvers
+    resolvers: graphqlSchemaParts.resolvers,
+    schemaDirectives: graphqlSchemaParts.directives
   });
 }
 

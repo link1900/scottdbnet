@@ -14,6 +14,7 @@ export default class ServerContext implements Context {
   public roles: Role[];
   constructor(loaders: DataLoaders) {
     this.loaders = loaders;
+    this.roles = [];
   }
 
   public hasRole(role: Role): boolean {
@@ -22,7 +23,7 @@ export default class ServerContext implements Context {
 
   public checkForRole(role: Role): boolean {
     if (!this.hasRole(role)) {
-      throw new ForbiddenError('You do not have the required role.');
+      throw new ForbiddenError(`You do not have the required role of ${role}.`);
     }
     return true;
   }

@@ -4,6 +4,8 @@ import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { getGraphqlSchemaFromDefinition } from '../../graphql/graphqlSchemaBuilders';
 import { graphqlSchemaDefinition } from '../graphqlSchema';
 import { Context } from '../../graphql/graphqlSchemaTypes';
+import { createContextFromRequest } from '../serverHelper';
+import { Role } from '../Role';
 
 let schema: GraphQLSchema | undefined;
 
@@ -80,6 +82,16 @@ export async function callGraphql(
   );
 
   return result;
+}
+
+export async function createAdminContext() {
+  const context = await createContextFromRequest();
+  context.roles = [Role.ADMIN];
+  return context;
+}
+
+export async function createPublicContext() {
+  return createContextFromRequest();
 }
 
 describe('testHelpers', () => {

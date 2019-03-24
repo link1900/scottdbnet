@@ -1,12 +1,11 @@
 import { callGraphql } from '../../server/__tests__/testHelpers';
 import { gql } from 'apollo-server-core';
 import { Greyhound } from '../greyhound/Greyhound';
-import { createBaseContext } from '../../server/graphqlSchema';
-import { closeDatabaseConnection } from '../../server/serverHelper';
+import { closeDatabaseConnection, createContextFromRequest } from '../../server/serverHelper';
 
 describe('rankerType', () => {
   beforeAll(async () => {
-    const context = await createBaseContext();
+    const context = await createContextFromRequest();
     await context.loaders.greyhound.repository.clear();
     await Promise.all(
       Array(10)
@@ -102,7 +101,7 @@ describe('rankerType', () => {
 });
 
 async function runGreyhoundQuery(vars: object) {
-  const context = await createBaseContext();
+  const context = await createContextFromRequest();
   const query = gql`
     query greyhoundQuery(
       $first: Int

@@ -12,7 +12,7 @@ export const greyhoundDefinition = gql`
     sire: Greyhound
     dam: Greyhound
     color: String
-    gender: String
+    gender: GreyhoundGender
     dateOfBirth: DateTime
   }
 `;
