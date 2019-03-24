@@ -1,43 +1,9 @@
-// import { GraphQLString, GraphQLNonNull } from 'graphql';
-// import { mutationWithClientMutationId } from 'graphql-relay';
-// import { greyhoundType } from '../greyhound/greyhoundType';
-// import { updateGreyhound } from '../greyhound/greyhoundHelper';
-// import { forbiddenError } from '../error/errorHelper';
-// import dateType from '../database/dateType';
-//
-// export default mutationWithClientMutationId({
-//     name: 'GreyhoundUpdate',
-//     inputFields: {
-//         greyhoundId: { type: new GraphQLNonNull(GraphQLString) },
-//         name: { type: new GraphQLNonNull(GraphQLString) },
-//         gender: { type: GraphQLString },
-//         color: { type: GraphQLString },
-//         dateOfBirth: { type: dateType }
-//     },
-//     outputFields: {
-//         greyhound: { type: greyhoundType }
-//     },
-//     mutateAndGetPayload
-// });
-//
-// export async function mutateAndGetPayload(input, context) {
-//     if (!context.hasAccess('user')) {
-//         throw forbiddenError('You must be a user to update a greyhound');
-//     }
-//
-//     const greyhound = await updateGreyhound(context, input);
-//     return {
-//         greyhound
-//     };
-// }
-
 import { gql } from 'apollo-server-core';
 import { createMutation } from '../../graphql/graphqlSchemaBuilders';
 import ServerContext from '../../server/ServerContext';
 import { MutationInput, MutationPayload } from '../../graphql/graphqlSchemaTypes';
 import { Role } from '../../server/Role';
 import NotFoundError from '../../error/NotFoundError';
-import InternalServerError from '../../error/InternalServerError';
 import UserInputError from '../../error/UserInputError';
 import { InvalidFieldReason } from '../../error/InvalidFieldReason';
 import { Greyhound } from './Greyhound';

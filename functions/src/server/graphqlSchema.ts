@@ -13,6 +13,8 @@ import { notEmptyDirective } from '../graphql/types/notEmptyDirective';
 import { deleteGreyhoundMutation } from '../ranker/greyhound/greyhoundDeleteMutation';
 import { nodeIdType } from '../graphql/types/nodeIdType';
 import { updateGreyhoundMutation } from '../ranker/greyhound/greyhoundUpdateMutation';
+import { setSireGreyhoundMutation } from '../ranker/greyhound/greyhoundSetSireMutation';
+import { setDamGreyhoundMutation } from '../ranker/greyhound/greyhoundSetDamMutation';
 
 export const graphqlSchemaDefinition: GraphqlSchemaDefinition = {
   contextFromRequestGenerator: createContextFromRequest,
@@ -33,6 +35,8 @@ export const graphqlSchemaDefinition: GraphqlSchemaDefinition = {
     greyhoundGenderType,
     createGreyhoundMutation,
     deleteGreyhoundMutation,
-    updateGreyhoundMutation
+    updateGreyhoundMutation,
+    setSireGreyhoundMutation,
+    setDamGreyhoundMutation
   ]
 };

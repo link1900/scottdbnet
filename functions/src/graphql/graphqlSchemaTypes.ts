@@ -9,6 +9,7 @@ export interface GraphqlInfo {}
 
 export interface MutationInput {
   clientMutationId?: string;
+  [key: string]: any;
 }
 
 export interface MutationPayload {
@@ -73,7 +74,7 @@ export interface GraphqlSchemaParts {
 export interface MutationOptions {
   name: string;
   definition: DocumentNode;
-  resolver: (input: MutationInput, context?: Context, info?: GraphqlInfo) => any;
+  resolver: (input: any, context?: Context, info?: GraphqlInfo) => any;
 }
 
 export interface QueryOptions {
