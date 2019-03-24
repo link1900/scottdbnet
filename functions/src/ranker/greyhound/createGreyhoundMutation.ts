@@ -6,7 +6,7 @@ import { MutationInput, MutationPayload } from '../../graphql/graphqlSchemaTypes
 import UserInputError from '../../error/UserInputError';
 import { InvalidFieldReason } from '../../error/InvalidFieldReason';
 import { Role } from '../../server/Role';
-import { doesGreyhoundNameExist } from './greyhoundHelper';
+import { checkIfGreyhoundNameExists, doesGreyhoundNameExist } from './greyhoundHelper';
 
 export const createGreyhoundMutationDefinition = gql`
   input CreateGreyhoundInput {
@@ -38,14 +38,7 @@ export async function createGreyhoundResolver(
 ): Promise<CreateGreyhoundPayload> {
   context.checkForRole(Role.ADMIN);
   const greyhoundInput = new Greyhound(input);
-  const nameAlreadyExists = await doesGreyhoundNameExist(context, greyhoundInput.name);
-  if (nameAlreadyExists) {
-    throw new UserInputError(
-      `greyhound with name ${greyhoundInput.name} already exists`,
-      'name',
-      InvalidFieldReason.INVALID
-    );
-  }
+  await checkIfGreyhoundNameExists(context, greyhoundInput.name);
   const greyhound = await context.loaders.greyhound.create(greyhoundInput);
   return {
     greyhound

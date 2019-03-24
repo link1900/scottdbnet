@@ -1,7 +1,10 @@
 import { gql } from 'apollo-server-express';
-import { closeDatabaseConnection } from '../../../server/serverHelper';
-import { buildQueryFunction, createAdminContext } from '../../../server/__tests__/testHelpers';
-import { Greyhound } from '../Greyhound';
+import {
+  buildQueryFunction,
+  clearDatabase,
+  closeDatabase,
+  getContextAndFixture
+} from '../../../server/__tests__/testHelpers';
 
 const runGreyhoundMutation = buildQueryFunction(
   gql`
@@ -22,13 +25,12 @@ const runGreyhoundMutation = buildQueryFunction(
 );
 
 describe('createGreyhoundMutation', () => {
-  beforeAll(async () => {
-    const context = await createAdminContext();
-    await context.loaders.greyhound.repository.clear();
+  beforeEach(async () => {
+    await clearDatabase();
   });
 
   afterAll(async () => {
-    await closeDatabaseConnection();
+    await closeDatabase();
   });
 
   it('create greyhound correctly', async () => {
@@ -62,11 +64,11 @@ describe('createGreyhoundMutation', () => {
   });
 
   it('fails when name already exists', async () => {
-    const context = await createAdminContext();
-    await context.loaders.greyhound.create(new Greyhound({ name: 'EXISTING GREYHOUND' }));
+    const { fixture } = await getContextAndFixture();
+    const { greyhound1 } = fixture;
     const vars = {
       input: {
-        name: 'existing greyhound'
+        name: greyhound1.name
       }
     };
     const result = await runGreyhoundMutation(vars, true);

@@ -12,6 +12,7 @@ import { uppercaseDirective } from '../graphql/types/upperCaseDirective';
 import { notEmptyDirective } from '../graphql/types/notEmptyDirective';
 import { deleteGreyhoundMutation } from '../ranker/greyhound/greyhoundDeleteMutation';
 import { nodeIdType } from '../graphql/types/nodeIdType';
+import { updateGreyhoundMutation } from '../ranker/greyhound/greyhoundUpdateMutation';
 
 export const graphqlSchemaDefinition: GraphqlSchemaDefinition = {
   contextFromRequestGenerator: createContextFromRequest,
@@ -31,6 +32,7 @@ export const graphqlSchemaDefinition: GraphqlSchemaDefinition = {
     rankerQuery,
     greyhoundGenderType,
     createGreyhoundMutation,
-    deleteGreyhoundMutation
+    deleteGreyhoundMutation,
+    updateGreyhoundMutation
   ]
 };
