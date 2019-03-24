@@ -25,11 +25,11 @@ export const greyhoundResolver = {
     }
     return context.loaders.greyhound.load(sireId);
   },
-  dam: ({ sireId }: Greyhound, args: any, context: ServerContext) => {
-    if (!sireId) {
+  dam: ({ damId }: Greyhound, args: any, context: ServerContext) => {
+    if (!damId) {
       return undefined;
     }
-    return context.loaders.greyhound.load(sireId);
+    return context.loaders.greyhound.load(damId);
   }
 };
 
