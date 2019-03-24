@@ -25,6 +25,7 @@ import {
 } from './graphqlSchemaTypes';
 import { base64Decode, base64Encode } from '../util/stringHelper';
 import { SchemaDirectiveVisitor } from 'apollo-server-cloud-functions';
+import { Request } from 'express';
 
 export const rootDefinition = gql`
   interface Node {
