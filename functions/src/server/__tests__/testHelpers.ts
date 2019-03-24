@@ -5,8 +5,9 @@ import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { getGraphqlSchemaFromDefinition } from '../../graphql/graphqlSchemaBuilders';
 import { graphqlSchemaDefinition } from '../graphqlSchema';
 import { Context } from '../../graphql/graphqlSchemaTypes';
-import { createContextFromRequest } from '../serverHelper';
+import { closeDatabaseConnection, createContextFromRequest } from '../serverHelper';
 import { Role } from '../Role';
+import { createFixture } from './fixtureHelper';
 
 let schema: GraphQLSchema | undefined;
 
@@ -89,6 +90,25 @@ export async function createAdminContext() {
   const context = await createContextFromRequest();
   context.roles = [Role.ADMIN];
   return context;
+}
+
+export async function getContextAndFixture() {
+  const context = await createAdminContext();
+  const fixture = await createFixture(context);
+  return {
+    context,
+    fixture
+  };
+}
+
+export async function clearDatabase() {
+  const context = await createAdminContext();
+  await context.loaders.greyhound.repository.clear();
+  return true;
+}
+
+export async function closeDatabase() {
+  await closeDatabaseConnection();
 }
 
 export async function createPublicContext() {
