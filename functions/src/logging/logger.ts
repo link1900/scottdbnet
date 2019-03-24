@@ -10,10 +10,10 @@ export class Logger {
   public enabled: boolean;
   public logGenerator: any;
 
-  constructor() {
+  constructor(logLevel: string) {
     this.enabled = true;
     this.logGenerator = createLogger({
-      level: 'info',
+      level: logLevel,
       format: (level: LogLevel, event: any) => {
         return JSON.stringify(event);
       }
@@ -48,8 +48,16 @@ export class Logger {
     this.logGenerator[event.level](event);
     return event;
   }
+
+  set logLevel(newLogLevel: string) {
+    this.logGenerator.level = newLogLevel;
+  }
+
+  get logLevel(): string {
+    return this.logGenerator.level;
+  }
 }
 
-const logger = new Logger();
+const logger = new Logger('info');
 
 export default logger;
