@@ -45,6 +45,8 @@ export function getMaskedErrorMessageForCode(message: string, code: ErrorCode) {
       return 'There was an unexpected error';
     case ErrorCode.USER_INPUT_ERROR:
       return message;
+    default:
+      return 'There was an unexpected error';
   }
 }
 

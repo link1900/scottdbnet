@@ -14,7 +14,7 @@ export class Logger {
   public enabled: boolean;
   public logGenerator: any;
 
-  constructor(newLogLevel: string) {
+  constructor(newLogLevel: string = 'info') {
     this.enabled = true;
     this.logLevel = newLogLevel;
   }

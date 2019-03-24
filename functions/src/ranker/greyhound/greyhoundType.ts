@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server-core';
-import { createType, toGlobalId } from '../../graphql/graphqlSchemaBuilders';
+import { createType } from '../../graphql/graphqlSchemaBuilders';
 import { Greyhound } from './Greyhound';
 import ServerContext from '../../server/ServerContext';
 
@@ -18,7 +18,7 @@ export const greyhoundDefinition = gql`
 `;
 
 export const greyhoundResolver = {
-  id: ({ id }: Greyhound) => toGlobalId('Greyhound', id),
+  id: (greyhound: Greyhound) => greyhound.nodeId,
   sire: ({ sireId }: Greyhound, args: any, context: ServerContext) => {
     if (!sireId) {
       return undefined;

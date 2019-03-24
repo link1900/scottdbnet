@@ -1,16 +1,17 @@
 import { closeDatabaseConnection } from '../../server/serverHelper';
-import { createBaseContext } from '../../server/graphqlSchema';
 import { Greyhound } from '../../ranker/greyhound/Greyhound';
 import { runQueryBuilderAsConnection } from '../connectionForSqlQuery';
 import ServerContext from '../../server/ServerContext';
 import { base64Encode, objectToString } from '../../util/stringHelper';
+import { getContextAndFixture } from '../../server/__tests__/testHelpers';
 
 describe('connectionForSqlQuery', () => {
   let context: ServerContext;
   let greyhounds: Greyhound[];
 
   beforeEach(async () => {
-    context = await createBaseContext();
+    const { context: someContext } = await getContextAndFixture();
+    context = someContext;
     await context.loaders.greyhound.repository.clear();
     greyhounds = await Promise.all(
       Array(10)

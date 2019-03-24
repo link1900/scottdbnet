@@ -1,7 +1,25 @@
 import { gql } from 'apollo-server-express';
 import { closeDatabaseConnection } from '../../../server/serverHelper';
-import { callGraphql, createAdminContext, createPublicContext } from '../../../server/__tests__/testHelpers';
+import { buildQueryFunction, createAdminContext } from '../../../server/__tests__/testHelpers';
 import { Greyhound } from '../Greyhound';
+
+const runGreyhoundMutation = buildQueryFunction(
+  gql`
+    mutation CreateGreyhound($input: CreateGreyhoundInput!) {
+      createGreyhound(input: $input) {
+        clientMutationId
+        greyhound {
+          id
+          name
+          color
+          gender
+          dateOfBirth
+        }
+      }
+    }
+  `,
+  'createGreyhound'
+);
 
 describe('createGreyhoundMutation', () => {
   beforeAll(async () => {
@@ -55,31 +73,3 @@ describe('createGreyhoundMutation', () => {
     expect(result.message).toContain('already exists');
   });
 });
-
-async function runGreyhoundMutation(vars: object, expectError: boolean = false, auth: boolean = true) {
-  const context = auth ? await createAdminContext() : await createPublicContext();
-  const query = gql`
-    mutation CreateGreyhound($input: CreateGreyhoundInput!) {
-      createGreyhound(input: $input) {
-        clientMutationId
-        greyhound {
-          id
-          name
-          color
-          gender
-          dateOfBirth
-        }
-      }
-    }
-  `;
-  const result = await callGraphql(query, vars, context, expectError);
-  if (expectError) {
-    const { errors = [] } = result;
-    return errors[0];
-  }
-  const { data } = result;
-  if (!data || !data.createGreyhound) {
-    throw new Error('Cannot find result data');
-  }
-  return data.createGreyhound;
-}

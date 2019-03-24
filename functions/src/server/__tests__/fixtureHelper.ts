@@ -5,7 +5,7 @@ import moment from 'moment-timezone';
 export async function createFixture(context: ServerContext) {
   const sire1 = await context.loaders.greyhound.create(
     new Greyhound({
-      name: 'SIRE',
+      name: 'SIRE1',
       color: 'black',
       gender: 'dog',
       dateOfBirth: moment()
@@ -15,7 +15,7 @@ export async function createFixture(context: ServerContext) {
   );
   const dam1 = await context.loaders.greyhound.create(
     new Greyhound({
-      name: 'DAM',
+      name: 'DAM1',
       color: 'black',
       gender: 'bitch',
       dateOfBirth: moment()
@@ -25,7 +25,7 @@ export async function createFixture(context: ServerContext) {
   );
   const greyhound1 = await context.loaders.greyhound.create(
     new Greyhound({
-      name: 'EXISTING GREYHOUND',
+      name: 'GREYHOUND1',
       sireId: sire1.id,
       damId: dam1.id,
       color: 'black',

@@ -5,8 +5,8 @@ import { Greyhound } from './Greyhound';
 import { MutationInput, MutationPayload } from '../../graphql/graphqlSchemaTypes';
 import UserInputError from '../../error/UserInputError';
 import { InvalidFieldReason } from '../../error/InvalidFieldReason';
-import { exists } from '../../util/objectHelper';
 import { Role } from '../../server/Role';
+import { doesGreyhoundNameExist } from './greyhoundHelper';
 
 export const createGreyhoundMutationDefinition = gql`
   input CreateGreyhoundInput {
@@ -50,16 +50,6 @@ export async function createGreyhoundResolver(
   return {
     greyhound
   };
-}
-
-async function doesGreyhoundNameExist(context: ServerContext, name: string, ignoreId?: string): Promise<boolean> {
-  const queryBuilder = context.loaders.greyhound.getQueryBuilder();
-  queryBuilder.andWhere('greyhound.name = :name', { name });
-  if (ignoreId) {
-    queryBuilder.andWhere('greyhound.id <> :id', { id: ignoreId });
-  }
-  const foundGreyhounds = await queryBuilder.getOne();
-  return exists(foundGreyhounds);
 }
 
 export const createGreyhoundMutation = createMutation({
