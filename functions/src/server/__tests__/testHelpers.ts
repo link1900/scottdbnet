@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { get, has } from 'lodash';
 import { DocumentNode, ExecutionResult, graphql, GraphQLSchema } from 'graphql';
 import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { getGraphqlSchemaFromDefinition } from '../../graphql/graphqlSchemaBuilders';
@@ -92,6 +93,24 @@ export async function createAdminContext() {
 
 export async function createPublicContext() {
   return createContextFromRequest();
+}
+
+export function buildQueryFunction(query: any, accessKey: string) {
+  return async function runQuery(vars: object, expectError: boolean = false, auth: boolean = true) {
+    const context = auth ? await createAdminContext() : await createPublicContext();
+    const result = await callGraphql(query, vars, context, expectError);
+    if (expectError) {
+      const { errors = [] } = result;
+      return errors[0];
+    }
+
+    const { data } = result;
+
+    if (!data || !has(data, accessKey)) {
+      throw new Error('Cannot find result data');
+    }
+    return get(data, accessKey);
+  };
 }
 
 describe('testHelpers', () => {
