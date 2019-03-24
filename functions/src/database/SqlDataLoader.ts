@@ -80,4 +80,8 @@ export class SqlDataLoader<
       this.prime(entity.id, entity);
     }
   }
+
+  public async findById(id: string): Promise<EntityInstance | undefined> {
+    return this.repository.findOne(id);
+  }
 }
