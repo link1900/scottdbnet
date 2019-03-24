@@ -1,4 +1,5 @@
 import { Entity, VersionColumn, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { toGlobalId } from '../graphql/graphqlSchemaBuilders';
 
 @Entity()
 export class BaseModel {
@@ -19,4 +20,8 @@ export class BaseModel {
   @VersionColumn()
   // @ts-ignore
   public version: number;
+
+  public get nodeId() {
+    return toGlobalId(this.constructor.name, this.id);
+  }
 }
