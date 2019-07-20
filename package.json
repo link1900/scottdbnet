@@ -2,6 +2,7 @@
   "name": "scottdb",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "@material-ui/core": "3.7.1",
     "@material-ui/icons": "3.0.1",
