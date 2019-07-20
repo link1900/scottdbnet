@@ -18,6 +18,33 @@
             "value": "no-cache"
           }
         ]
+      },
+      {
+        "source": "/style.css",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=10080"
+          }
+        ]
+      },
+      {
+        "source": "/favicon*",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=10080"
+          }
+        ]
+      },
+      {
+        "source": "/static/**/*",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=10080"
+          }
+        ]
       }
     ],
     "rewrites": [
