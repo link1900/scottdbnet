@@ -10,7 +10,7 @@
     "firebase-admin": "8.0.0",
     "firebase-functions": "2.3.1",
     "firebaseui": "4.0.0",
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
     "react": "16.4.2",
     "react-dom": "16.4.2",
     "react-redux": "5.0.7",
