@@ -1,15 +1,32 @@
 {
-  "name": "scottdb",
+  "name": "scottdbnet",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "analyze": "source-map-explorer build/static/js/main.*",
+    "eject": "react-scripts-ts eject",
+    "lint": "tsc --noEmit && tslint src/**/*.tsx",
+    "unit-test": "react-scripts-ts test",
+    "test": "set CI=true && yarn unit-test",
+    "format": "prettier --write \"src/**/*.js\" \"src/**/*.jsx\" \"src/**/*.ts\" \"src/**/*.tsx\" \"functions/src/**/*.ts\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "dependencies": {
     "@material-ui/core": "3.7.1",
     "@material-ui/icons": "3.0.1",
-    "firebase": "6.1.0",
-    "firebase-admin": "8.0.0",
-    "firebase-functions": "2.3.1",
-    "firebaseui": "4.0.0",
     "lodash": "4.17.11",
     "react": "16.4.2",
     "react-dom": "16.4.2",
@@ -24,28 +41,6 @@
     "store": "2.0.12",
     "styled-components": "3.4.5",
     "uuid": "3.3.2"
-  },
-  "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "analyze": "source-map-explorer build/static/js/main.*",
-    "eject": "react-scripts-ts eject",
-    "lint": "tsc --noEmit && tslint src/**/*.tsx",
-    "unit-test": "react-scripts-ts test",
-    "test": "set CI=true && yarn unit-test",
-    "format": "prettier --write \"src/**/*.js\" \"src/**/*.jsx\" \"src/**/*.ts\" \"src/**/*.tsx\" \"functions/src/**/*.ts\"",
-    "deploy": "yarn build && firebase deploy"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx,json,css,md}": [
-      "prettier --write",
-      "git add"
-    ]
   },
   "devDependencies": {
     "@types/chance": "1.0.1",

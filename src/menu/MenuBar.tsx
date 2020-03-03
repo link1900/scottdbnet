@@ -1,10 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Avatar, IconButton, Menu, MenuItem, Icon, AppBar, Toolbar } from '@material-ui/core';
-import { compose, withState } from 'recompose';
-import { withFirebase } from 'react-redux-firebase';
-import { connect } from 'react-redux';
-import { getViewerFromAuth } from '../auth/authHelper';
+import { IconButton, Icon, AppBar, Toolbar } from '@material-ui/core';
+import { compose } from 'recompose';
 
 const styles = {
   appBar: {
@@ -32,23 +29,8 @@ interface Props {
 }
 
 class MenuBar extends React.Component<Props, object> {
-  public setTarget = (event: any) => {
-    const { setAnchorEl } = this.props;
-    setAnchorEl(event.currentTarget);
-  };
-
-  public clearTarget = () => {
-    const { setAnchorEl } = this.props;
-    setAnchorEl(null);
-  };
-
-  public logout = () => {
-    const { logout } = this.props;
-    logout();
-  };
-
   public render() {
-    const { classes, viewer, anchorEl, loginButton, showMenu, onMenuPress } = this.props;
+    const { classes, showMenu, onMenuPress } = this.props;
     return (
       <AppBar key="appBar" position="static" className={classes.appBar}>
         <Toolbar>
@@ -57,40 +39,10 @@ class MenuBar extends React.Component<Props, object> {
               <Icon>menu</Icon>
             </IconButton>
           ) : null}
-          {viewer ? (
-            <IconButton
-              aria-owns={anchorEl ? 'user-menu' : undefined}
-              aria-haspopup="true"
-              onClick={this.setTarget}
-              color="inherit"
-            >
-              {viewer.imageUrl ? <Avatar alt={viewer.name} src={viewer.imageUrl} /> : viewer.name}
-            </IconButton>
-          ) : (
-            loginButton
-          )}
-          <Menu id="user-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.clearTarget}>
-            <MenuItem onClick={this.logout}>Logout</MenuItem>
-          </Menu>
         </Toolbar>
       </AppBar>
     );
   }
 }
 
-function mapStateToProps(state: any, ownProps: any) {
-  return {
-    viewer: getViewerFromAuth(state.firebase.auth),
-    logout: () => {
-      ownProps.setAnchorEl(null);
-      ownProps.firebase.logout();
-    }
-  };
-}
-
-export default compose(
-  withStyles(styles),
-  withState('anchorEl', 'setAnchorEl', null),
-  withFirebase,
-  connect(mapStateToProps)
-)(MenuBar);
+export default compose(withStyles(styles))(MenuBar);
