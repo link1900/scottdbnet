@@ -48,11 +48,11 @@ export default class Home extends React.Component<Props, State> {
                   <ListItemText primary="Linkin Games" />
                 </ListItem>
               </FlatLink>
-              <ListItem button={true} onClick={this.navigateOnClick('https://agra-ranker.herokuapp.com')}>
+              <ListItem button={true} onClick={this.navigateOnClick('https://ranker.scottdb.net')}>
                 <Avatar src={gcaIcon} alt={'gca logo'} />
                 <ListItemText primary="Greyhound Rankings" />
               </ListItem>
-              <ListItem button={true} onClick={this.navigateOnClick('mailto:link1900@gmail.com')}>
+              <ListItem button={true} onClick={this.navigateOnClick('mailto:scott@scottdb.net')}>
                 <Avatar src={mailIcon} alt={'email icon'} />
                 <ListItemText primary="Email" />
               </ListItem>
