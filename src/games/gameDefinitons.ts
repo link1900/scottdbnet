@@ -1,3 +1,4 @@
+import GameOfLife from './gameOfLife/GameOfLife';
 import SimpleTennis from './simpleTennis/SimpleTennis';
 import tennisPreview from './simpleTennis/tennisPreview.png';
 import LightOn from './lightOn/LightOn';
@@ -10,6 +11,7 @@ import ticPreview from './tictactoe/ticPreview.png';
 import GuesserPreview from './guesser/thinking.jpg';
 import GuesserAIPreview from './guesser-ai/thinkingAI.png';
 import GuesserAI from './guesser-ai/GuesserAI';
+import gameOfLifePreview from './gameOfLife/conway_game_of_life.png';
 
 export interface GameDefinition {
   name?: string;
@@ -80,6 +82,16 @@ export const gameDefinitions: GameDefinition[] = [
     year: '2016',
     component: Tic,
     image: ticPreview,
+    author: 'Scott Brown'
+  },
+  {
+    name: 'cgol',
+    title: 'Conway\'s Game of Life',
+    originalFramework: 'React',
+    originalLanguage: 'Typescript',
+    year: '2021',
+    component: GameOfLife,
+    image: gameOfLifePreview,
     author: 'Scott Brown'
   }
 ];
