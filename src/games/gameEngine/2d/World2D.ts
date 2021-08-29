@@ -1,5 +1,5 @@
 import Shape from './Shape';
-import { World, WorldProps } from './World';
+import { World, WorldProps } from '../base/World';
 
 export type BoundType = 'wall' | 'wrap' | 'delete';
 

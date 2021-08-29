@@ -1,5 +1,5 @@
 import React from "react";
-import { World } from "./World";
+import { World } from "../base/World";
 
 interface Props {
   height?: number;

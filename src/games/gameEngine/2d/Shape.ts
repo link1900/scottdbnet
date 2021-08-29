@@ -1,4 +1,4 @@
-import Entity, { EntityProps } from './Entity';
+import Entity, { EntityProps } from '../base/Entity';
 import { World2D } from './World2D';
 
 export interface ShapeProps extends EntityProps {

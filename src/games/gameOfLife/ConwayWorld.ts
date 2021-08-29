@@ -1,6 +1,6 @@
-import { GridCellProps } from "../gameEngine/GridCell";
-import { WorldGrid, WorldGridProps } from "../gameEngine/WorldGrid";
-import { getChance } from "../gameEngine/randomHelper";
+import { GridCellProps } from "../gameEngine";
+import { WorldGrid, WorldGridProps } from "../gameEngine";
+import { getChance } from "../gameEngine";
 import { ConwayCell } from "./ConwayCell";
 
 export interface ConwayWorldProps extends WorldGridProps {}
