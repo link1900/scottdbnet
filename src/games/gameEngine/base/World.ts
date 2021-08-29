@@ -1,4 +1,4 @@
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import Entity from "./Entity";
 
 export interface WorldProps {
@@ -15,7 +15,7 @@ export class World {
   private intervalId: number | undefined = undefined;
 
   constructor({
-    id = uuid.v4(),
+    id = uuid(),
     entities = [],
     framesPerSecond = 60
   }: WorldProps) {

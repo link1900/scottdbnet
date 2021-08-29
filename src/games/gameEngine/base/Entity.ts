@@ -1,5 +1,5 @@
-import uuid from 'uuid';
-import { World } from './World';
+import { v4 as uuid } from "uuid";
+import { World } from "./World";
 
 export interface EntityProps {
   id?: string;
@@ -19,7 +19,13 @@ export default class Entity {
   public alive: boolean;
   public world: World;
 
-  constructor({ id = uuid.v4(), visible = true, active = true, alive = true, world }: EntityProps) {
+  constructor({
+    id = uuid(),
+    visible = true,
+    active = true,
+    alive = true,
+    world
+  }: EntityProps) {
     this.id = id;
     this.visible = visible;
     this.active = active;
