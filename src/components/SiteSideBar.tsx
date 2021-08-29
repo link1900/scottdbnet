@@ -1,7 +1,13 @@
 import React from "react";
-import { Drawer, List, ListItem, ListItemText } from "@material-ui/core";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Divider
+} from "@material-ui/core";
 import { gameDefinitions } from "../games/gameDefinitons";
-import {useHistory, useRouteMatch} from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 export interface SiteSideBarProps {
   variant: "permanent" | "temporary";
@@ -33,9 +39,14 @@ function SiteSideBar(props: SiteSideBarProps) {
         <ListItem key="games" button onClick={() => goToPage(`${url}`)}>
           <ListItemText primary="Games" />
         </ListItem>
+        <Divider />
         {gameDefinitions.map(gameDefinition => {
           return (
-            <ListItem key={gameDefinition.name} button onClick={() => goToPage(`${url}/${gameDefinition.name}`)}>
+            <ListItem
+              key={gameDefinition.name}
+              button
+              onClick={() => goToPage(`${url}/${gameDefinition.name}`)}
+            >
               <ListItemText primary={gameDefinition.title} />
             </ListItem>
           );

@@ -9,8 +9,8 @@ import { Guesser } from "./guesser/Guesser";
 // import Tic from './tictactoe/Tic';
 // import ticPreview from './tictactoe/ticPreview.png';
 import GuesserPreview from "./guesser/thinking.jpg";
-// import GuesserAIPreview from './guesser-ai/thinkingAI.png';
-// import GuesserAI from './guesser-ai/GuesserAI';
+import GuesserAIPreview from "./guesserAI/thinkingAI.png";
+import { GuesserAI } from "./guesserAI/GuesserAI";
 import gameOfLifePreview from "./gameOfLife/conway_game_of_life.png";
 
 export interface GameDefinition {
@@ -65,15 +65,15 @@ export const gameDefinitions: GameDefinition[] = [
     component: Guesser,
     author: "Scott Brown"
   },
-  // {
-  //   name: 'guesser-ai',
-  //   title: 'Guess the number AI',
-  //   originalLanguage: 'Javascript',
-  //   image: GuesserAIPreview,
-  //   year: '2018',
-  //   component: GuesserAI,
-  //   author: 'Scott Brown'
-  // },
+  {
+    name: "guesser-ai",
+    title: "Guess the number AI",
+    originalLanguage: "Javascript",
+    image: GuesserAIPreview,
+    year: "2018",
+    component: GuesserAI,
+    author: "Scott Brown"
+  },
   // {
   //   name: 'tic',
   //   title: 'Noughts and Crosses',
