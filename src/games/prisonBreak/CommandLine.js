@@ -1,10 +1,10 @@
-import React from 'react';
-import { TextField } from '@material-ui/core';
-import './commandLine.css';
+import React from "react";
+import { TextField } from "@material-ui/core";
+import "./commandLine.css";
 
 export default class CommandLine extends React.Component {
   componentDidUpdate() {
-    const mainTextArea = document.getElementById('main-text-area');
+    const mainTextArea = document.getElementById("main-text-area");
     if (mainTextArea) {
       mainTextArea.scrollTop = mainTextArea.scrollHeight;
     }
@@ -23,17 +23,28 @@ export default class CommandLine extends React.Component {
   };
 
   render() {
-    const { name = 'bash', currentInput = '', onChange = () => {}, onKeyDown = () => {}, log = [] } = this.props;
+    const {
+      name = "bash",
+      currentInput = "",
+      onChange = () => {},
+      onKeyDown = () => {},
+      log = []
+    } = this.props;
     return (
-      <div style={{ width: '600px' }} role="presentation" onClick={this.clickConsole} className="shell-wrap">
+      <div
+        style={{ width: "600px" }}
+        role="presentation"
+        onClick={this.clickConsole}
+        className="shell-wrap"
+      >
         <p className="shell-top-bar">{name}</p>
         <div
           id="main-text-area"
           className="shell-body"
           style={{
-            minHeight: '200px',
-            overflowY: 'scroll',
-            maxHeight: '500px'
+            minHeight: "200px",
+            overflowY: "scroll",
+            maxHeight: "500px"
           }}
         >
           {log.map((logItem, index) => {
@@ -54,16 +65,16 @@ export default class CommandLine extends React.Component {
               disableUnderline: true,
               style: {
                 padding: 0,
-                width: '95%',
+                width: "95%",
                 marginTop: 3,
-                height: 'inherit',
-                lineHeight: 'inherit'
+                height: "inherit",
+                lineHeight: "inherit"
               }
             }}
             inputProps={{
               style: {
-                background: '#00000',
-                color: 'rgb(199, 197,189)',
+                background: "#00000",
+                color: "rgb(199, 197,189)",
                 font: "14px 'Roboto Mono', monospace"
               }
             }}

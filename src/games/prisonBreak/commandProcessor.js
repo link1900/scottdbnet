@@ -1,44 +1,59 @@
-import React from 'react';
-import { includes, first, find, filter, intersection, isNil, tail, isEmpty } from 'lodash';
-import './commandLine.css';
-import CommandRef from './CommandRef';
-import { convertToDirection, flipDirection } from './Location';
-import { createWorld, itemsAtLocation, monstersAtLocation } from './World';
-import { equipmentTypes } from './Item';
-import { getPlayerLocation, getPlayer, getPlayerScore } from './Player';
-import { randomInteger } from '../../utils/randomHelper';
+import React from "react";
+import {
+  includes,
+  first,
+  find,
+  filter,
+  intersection,
+  isNil,
+  tail,
+  isEmpty
+} from "lodash";
+import "./commandLine.css";
+import CommandRef from "./CommandRef";
+import { convertToDirection, flipDirection } from "./Location";
+import { createWorld, itemsAtLocation, monstersAtLocation } from "./World";
+import { equipmentTypes } from "./Item";
+import { getPlayerLocation, getPlayer, getPlayerScore } from "./Player";
+import { randomInteger } from "../gameEngine";
 
 const commandList = [
-  { keys: ['look', 'l', 'where', 'ls'], action: look },
-  { keys: ['north', 'n', 'up'], action: move },
-  { keys: ['east', 'e', 'right'], action: move },
-  { keys: ['west', 'w', 'left'], action: move },
-  { keys: ['south', 's', 'down'], action: move },
-  { keys: ['move', 'go'], action: moveBy },
-  { keys: ['clear'], action: clear },
-  { keys: ['help', '?'], action: help },
-  { keys: ['quest', 'log', 'journal', 'goal', 'objective', 'load'], action: quest },
-  { keys: ['save', 'backup'], action: save },
-  { keys: ['restart', 'reset', 'delete'], action: restart },
-  { keys: ['yes', 'ok', 'agree', 'nod'], action: yes },
-  { keys: ['no', 'nope', 'disagree'], action: no },
-  { keys: ['status', 'me', 'self', 'stats'], action: status },
-  { keys: ['inventory'], action: inventory },
-  { keys: ['equipment'], action: equipment },
-  { keys: ['take', 'grab', 'get', 'pickup', 'collect'], action: take },
-  { keys: ['list'], adverb: true },
-  { keys: ['equip', 'wear', 'don'], action: equip },
-  { keys: ['unequip', 'remove', 'doff'], action: unequip },
-  { keys: ['open', 'unlock'], action: unlock },
-  { keys: ['showmap'], action: revealMap, hidden: true },
-  { keys: ['attack', 'kill', 'damage', 'hurt', 'stab', 'kick', 'slice', 'chop'], action: attack },
-  { keys: ['use', 'drink', 'consume', 'eat'], action: use }
+  { keys: ["look", "l", "where", "ls"], action: look },
+  { keys: ["north", "n", "up"], action: move },
+  { keys: ["east", "e", "right"], action: move },
+  { keys: ["west", "w", "left"], action: move },
+  { keys: ["south", "s", "down"], action: move },
+  { keys: ["move", "go"], action: moveBy },
+  { keys: ["clear"], action: clear },
+  { keys: ["help", "?"], action: help },
+  {
+    keys: ["quest", "log", "journal", "goal", "objective", "load"],
+    action: quest
+  },
+  { keys: ["save", "backup"], action: save },
+  { keys: ["restart", "reset", "delete"], action: restart },
+  { keys: ["yes", "ok", "agree", "nod"], action: yes },
+  { keys: ["no", "nope", "disagree"], action: no },
+  { keys: ["status", "me", "self", "stats"], action: status },
+  { keys: ["inventory"], action: inventory },
+  { keys: ["equipment"], action: equipment },
+  { keys: ["take", "grab", "get", "pickup", "collect"], action: take },
+  { keys: ["list"], adverb: true },
+  { keys: ["equip", "wear", "don"], action: equip },
+  { keys: ["unequip", "remove", "doff"], action: unequip },
+  { keys: ["open", "unlock"], action: unlock },
+  { keys: ["showmap"], action: revealMap, hidden: true },
+  {
+    keys: ["attack", "kill", "damage", "hurt", "stab", "kick", "slice", "chop"],
+    action: attack
+  },
+  { keys: ["use", "drink", "consume", "eat"], action: use }
   // drop //item discard
   // quit //game //exit
 ];
 
 export function processCommand(state, command, allowedCommands) {
-  const commandWords = command.split(' ');
+  const commandWords = command.split(" ");
   const firstWord = first(commandWords);
   if (!isAllowedCommand(firstWord, allowedCommands)) {
     return invalidInput(state, command);
@@ -48,7 +63,7 @@ export function processCommand(state, command, allowedCommands) {
     return error(state, command);
   }
   if (commandDef.adverb) {
-    const rest = tail(commandWords).join(' ');
+    const rest = tail(commandWords).join(" ");
     return processCommand(state, rest);
   }
   return commandDef.action(state, command);
@@ -61,7 +76,7 @@ export function logViewProcessor(logItem) {
 export function updateLog(state, command, value) {
   return {
     ...state,
-    currentInput: '',
+    currentInput: "",
     log: state.log.concat([command]).concat([value]),
     history: state.history.concat([command]),
     historyPosition: state.history.length + 1
@@ -78,7 +93,7 @@ export function updateLogDirect(state, value) {
 export function clear(state) {
   return {
     ...state,
-    currentInput: '',
+    currentInput: "",
     log: []
   };
 }
@@ -88,8 +103,9 @@ export function error(state, command) {
     state,
     command,
     <span>
-      Sorry I do not understand {command}. Try entering <CommandRef command="help" /> or <CommandRef command="?" /> to
-      see a list of commands.
+      Sorry I do not understand {command}. Try entering{" "}
+      <CommandRef command="help" /> or <CommandRef command="?" /> to see a list
+      of commands.
     </span>
   );
 }
@@ -103,7 +119,8 @@ export function look(state, command) {
     state,
     command,
     <span>
-      You are located at <b>{playerLocation.name}</b>. {playerLocation.description} <br />
+      You are located at <b>{playerLocation.name}</b>.{" "}
+      {playerLocation.description} <br />
       Looking around you see:
       <br />
       {possibleDirections(state, playerLocation)}
@@ -120,7 +137,7 @@ function itemLook(state, location) {
   }
   return (
     <span>
-      You can see the following item{items.length === 1 ? '' : 's'}:
+      You can see the following item{items.length === 1 ? "" : "s"}:
       <ul>
         {items.map(item => (
           <li key={item.id}>
@@ -143,7 +160,10 @@ function monsterLook(state, location) {
       <ul>
         {monsters.map(monster => (
           <li key={monster.id}>
-            <CommandRef command={`attack ${monster.name}`} label={monster.name} />
+            <CommandRef
+              command={`attack ${monster.name}`}
+              label={monster.name}
+            />
           </li>
         ))}
       </ul>
@@ -157,13 +177,17 @@ function possibleDirections(state, location) {
   }
   return (
     <span>
-      You can move in the following direction{location.paths.length === 1 ? '' : 's'}:
+      You can move in the following direction{location.paths.length === 1
+        ? ""
+        : "s"}:
       <ul>
         {location.paths.map(path => {
           if (!path) {
             return null;
           }
-          const newLocation = find(state.world.locations, { id: path.toLocationId });
+          const newLocation = find(state.world.locations, {
+            id: path.toLocationId
+          });
           return (
             <li key={path.direction}>
               <CommandRef command={path.direction} /> to {newLocation.name}
@@ -176,13 +200,16 @@ function possibleDirections(state, location) {
 }
 
 export function help(state, command) {
-  const commandKeys = commandList.filter(cl => cl.hidden !== true).map(commandDef => first(commandDef.keys));
+  const commandKeys = commandList
+    .filter(cl => cl.hidden !== true)
+    .map(commandDef => first(commandDef.keys));
   return updateLog(
     state,
     command,
     <span>
       To play this game you enter your actions by typing in the command such as
-      <CommandRef command="north" /> to move north or <CommandRef command="look" /> to look around.
+      <CommandRef command="north" /> to move north or{" "}
+      <CommandRef command="look" /> to look around.
       <br />
       Here is the list of valid commands:
       <br />
@@ -207,9 +234,10 @@ export function intro(state) {
   return updateLogDirect(
     state,
     <span>
-      You wake up in your cell as you have done for the past few weeks, but today something is different. Your cell door
-      is open! This is your one chance to escape this prison. I need to move <CommandRef command="south" /> and get out
-      of this cell.
+      You wake up in your cell as you have done for the past few weeks, but
+      today something is different. Your cell door is open! This is your one
+      chance to escape this prison. I need to move{" "}
+      <CommandRef command="south" /> and get out of this cell.
     </span>
   );
 }
@@ -217,7 +245,11 @@ export function intro(state) {
 export function move(state, command) {
   const direction = convertToDirection(command);
   if (!direction) {
-    return updateLog(state, command, <span>You cannot move in that direction</span>);
+    return updateLog(
+      state,
+      command,
+      <span>You cannot move in that direction</span>
+    );
   }
   const playerLocation = getPlayerLocation(state);
   const player = getPlayer(state);
@@ -226,7 +258,8 @@ export function move(state, command) {
       state,
       command,
       <span>
-        You cannot move <CommandRef command={direction} />, there is no path that way.
+        You cannot move <CommandRef command={direction} />, there is no path
+        that way.
       </span>
     );
   }
@@ -236,7 +269,8 @@ export function move(state, command) {
       state,
       command,
       <span>
-        You cannot move <CommandRef command={direction} />, there is no path that way.
+        You cannot move <CommandRef command={direction} />, there is no path
+        that way.
       </span>
     );
   }
@@ -246,7 +280,8 @@ export function move(state, command) {
       state,
       command,
       <span>
-        The door in that direction is locked. I will need a key to <CommandRef command="unlock" /> it.
+        The door in that direction is locked. I will need a key to{" "}
+        <CommandRef command="unlock" /> it.
       </span>
     );
   }
@@ -257,16 +292,22 @@ export function move(state, command) {
       state,
       command,
       <span>
-        {first(monsters).name} blocks our path. I will have to{' '}
-        <CommandRef command={`attack ${first(monsters).name}`} label="attack" /> and defeat it first.
+        {first(monsters).name} blocks our path. I will have to{" "}
+        <CommandRef command={`attack ${first(monsters).name}`} label="attack" />{" "}
+        and defeat it first.
       </span>
     );
   }
 
-  let updatedState = updateEntity(state, player.id, 'locationId', path.toLocationId);
+  let updatedState = updateEntity(
+    state,
+    player.id,
+    "locationId",
+    path.toLocationId
+  );
   const oldLocation = find(state.world.locations, { id: path.fromLocationId });
   const newLocation = find(state.world.locations, { id: path.toLocationId });
-  updatedState = updateLocation(updatedState, newLocation.id, 'visited', true);
+  updatedState = updateLocation(updatedState, newLocation.id, "visited", true);
   updatedState = updateLog(
     updatedState,
     command,
@@ -275,21 +316,25 @@ export function move(state, command) {
     </span>
   );
 
-  return look(updatedState, 'look');
+  return look(updatedState, "look");
 }
 
 export function moveBy(state, command) {
-  const directionParts = command.split(' ');
+  const directionParts = command.split(" ");
   if (directionParts.length === 2) {
     const direction = directionParts[1];
     return move(state, direction);
   } else {
-    return updateLog(state, command, <span>What direction should I move in?</span>);
+    return updateLog(
+      state,
+      command,
+      <span>What direction should I move in?</span>
+    );
   }
 }
 
 export function quest(state, command) {
-  if (state.world.quest === 'main') {
+  if (state.world.quest === "main") {
     return updateLog(
       state,
       command,
@@ -299,7 +344,7 @@ export function quest(state, command) {
     );
   }
 
-  if (state.world.quest === 'done') {
+  if (state.world.quest === "done") {
     return updateLog(state, command, <span>I am free at last.</span>);
   }
 
@@ -307,16 +352,17 @@ export function quest(state, command) {
     ...state,
     world: {
       ...state.world,
-      quest: 'main'
+      quest: "main"
     }
   };
   return updateLog(
     updatedState,
     command,
     <span>
-      You wake up in your cell as you have done for the past few weeks, but today something is different. Your cell door
-      is open! This is your one chance to escape this prison. I need to move <CommandRef command="south" /> and get out
-      of this cell.
+      You wake up in your cell as you have done for the past few weeks, but
+      today something is different. Your cell door is open! This is your one
+      chance to escape this prison. I need to move{" "}
+      <CommandRef command="south" /> and get out of this cell.
     </span>
   );
 }
@@ -326,8 +372,8 @@ function save(state, command) {
     state,
     command,
     <span>
-      This game auto saves all progress. If you would like to start from the beginning use the{' '}
-      <CommandRef command="restart" /> command.
+      This game auto saves all progress. If you would like to start from the
+      beginning use the <CommandRef command="restart" /> command.
     </span>
   );
 }
@@ -342,7 +388,11 @@ function restart(state, command) {
           ...someState,
           prompt: null
         };
-        return updateLog(otherUpdateState, command, <span>You continue on.</span>);
+        return updateLog(
+          otherUpdateState,
+          command,
+          <span>You continue on.</span>
+        );
       }
     }
   };
@@ -350,8 +400,9 @@ function restart(state, command) {
     updateState,
     command,
     <span>
-      Are you sure you want to <CommandRef command="restart" /> from the beginning? All saved progress up to this point
-      will be lost. (<CommandRef command="yes" /> / <CommandRef command="no" />)
+      Are you sure you want to <CommandRef command="restart" /> from the
+      beginning? All saved progress up to this point will be lost. (<CommandRef command="yes" />{" "}
+      / <CommandRef command="no" />)
     </span>
   );
 }
@@ -392,7 +443,8 @@ function invalidInput(state, command) {
     state,
     command,
     <span>
-      You must answer either <CommandRef command="yes" /> or <CommandRef command="no" />
+      You must answer either <CommandRef command="yes" /> or{" "}
+      <CommandRef command="no" />
     </span>
   );
 }
@@ -401,13 +453,15 @@ function isAllowedCommand(command, allowedCommands) {
   if (!allowedCommands) {
     return true;
   }
-  const commandWords = command.split(' ');
+  const commandWords = command.split(" ");
   const firstWord = first(commandWords);
   const allowedCommandList = filter(
     commandList,
     commandDef => intersection(commandDef.keys, allowedCommands).length > 0
   );
-  return !isNil(find(allowedCommandList, commandDef => includes(commandDef.keys, firstWord)));
+  return !isNil(
+    find(allowedCommandList, commandDef => includes(commandDef.keys, firstWord))
+  );
 }
 
 function status(state, command) {
@@ -416,12 +470,12 @@ function status(state, command) {
     return updateLog(state, command, <span>I am nothing</span>);
   }
   const stats = [
-    { name: 'HP', value: `${player.currentHP} / ${player.maxHP}` },
-    { name: 'Strength', value: player.strength },
-    { name: 'Resistance', value: player.resistance },
-    { name: 'Speed', value: player.speed },
-    { name: 'Attack', value: player.attack },
-    { name: 'Defence', value: player.defence }
+    { name: "HP", value: `${player.currentHP} / ${player.maxHP}` },
+    { name: "Strength", value: player.strength },
+    { name: "Resistance", value: player.resistance },
+    { name: "Speed", value: player.speed },
+    { name: "Attack", value: player.attack },
+    { name: "Defence", value: player.defence }
   ];
   return updateLog(
     state,
@@ -512,18 +566,34 @@ function playerEquipment(state) {
 }
 
 function take(state, command) {
-  const commandTail = tail(command.split(' ')).join(' ');
+  const commandTail = tail(command.split(" ")).join(" ");
   const location = getPlayerLocation(state);
   const items = itemsAtLocation(state, location);
-  const foundItem = find(items, item => item.name.toLowerCase() === commandTail.trim().toLowerCase());
+  const foundItem = find(
+    items,
+    item => item.name.toLowerCase() === commandTail.trim().toLowerCase()
+  );
   const player = getPlayer(state);
   if (!foundItem || !player) {
-    return updateLog(state, command, <span>Cannot find anything called {commandTail}</span>);
+    return updateLog(
+      state,
+      command,
+      <span>Cannot find anything called {commandTail}</span>
+    );
   }
-  let updateState = updateEntity(state, foundItem.id, 'locationId', null);
-  updateState = updateEntity(updateState, player.id, 'itemIds', player.itemIds.concat(foundItem.id));
+  let updateState = updateEntity(state, foundItem.id, "locationId", null);
+  updateState = updateEntity(
+    updateState,
+    player.id,
+    "itemIds",
+    player.itemIds.concat(foundItem.id)
+  );
 
-  updateState = updateLog(updateState, command, <span>You have taken {foundItem.name}</span>);
+  updateState = updateLog(
+    updateState,
+    command,
+    <span>You have taken {foundItem.name}</span>
+  );
 
   if (includes(equipmentTypes, foundItem.type)) {
     return equip(updateState, `equip ${foundItem.name}`);
@@ -561,7 +631,9 @@ export function updateLocationForState(state, location) {
     ...state,
     world: {
       ...state.world,
-      locations: state.world.locations.filter(e => e.id !== location.id).concat(location)
+      locations: state.world.locations
+        .filter(e => e.id !== location.id)
+        .concat(location)
     }
   };
 }
@@ -571,69 +643,134 @@ export function updateEntityForState(state, entity) {
     ...state,
     world: {
       ...state.world,
-      entities: state.world.entities.filter(e => e.id !== entity.id).concat(entity)
+      entities: state.world.entities
+        .filter(e => e.id !== entity.id)
+        .concat(entity)
     }
   };
 }
 
 function equip(state, command) {
-  const commandTail = tail(command.split(' ')).join(' ');
+  const commandTail = tail(command.split(" ")).join(" ");
   const playerItems = getPlayerItems(state);
   const player = getPlayer(state);
-  const foundItem = find(playerItems, item => item.name.toLowerCase() === commandTail.trim().toLowerCase());
+  const foundItem = find(
+    playerItems,
+    item => item.name.toLowerCase() === commandTail.trim().toLowerCase()
+  );
 
   if (!foundItem || !player) {
-    return updateLog(state, command, <span>You cannot equip {commandTail} as it is not in your inventory.</span>);
+    return updateLog(
+      state,
+      command,
+      <span>
+        You cannot equip {commandTail} as it is not in your inventory.
+      </span>
+    );
   }
   if (!includes(equipmentTypes, foundItem.type)) {
-    return updateLog(state, command, <span>{commandTail} cannot be equipped.</span>);
+    return updateLog(
+      state,
+      command,
+      <span>{commandTail} cannot be equipped.</span>
+    );
   }
 
   let updateState = state;
-  if (foundItem.type === 'weapon') {
-    updateState = updateEntity(updateState, player.id, 'weaponId', foundItem.id);
-    updateState = updateEntity(updateState, player.id, 'attack', player.attack + foundItem.attackChange);
+  if (foundItem.type === "weapon") {
+    updateState = updateEntity(
+      updateState,
+      player.id,
+      "weaponId",
+      foundItem.id
+    );
+    updateState = updateEntity(
+      updateState,
+      player.id,
+      "attack",
+      player.attack + foundItem.attackChange
+    );
   }
 
-  if (foundItem.type === 'shield') {
-    updateState = updateEntity(updateState, player.id, 'shieldId', foundItem.id);
-    updateState = updateEntity(updateState, player.id, 'defence', player.defence + foundItem.defenceChange);
+  if (foundItem.type === "shield") {
+    updateState = updateEntity(
+      updateState,
+      player.id,
+      "shieldId",
+      foundItem.id
+    );
+    updateState = updateEntity(
+      updateState,
+      player.id,
+      "defence",
+      player.defence + foundItem.defenceChange
+    );
   }
 
   updateState = updateEntity(
     updateState,
     player.id,
-    'itemIds',
+    "itemIds",
     player.itemIds.filter(itemId => itemId !== foundItem.id)
   );
 
-  return updateLog(updateState, command, <span>You have equipped {foundItem.name}</span>);
+  return updateLog(
+    updateState,
+    command,
+    <span>You have equipped {foundItem.name}</span>
+  );
 }
 
 function unequip(state, command) {
-  const commandTail = tail(command.split(' ')).join(' ');
+  const commandTail = tail(command.split(" ")).join(" ");
   const pe = getPlayerEquipment(state);
   const player = getPlayer(state);
-  const foundItem = find(pe, item => item.name.toLowerCase() === commandTail.trim().toLowerCase());
+  const foundItem = find(
+    pe,
+    item => item.name.toLowerCase() === commandTail.trim().toLowerCase()
+  );
 
   if (!foundItem || !player) {
-    return updateLog(state, command, <span>You cannot un-equip {commandTail} as it is not equipped.</span>);
+    return updateLog(
+      state,
+      command,
+      <span>You cannot un-equip {commandTail} as it is not equipped.</span>
+    );
   }
 
   let updateState = state;
-  if (foundItem.type === 'weapon') {
-    updateState = updateEntity(updateState, player.id, 'weaponId', null);
-    updateState = updateEntity(updateState, player.id, 'attack', player.attack - foundItem.attackChange);
+  if (foundItem.type === "weapon") {
+    updateState = updateEntity(updateState, player.id, "weaponId", null);
+    updateState = updateEntity(
+      updateState,
+      player.id,
+      "attack",
+      player.attack - foundItem.attackChange
+    );
   }
 
-  if (foundItem.type === 'shield') {
-    updateState = updateEntity(updateState, player.id, 'shieldId', null);
-    updateState = updateEntity(updateState, player.id, 'defence', player.defence - foundItem.defenceChange);
+  if (foundItem.type === "shield") {
+    updateState = updateEntity(updateState, player.id, "shieldId", null);
+    updateState = updateEntity(
+      updateState,
+      player.id,
+      "defence",
+      player.defence - foundItem.defenceChange
+    );
   }
 
-  updateState = updateEntity(updateState, player.id, 'itemIds', player.itemIds.concat(foundItem.id));
+  updateState = updateEntity(
+    updateState,
+    player.id,
+    "itemIds",
+    player.itemIds.concat(foundItem.id)
+  );
 
-  return updateLog(updateState, command, <span>You have un-equipped {foundItem.name}</span>);
+  return updateLog(
+    updateState,
+    command,
+    <span>You have un-equipped {foundItem.name}</span>
+  );
 }
 
 function getPlayerItems(state) {
@@ -641,7 +778,9 @@ function getPlayerItems(state) {
   if (!player) {
     return [];
   }
-  return player.itemIds.map(itemId => find(state.world.entities, { id: itemId }));
+  return player.itemIds.map(itemId =>
+    find(state.world.entities, { id: itemId })
+  );
 }
 
 function getPlayerEquipment(state) {
@@ -670,10 +809,16 @@ export function unlock(state, command) {
   }
   const lockedPaths = currentLocation.paths.filter(p => p.locked);
   if (lockedPaths === 0) {
-    return updateLog(state, command, <span>There are no locked doors here.</span>);
+    return updateLog(
+      state,
+      command,
+      <span>There are no locked doors here.</span>
+    );
   }
-  const connectedLocations = lockedPaths.map(p => find(state.world.locations, { id: p.toLocationId }));
-  let allowedDirection = '';
+  const connectedLocations = lockedPaths.map(p =>
+    find(state.world.locations, { id: p.toLocationId })
+  );
+  let allowedDirection = "";
   const updatePaths = currentLocation.paths.map(p => {
     if (!p.locked) {
       return p;
@@ -684,7 +829,12 @@ export function unlock(state, command) {
       locked: false
     };
   });
-  let updateState = updateLocation(state, currentLocation.id, 'paths', updatePaths);
+  let updateState = updateLocation(
+    state,
+    currentLocation.id,
+    "paths",
+    updatePaths
+  );
   connectedLocations.forEach(loc => {
     const otherPaths = loc.paths.map(poa => {
       if (!poa.locked || poa.direction !== allowedDirection) {
@@ -695,17 +845,21 @@ export function unlock(state, command) {
         locked: false
       };
     });
-    updateState = updateLocation(updateState, loc.id, 'paths', otherPaths);
+    updateState = updateLocation(updateState, loc.id, "paths", otherPaths);
   });
 
-  return updateLog(updateState, command, <span>You have unlocked all doors.</span>);
+  return updateLog(
+    updateState,
+    command,
+    <span>You have unlocked all doors.</span>
+  );
 }
 
 export function revealMap(state, command) {
   let updatedState = state;
 
   state.world.locations.forEach(location => {
-    updatedState = updateLocation(updatedState, location.id, 'visited', true);
+    updatedState = updateLocation(updatedState, location.id, "visited", true);
   });
 
   return updateLog(updatedState, command, <span>Map is revealed.</span>);
@@ -719,7 +873,11 @@ export function attack(state, command) {
   const playerLocation = getPlayerLocation(state);
   const monsters = monstersAtLocation(state, playerLocation);
   if (isEmpty(monsters)) {
-    return updateLog(state, command, <span>There is nothing you can attack in here.</span>);
+    return updateLog(
+      state,
+      command,
+      <span>There is nothing you can attack in here.</span>
+    );
   }
 
   const monster = first(monsters);
@@ -728,7 +886,9 @@ export function attack(state, command) {
 
 export function battle(state, command, creature1, creature2) {
   // fastest creature goes first
-  const fighters = [creature1, creature2].sort((c1, c2) => c2.speed + c2.speed / 4 - (c1.speed + c1.speed / 4));
+  const fighters = [creature1, creature2].sort(
+    (c1, c2) => c2.speed + c2.speed / 4 - (c1.speed + c1.speed / 4)
+  );
   const fighter1 = fighters[0];
   const fighter2 = fighters[1];
 
@@ -745,7 +905,8 @@ export function battle(state, command, creature1, creature2) {
   updateState = updateLogDirect(
     updateState,
     <span>
-      {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs. {fighter2.name} HP: {fighter2.currentHP}/
+      {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs.{" "}
+      {fighter2.name} HP: {fighter2.currentHP}/
       {fighter2.maxHP}
     </span>
   );
@@ -765,7 +926,8 @@ export function battle(state, command, creature1, creature2) {
   return updateLogDirect(
     updateState,
     <span>
-      {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs. {fighter2.name} HP: {fighter2.currentHP}/
+      {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs.{" "}
+      {fighter2.name} HP: {fighter2.currentHP}/
       {fighter2.maxHP}
     </span>
   );
@@ -779,7 +941,12 @@ export function damage(state, creature1, creature2) {
   if (creature2.currentHP < 0) {
     creature2.currentHP = 0;
   }
-  const updateState = updateEntity(state, creature2.id, 'currentHP', creature2.currentHP);
+  const updateState = updateEntity(
+    state,
+    creature2.id,
+    "currentHP",
+    creature2.currentHP
+  );
 
   return updateLogDirect(
     updateState,
@@ -790,71 +957,94 @@ export function damage(state, creature1, creature2) {
 }
 
 export function finishBattle(state, winner, loser) {
-  if (loser.type === 'player') {
+  if (loser.type === "player") {
     const updateStateOther = updateLogDirect(
       state,
       <span>
         You have no health left and die!
-        <p style={{ fontSize: '20px' }}>GAME OVER</p>
+        <p style={{ fontSize: "20px" }}>GAME OVER</p>
       </span>
     );
-    return resetWorld(updateStateOther, 'game over');
+    return resetWorld(updateStateOther, "game over");
   }
 
   winner.score += loser.maxHP;
-  let updateState = updateEntity(state, winner.id, 'score', winner.score);
-  updateState = updateEntity(updateState, loser.id, 'locationId', null);
-  const vicHP = Math.min(winner.maxHP, winner.currentHP + Math.round(winner.maxHP * 0.1));
-  updateState = updateEntity(updateState, winner.id, 'currentHP', vicHP);
-  updateState = updateLogDirect(updateState, <span>You defeated {loser.name}!</span>);
+  let updateState = updateEntity(state, winner.id, "score", winner.score);
+  updateState = updateEntity(updateState, loser.id, "locationId", null);
+  const vicHP = Math.min(
+    winner.maxHP,
+    winner.currentHP + Math.round(winner.maxHP * 0.1)
+  );
+  updateState = updateEntity(updateState, winner.id, "currentHP", vicHP);
+  updateState = updateLogDirect(
+    updateState,
+    <span>You defeated {loser.name}!</span>
+  );
 
-  if (loser.name === 'Warden') {
+  if (loser.name === "Warden") {
     updateState = updateLogDirect(
       updateState,
       <span>
         <p>
           The Warden lays dying and says with his final words: <br />
-          You may have won your freedom from this prison, but you shall meet your end in the town beyond... <br />
+          You may have won your freedom from this prison, but you shall meet
+          your end in the town beyond... <br />
           With that the Warden breaths his last breath. <br />
-          You leap over his body and run up the flight of stairs finally escaping this hellish place
+          You leap over his body and run up the flight of stairs finally
+          escaping this hellish place
         </p>
-        <p style={{ fontSize: '20px' }}>
+        <p style={{ fontSize: "20px" }}>
           CONGRATULATIONS <br />
           YOU ESCAPED PRISON !!! Score: {getPlayerScore(state)}
         </p>
       </span>
     );
 
-    return resetWorld(updateState, 'game over');
+    return resetWorld(updateState, "game over");
   }
 
   return updateState;
 }
 
 export function use(state, command) {
-  const commandTail = tail(command.split(' ')).join(' ');
+  const commandTail = tail(command.split(" ")).join(" ");
   const playerItems = getPlayerItems(state);
   const player = getPlayer(state);
-  const foundItem = find(playerItems, item => item.name.toLowerCase() === commandTail.trim().toLowerCase());
+  const foundItem = find(
+    playerItems,
+    item => item.name.toLowerCase() === commandTail.trim().toLowerCase()
+  );
 
   if (!foundItem || !player) {
-    return updateLog(state, command, <span>You cannot use {commandTail} as it is not in your inventory.</span>);
+    return updateLog(
+      state,
+      command,
+      <span>You cannot use {commandTail} as it is not in your inventory.</span>
+    );
   }
   if (includes(equipmentTypes, foundItem.type)) {
     return equip(state, `equip ${commandTail}`);
   }
 
-  if (foundItem.type !== 'consumable') {
-    return updateLog(state, command, <span>You do not know how to use {foundItem.name}</span>);
+  if (foundItem.type !== "consumable") {
+    return updateLog(
+      state,
+      command,
+      <span>You do not know how to use {foundItem.name}</span>
+    );
   }
 
-  let updateState = updateEntity(state, player.id, 'currentHP', player.maxHP);
+  let updateState = updateEntity(state, player.id, "currentHP", player.maxHP);
   updateState = updateEntity(
     updateState,
     player.id,
-    'itemIds',
+    "itemIds",
     player.itemIds.filter(itemId => itemId !== foundItem.id)
   );
 
-  return updateLog(updateState, command, <span>You have used {foundItem.name}</span>);
+  return updateLog(
+    updateState,
+    command,
+    <span>You have used {foundItem.name}</span>
+  );
 }

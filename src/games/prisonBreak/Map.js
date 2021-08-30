@@ -1,9 +1,9 @@
-import React from 'react';
-import './commandLine.css';
-import SimpleCanvas from '../simpleCanvas/SimpleCanvas';
-import GridRect from '../simpleCanvas/GridRect';
-import CanvasRect from '../simpleCanvas/CanvasRect';
-import { flatten } from 'lodash';
+import React from "react";
+import { flatten } from "lodash";
+import "./commandLine.css";
+import SimpleCanvas from "../simpleCanvas/SimpleCanvas";
+import GridRect from "../simpleCanvas/GridRect";
+import CanvasRect from "../simpleCanvas/CanvasRect";
 
 function getBorderTop(cell) {
   if (!cell || !cell.borderTop || !cell.borderTop.show) {
@@ -12,7 +12,13 @@ function getBorderTop(cell) {
   const { size, x, y } = cell;
   const gridX = x * size;
   const gridY = y * size;
-  return new CanvasRect({ fillColor: cell.borderTop.color, x: gridX, y: gridY, width: size, height: 1 });
+  return new CanvasRect({
+    fillColor: cell.borderTop.color,
+    x: gridX,
+    y: gridY,
+    width: size,
+    height: 1
+  });
 }
 
 function getBorderBottom(cell) {
@@ -23,7 +29,13 @@ function getBorderBottom(cell) {
   const gridX = x * size;
   const gridY = y * size;
 
-  return new CanvasRect({ fillColor: cell.borderBottom.color, x: gridX, y: gridY + size, width: size, height: 1 });
+  return new CanvasRect({
+    fillColor: cell.borderBottom.color,
+    x: gridX,
+    y: gridY + size,
+    width: size,
+    height: 1
+  });
 }
 
 function getBorderLeft(cell) {
@@ -33,7 +45,13 @@ function getBorderLeft(cell) {
   const { size, x, y } = cell;
   const gridX = x * size;
   const gridY = y * size;
-  return new CanvasRect({ fillColor: cell.borderLeft.color, x: gridX, y: gridY, width: 1, height: size });
+  return new CanvasRect({
+    fillColor: cell.borderLeft.color,
+    x: gridX,
+    y: gridY,
+    width: 1,
+    height: size
+  });
 }
 
 function getBorderRight(cell) {
@@ -43,7 +61,13 @@ function getBorderRight(cell) {
   const { size, x, y } = cell;
   const gridX = x * size;
   const gridY = y * size;
-  return new CanvasRect({ fillColor: cell.borderRight.color, x: gridX + size, y: gridY, width: 1, height: size });
+  return new CanvasRect({
+    fillColor: cell.borderRight.color,
+    x: gridX + size,
+    y: gridY,
+    width: 1,
+    height: size
+  });
 }
 
 function getCells(cellSize, cells) {
@@ -62,8 +86,8 @@ function getCells(cellSize, cells) {
             y: y * size,
             width: size,
             height: size,
-            lineColor: '#BAB7B6',
-            fillColor: '#BAB7B6'
+            lineColor: "#BAB7B6",
+            fillColor: "#BAB7B6"
           })
         ]
           .concat(getBorderTop(cell))
@@ -83,21 +107,35 @@ function getCurrentLocation(currentLocationX, currentLocationY, cellSize) {
     y: currentLocationY * cellSize + cellSize / 2 / 2,
     width: cellSize / 2,
     height: cellSize / 2,
-    lineColor: 'blue',
-    fillColor: 'blue'
+    lineColor: "blue",
+    fillColor: "blue"
   });
 }
 
 export default class Map extends React.Component {
   render() {
-    const { showMap, gridHeight, gridWidth, cellSize, cells, currentLocationX, currentLocationY } = this.props;
+    const {
+      showMap,
+      gridHeight,
+      gridWidth,
+      cellSize,
+      cells,
+      currentLocationX,
+      currentLocationY
+    } = this.props;
     if (!showMap) {
       return null;
     }
-    const elements = getCells(cellSize, cells).concat(getCurrentLocation(currentLocationX, currentLocationY, cellSize));
+    const elements = getCells(cellSize, cells).concat(
+      getCurrentLocation(currentLocationX, currentLocationY, cellSize)
+    );
     return (
-      <div style={{ margin: '30px' }}>
-        <SimpleCanvas width={cellSize * gridWidth} height={cellSize * gridHeight} elements={elements} />
+      <div style={{ margin: "30px" }}>
+        <SimpleCanvas
+          width={cellSize * gridWidth}
+          height={cellSize * gridHeight}
+          elements={elements}
+        />
       </div>
     );
   }

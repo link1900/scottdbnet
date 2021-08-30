@@ -1,73 +1,93 @@
-import { Avatar, Card, CardContent, Divider, List, ListItem, ListItemText } from '@material-ui/core';
-import React from 'react';
-import diceIcon from './diceIcon.png';
-import gcaIcon from './gcaLogo.png';
-import githubLogo from './github.png';
-import siteIcon from './icon.png';
-import linkedinLogo from './linkedin.png';
-import mailIcon from './mailIcon.png';
-import { FlatLink } from '../UI/FlatLink';
+import React from "react";
+import { useHistory } from "react-router-dom";
+import {
+  Avatar,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText
+} from "@material-ui/core";
+import { SitePage } from "../components/SitePage";
+import diceIcon from "./diceIcon.png";
+import gcaIcon from "./gcaLogo.png";
+import githubLogo from "./github.png";
+import siteIcon from "./icon.png";
+import linkedinLogo from "./linkedin.png";
+import mailIcon from "./mailIcon.png";
+import { useGreyBody } from "./useBackgroundColor";
 
-interface Props {}
+export function Home() {
+  useGreyBody();
+  const history = useHistory();
 
-interface State {}
-
-export default class Home extends React.Component<Props, State> {
-  public navigateTo(url: string): void {
-    window.location.href = url;
-  }
-
-  public navigateOnClick = (url: string): (() => void) => {
-    return () => {
-      this.navigateTo(url);
-    };
+  const navTo = (route: string) => {
+    history.push(route);
   };
-
-  public componentWillMount() {
-    document.body.style.backgroundColor = '#9E9E9E';
-  }
-
-  public componentWillUnmount() {
-    document.body.style.backgroundColor = null;
-  }
-
-  public render() {
-    return (
-      <div style={{ paddingTop: '40px', display: 'flex', justifyContent: 'center' }}>
-        <Card>
-          <CardContent>
-            <List>
-              <ListItem>
-                <Avatar src={siteIcon} alt={'Scott Brown logo'} />
-                <ListItemText primary="Scott Brown" />
-              </ListItem>
-              <Divider />
-              <FlatLink to={'/games'}>
-                <ListItem button={true}>
-                  <Avatar src={diceIcon} alt={'dice icon'} />
+  return (
+    <SitePage>
+      <Grid container justifyContent="center" spacing={2}>
+        <Grid item xs={3}>
+          <Card>
+            <CardContent>
+              <List>
+                <ListItem button component="a" href="https://scottdb.net">
+                  <ListItemAvatar>
+                    <Avatar src={siteIcon} alt={"Scott Brown logo"} />
+                  </ListItemAvatar>
+                  <ListItemText primary="Scott Brown" />
+                </ListItem>
+                <Divider />
+                <ListItem button onClick={() => navTo("/games")}>
+                  <ListItemAvatar>
+                    <Avatar src={diceIcon} alt={"dice icon"} />
+                  </ListItemAvatar>
                   <ListItemText primary="Linkin Games" />
                 </ListItem>
-              </FlatLink>
-              <ListItem button={true} onClick={this.navigateOnClick('https://ranker.scottdb.net')}>
-                <Avatar src={gcaIcon} alt={'gca logo'} />
-                <ListItemText primary="Greyhound Rankings" />
-              </ListItem>
-              <ListItem button={true} onClick={this.navigateOnClick('mailto:scott@scottdb.net')}>
-                <Avatar src={mailIcon} alt={'email icon'} />
-                <ListItemText primary="Email" />
-              </ListItem>
-              <ListItem button={true} onClick={this.navigateOnClick('https://github.com/link1900')}>
-                <Avatar src={githubLogo} alt={'github logo'} />
-                <ListItemText primary="Github" />
-              </ListItem>
-              <ListItem button={true} onClick={this.navigateOnClick('https://www.linkedin.com/in/scott-brown-246882b')}>
-                <Avatar src={linkedinLogo} alt={'linkedin logo'} />
-                <ListItemText primary="Linkedin" />
-              </ListItem>
-            </List>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+                <ListItem
+                  button
+                  component="a"
+                  href="https://ranker.scottdb.net"
+                >
+                  <ListItemAvatar>
+                    <Avatar src={gcaIcon} alt={"gca logo"} />
+                  </ListItemAvatar>
+                  <ListItemText primary="Greyhound Rankings" />
+                </ListItem>
+                <ListItem button component="a" href="mailto:link1900@gmail.com">
+                  <ListItemAvatar>
+                    <Avatar src={mailIcon} alt={"email icon"} />
+                  </ListItemAvatar>
+                  <ListItemText primary="Email" />
+                </ListItem>
+                <ListItem
+                  button
+                  component="a"
+                  href="https://github.com/link1900"
+                >
+                  <ListItemAvatar>
+                    <Avatar src={githubLogo} alt={"github logo"} />
+                  </ListItemAvatar>
+                  <ListItemText primary="Github" />
+                </ListItem>
+                <ListItem
+                  button
+                  component="a"
+                  href={"https://www.linkedin.com/in/scott-brown-246882b"}
+                >
+                  <ListItemAvatar>
+                    <Avatar src={linkedinLogo} alt={"linkedin logo"} />
+                  </ListItemAvatar>
+                  <ListItemText primary="Linkedin" />
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </SitePage>
+  );
 }

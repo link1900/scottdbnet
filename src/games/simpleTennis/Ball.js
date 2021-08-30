@@ -1,5 +1,5 @@
-import Circle from '../../sdbCanvas/Circle';
-import MovementMixin from '../../sdbCanvas/MovementMixin';
+import Circle from '../sdbCanvas/Circle';
+import MovementMixin from '../sdbCanvas/MovementMixin';
 
 export default class Ball extends MovementMixin(Circle) {
   increaseScore(score) {

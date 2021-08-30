@@ -1,7 +1,7 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { createActionCommandSelected } from './PrisonBreakReducer';
-import './commandLine.css';
+import React from "react";
+import { connect } from "react-redux";
+import { createActionCommandSelected } from "./PrisonBreakReducer";
+import "./commandLine.css";
 
 const mapStateToProps = state => {
   return state;
@@ -31,7 +31,4 @@ const CommandRef = props => {
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CommandRef);
+export default connect(mapStateToProps, mapDispatchToProps)(CommandRef);
