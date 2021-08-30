@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   AppBar,
   Grid,
-  Hidden,
   IconButton,
   Toolbar,
   Typography
@@ -33,7 +32,6 @@ function SiteHeader(props: Props) {
     >
       <Toolbar>
         <Grid container spacing={1} alignItems="center">
-          <Hidden lgUp>
             <Grid item>
               <IconButton
                 color="inherit"
@@ -47,7 +45,6 @@ function SiteHeader(props: Props) {
             <Grid item>
               <Typography variant="h6">Linkin Games</Typography>
             </Grid>
-          </Hidden>
           <Grid item xs />
         </Grid>
       </Toolbar>
