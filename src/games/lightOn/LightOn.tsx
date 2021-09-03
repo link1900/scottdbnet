@@ -1,5 +1,5 @@
 import React from "react";
-import { every } from "lodash";
+import every from "lodash/every";
 import { Button, Grid, MenuItem, Select, Typography } from "@material-ui/core";
 import { SitePage } from "../../components/SitePage";
 import SimpleCanvas from "../simpleCanvas/SimpleCanvas";

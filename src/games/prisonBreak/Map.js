@@ -1,5 +1,5 @@
 import React from "react";
-import { flatten } from "lodash";
+import flatten from "lodash/flatten";
 import "./commandLine.css";
 import SimpleCanvas from "../simpleCanvas/SimpleCanvas";
 import GridRect from "../simpleCanvas/GridRect";

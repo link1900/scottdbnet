@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import get from 'lodash/get';
 import Entity from './Entity';
 
 export default class Shape extends Entity {

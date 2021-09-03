@@ -1,4 +1,5 @@
-import { isString, isEmpty } from 'lodash';
+import isString from 'lodash/isString';
+import isEmpty from 'lodash/isEmpty';
 import { processCommand, newline } from './commandProcessor';
 import { createWorld } from './World';
 

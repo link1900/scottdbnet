@@ -1,4 +1,4 @@
-import { find } from 'lodash';
+import find from 'lodash/find';
 import { connect } from 'react-redux';
 import Map from './Map';
 import { getPlayerLocation } from './Player';

@@ -14,7 +14,6 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/uuid": "8.3.1",
-    "chance": "1.1.7",
     "lodash": "4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -35,7 +34,8 @@
     "deploy": "npm run build && npm run deploy:build && npm run deploy:index && npm run deploy:invalidate",
     "deploy:build": "aws s3 sync build s3://scottdb.net/ --exclude index.html",
     "deploy:index": "aws s3 cp build/index.html s3://scottdb.net/index.html --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html",
-    "deploy:invalidate": "aws cloudfront create-invalidation --distribution-id E2ESZP3QQOLMV --paths /"
+    "deploy:invalidate": "aws cloudfront create-invalidation --distribution-id E2ESZP3QQOLMV --paths /",
+    "stats": "npm run build -- --stats && npx webpack-bundle-analyzer ./build/bundle-stats.json"
   },
   "eslintConfig": {
     "extends": [

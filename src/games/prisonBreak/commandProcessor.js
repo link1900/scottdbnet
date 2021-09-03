@@ -1,14 +1,12 @@
 import React from "react";
-import {
-  includes,
-  first,
-  find,
-  filter,
-  intersection,
-  isNil,
-  tail,
-  isEmpty
-} from "lodash";
+import includes from "lodash/includes";
+import first from "lodash/first";
+import find from "lodash/find";
+import filter from "lodash/filter";
+import intersection from "lodash/intersection";
+import isNil from "lodash/isNil";
+import tail from "lodash/tail";
+import isEmpty from "lodash/isEmpty";
 import "./commandLine.css";
 import CommandRef from "./CommandRef";
 import { convertToDirection, flipDirection } from "./Location";

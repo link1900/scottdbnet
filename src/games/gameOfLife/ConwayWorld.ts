@@ -1,6 +1,5 @@
-import { GridCellProps } from "../gameEngine";
+import { GridCellProps, randomInteger } from '../gameEngine';
 import { WorldGrid, WorldGridProps } from "../gameEngine";
-import { getChance } from "../gameEngine";
 import { ConwayCell } from "./ConwayCell";
 
 export interface ConwayWorldProps extends WorldGridProps {}
@@ -9,7 +8,7 @@ export class ConwayWorld extends WorldGrid {
 
   public cellBuilder(defaultProps: GridCellProps): ConwayCell {
     return new ConwayCell({
-      living: getChance().natural({ min: 1, max: 10 }) === 1,
+      living: randomInteger(1, 10) === 1,
       ...defaultProps
     });
   }

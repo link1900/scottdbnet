@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { last } from "lodash";
+import last from "lodash/last";
 import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
 import thinkingImage from "./thinkingAI.png";
 import { SitePage } from "../../components/SitePage";

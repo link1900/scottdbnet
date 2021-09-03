@@ -1,4 +1,4 @@
-import { find } from 'lodash';
+import find from "lodash/find";
 
 export function getPlayerLocation(state) {
   const player = getPlayer(state);
@@ -9,7 +9,7 @@ export function getPlayerLocation(state) {
 }
 
 export function getPlayer(state) {
-  return find(state.world.entities, { type: 'player' });
+  return find(state.world.entities, { type: "player" });
 }
 
 export function getPlayerScore(state) {
