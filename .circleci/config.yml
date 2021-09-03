@@ -17,9 +17,9 @@ jobs:
       - aws-cli/install
       - node/install-packages
       - run:
-          command: yarn test
+          command: npm run test
       - run:
-          command: yarn deploy
+          command: npm run deploy
 
 workflows:
   test-and-deploy-all:
