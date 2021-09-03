@@ -7,7 +7,8 @@ export class ScottdbnetStack extends cdk.Stack {
     super(parent, name, props);
 
     new StaticSite(this, `${name}-frontend`, {
-      domainName: "scottdb.net"
+      domainName: "scottdb.net",
+      deployFiles: false
     });
   }
 }

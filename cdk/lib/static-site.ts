@@ -1,18 +1,20 @@
 #!/usr/bin/env node
-import * as cdk from "@aws-cdk/core";
-import * as route53 from "@aws-cdk/aws-route53";
-import * as s3 from "@aws-cdk/aws-s3";
-import * as s3deploy from "@aws-cdk/aws-s3-deployment";
 import * as acm from "@aws-cdk/aws-certificatemanager";
-import * as targets from "@aws-cdk/aws-route53-targets";
 import * as cloudfront from "@aws-cdk/aws-cloudfront";
+import { PriceClass } from "@aws-cdk/aws-cloudfront";
 import * as cloudwatch from "@aws-cdk/aws-cloudwatch";
 import * as iam from "@aws-cdk/aws-iam";
+import * as route53 from "@aws-cdk/aws-route53";
+import * as targets from "@aws-cdk/aws-route53-targets";
+import * as s3 from "@aws-cdk/aws-s3";
+import * as s3deploy from "@aws-cdk/aws-s3-deployment";
+import * as cdk from "@aws-cdk/core";
 import { Construct, Stack } from "@aws-cdk/core";
 
 export interface StaticSiteProps {
   domainName: string;
   siteSubDomain?: string;
+  deployFiles?: boolean;
 }
 
 /**
@@ -118,6 +120,7 @@ export class StaticSite extends Construct {
       "SiteDistribution",
       {
         viewerCertificate,
+        priceClass: PriceClass.PRICE_CLASS_ALL,
         originConfigs: [
           {
             s3OriginSource: {
@@ -161,12 +164,14 @@ export class StaticSite extends Construct {
       zone
     });
 
-    // Deploy site contents to S3 bucket
-    new s3deploy.BucketDeployment(this, "DeployWithInvalidation", {
-      sources: [s3deploy.Source.asset("../build")],
-      destinationBucket: siteBucket,
-      distribution,
-      distributionPaths: ["/*"]
-    });
+    if (props.deployFiles === true) {
+      // Deploy site contents to S3 bucket
+      new s3deploy.BucketDeployment(this, "DeployWithInvalidation", {
+        sources: [s3deploy.Source.asset("../build")],
+        destinationBucket: siteBucket,
+        distribution,
+        distributionPaths: ["/*"]
+      });
+    }
   }
 }
