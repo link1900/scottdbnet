@@ -39,7 +39,7 @@ export function GameList() {
         spacing={2}
         direction="column"
         alignItems="center"
-        justify="center"
+        justifyContent="center"
       >
         <Grid item>
           <Box paddingTop={4}>
@@ -51,7 +51,7 @@ export function GameList() {
             container
             spacing={4}
             direction="row"
-            justify="center"
+            justifyContent="center"
             alignItems="center"
           >
             {gameDefinitions.map(gameDefinition => {

@@ -6,9 +6,6 @@ import { ConwayCell } from "./ConwayCell";
 export interface ConwayWorldProps extends WorldGridProps {}
 
 export class ConwayWorld extends WorldGrid {
-  constructor(props: ConwayWorldProps) {
-    super(props);
-  }
 
   public cellBuilder(defaultProps: GridCellProps): ConwayCell {
     return new ConwayCell({

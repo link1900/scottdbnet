@@ -117,18 +117,3 @@ function calculateWinner(squares) {
   }
   return null;
 }
-
-function calculateCordsFromIndex(index) {
-  const mapping = {
-    1: { x: 1, y: 1 },
-    2: { x: 2, y: 1 },
-    3: { x: 3, y: 1 },
-    4: { x: 1, y: 2 },
-    5: { x: 2, y: 2 },
-    6: { x: 3, y: 2 },
-    7: { x: 1, y: 3 },
-    8: { x: 2, y: 3 },
-    9: { x: 3, y: 3 }
-  };
-  return mapping[index];
-}

@@ -11,10 +11,6 @@ export class GameOfLife extends React.Component<Props> {
   // @ts-ignore
   private world: ConwayWorld;
 
-  constructor(props: Props) {
-    super(props);
-  }
-
   public componentDidMount() {
     const canvas = this.refs.gameCanvas as HTMLCanvasElement;
     this.world = new ConwayWorld({
