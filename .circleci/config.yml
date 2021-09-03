@@ -1,0 +1,32 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.1.0
+  aws-cli: circleci/aws-cli@1.3.1
+executors:
+  default:
+    docker:
+      - image: cimg/node:12.18
+
+jobs:
+  client-test-deploy:
+    executor:
+      name: node/default
+      tag: '12.18'
+    steps:
+      - checkout
+      - aws-cli/install
+      - node/install-packages
+      - run:
+          command: yarn test
+      - run:
+          command: yarn deploy
+
+workflows:
+  test-and-deploy-all:
+    jobs:
+      - client-test-deploy:
+          context:
+            - scottdb
+          filters:
+            branches:
+              only: master
