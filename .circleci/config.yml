@@ -15,11 +15,22 @@ jobs:
     steps:
       - checkout
       - aws-cli/install
-      - node/install-packages
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          command: npm run test
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
       - run:
-          command: npm run deploy
+          command: yarn test
+      - run:
+          command: yarn deploy
 
 workflows:
   test-and-deploy-all:

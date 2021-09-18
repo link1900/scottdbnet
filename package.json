@@ -33,12 +33,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && npm run deploy:build && npm run deploy:index && npm run deploy:invalidate",
+    "deploy": "yarn build && yarn deploy:build && yarn deploy:index && yarn deploy:invalidate",
     "deploy:build": "aws s3 sync build s3://scottdb.net/ --exclude index.html --cache-control max-age=604800,public",
     "deploy:index": "aws s3 cp build/index.html s3://scottdb.net/index.html --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html",
     "deploy:invalidate": "aws cloudfront create-invalidation --distribution-id E2ESZP3QQOLMV --paths /",
-    "stats": "npm run build -- --stats && npx webpack-bundle-analyzer ./build/bundle-stats.json",
-    "start:prod": "npm run build && npx serve -s build"
+    "stats": "yarn build -- --stats && npx webpack-bundle-analyzer ./build/bundle-stats.json",
+    "start:prod": "yarn build && npx serve -s build"
   },
   "eslintConfig": {
     "extends": [
