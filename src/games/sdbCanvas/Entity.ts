@@ -6,7 +6,7 @@ export default class Entity {
 
   constructor({
     state,
-    name = '',
+    name = "",
     visible = true,
     active = true
   }: {

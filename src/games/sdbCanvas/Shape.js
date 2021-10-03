@@ -1,5 +1,5 @@
-import get from 'lodash/get';
-import Entity from './Entity';
+import get from "lodash/get";
+import Entity from "./Entity";
 
 export default class Shape extends Entity {
   constructor(props) {
@@ -11,7 +11,7 @@ export default class Shape extends Entity {
       ySpeed = 0,
       height = 10,
       width = 10,
-      color = 'black',
+      color = "black",
       facingDegree = 0
     } = props;
 
@@ -42,11 +42,11 @@ export default class Shape extends Entity {
   }
 
   setY(y, options) {
-    const boundType = get(options, 'boundType', 'none');
+    const boundType = get(options, "boundType", "none");
     const maxY = this.state.screen.height - this.height;
     const outOfBounds = y < 0 || y > maxY;
     if (outOfBounds) {
-      if (boundType === 'screen') {
+      if (boundType === "screen") {
         if (y <= 0) {
           y = 0;
         }
@@ -54,8 +54,10 @@ export default class Shape extends Entity {
           y = maxY;
         }
       }
-      if (boundType === 'delete') {
-        this.state.actors = this.state.actors.filter(actor => actor.name !== this.name);
+      if (boundType === "delete") {
+        this.state.actors = this.state.actors.filter(
+          (actor) => actor.name !== this.name
+        );
       }
     }
 
@@ -63,11 +65,11 @@ export default class Shape extends Entity {
   }
 
   setX(x, options) {
-    const boundType = get(options, 'boundType', 'none');
+    const boundType = get(options, "boundType", "none");
     const maxX = this.state.screen.width - this.width;
     const outOfBounds = x < 0 || x > maxX;
     if (outOfBounds) {
-      if (boundType === 'screen') {
+      if (boundType === "screen") {
         if (x <= 0) {
           x = 0;
         }
@@ -75,8 +77,10 @@ export default class Shape extends Entity {
           x = maxX;
         }
       }
-      if (boundType === 'delete') {
-        this.state.actors = this.state.actors.filter(actor => actor.name !== this.name);
+      if (boundType === "delete") {
+        this.state.actors = this.state.actors.filter(
+          (actor) => actor.name !== this.name
+        );
       }
     }
 

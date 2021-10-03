@@ -1,17 +1,17 @@
-import Circle from '../sdbCanvas/Circle';
-import MovementMixin from '../sdbCanvas/MovementMixin';
+import Circle from "../sdbCanvas/Circle";
+import MovementMixin from "../sdbCanvas/MovementMixin";
 
 export default class Ball extends MovementMixin(Circle) {
   increaseScore(score) {
     const { screen } = this.state;
     score.text += 1;
     if (score.text >= this.state.maxScore) {
-      const winText = this.state.getActorByName('winText');
-      if (score.name === 'playerScore') {
-        winText.text = 'Player wins! Click to continue';
+      const winText = this.state.getActorByName("winText");
+      if (score.name === "playerScore") {
+        winText.text = "Player wins! Click to continue";
       }
-      if (score.name === 'aiScore') {
-        winText.text = 'Computer wins! Click to continue';
+      if (score.name === "aiScore") {
+        winText.text = "Computer wins! Click to continue";
       }
       this.state.gameOver();
     }
@@ -26,10 +26,10 @@ export default class Ball extends MovementMixin(Circle) {
       return null;
     }
     const { screen } = this.state;
-    const playerPaddle = this.state.getActorByName('playerPaddle');
-    const aiPaddle = this.state.getActorByName('aiPaddle');
-    const playerScore = this.state.getActorByName('playerScore');
-    const aiScore = this.state.getActorByName('aiScore');
+    const playerPaddle = this.state.getActorByName("playerPaddle");
+    const aiPaddle = this.state.getActorByName("aiPaddle");
+    const playerScore = this.state.getActorByName("playerScore");
+    const aiScore = this.state.getActorByName("aiScore");
     this.x += this.speedX;
     this.y += this.speedY;
 

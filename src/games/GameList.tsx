@@ -54,7 +54,7 @@ export function GameList() {
             justifyContent="center"
             alignItems="center"
           >
-            {gameDefinitions.map(gameDefinition => {
+            {gameDefinitions.map((gameDefinition) => {
               return (
                 <Grid key={gameDefinition.name} item>
                   <Card className={classes.card}>

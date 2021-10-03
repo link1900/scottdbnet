@@ -1,5 +1,5 @@
-import React from 'react';
-import CanvasElement from './CanvasElement';
+import React from "react";
+import CanvasElement from "./CanvasElement";
 
 export interface Props {
   elements: CanvasElement[];
@@ -12,10 +12,10 @@ interface State {}
 export default class SimpleCanvas extends React.Component<Props, State> {
   public componentDidMount() {
     const canvas: any = this.refs.gameCanvas;
-    canvas.addEventListener('mousedown', (event: any) => {
+    canvas.addEventListener("mousedown", (event: any) => {
       const mouseX = event.pageX - canvas.offsetLeft;
       const mouseY = event.pageY - canvas.offsetTop;
-      this.props.elements.forEach(element => {
+      this.props.elements.forEach((element) => {
         if (element.containsPoint(mouseX, mouseY)) {
           element.onClick(this.props.elements);
         }
@@ -25,11 +25,15 @@ export default class SimpleCanvas extends React.Component<Props, State> {
   }
 
   public simulate() {
-    this.props.elements.forEach(element => element._simulate && element._simulate(this.props.elements));
+    this.props.elements.forEach(
+      (element) => element._simulate && element._simulate(this.props.elements)
+    );
   }
 
   public draw(canvas: HTMLCanvasElement) {
-    this.props.elements.forEach(element => element._draw && element._draw(canvas));
+    this.props.elements.forEach(
+      (element) => element._draw && element._draw(canvas)
+    );
   }
 
   public start(canvas: HTMLCanvasElement) {
@@ -42,6 +46,13 @@ export default class SimpleCanvas extends React.Component<Props, State> {
 
   public render() {
     const { width, height } = this.props;
-    return <canvas ref="gameCanvas" width={width} height={height} style={{ border: 'black solid 1px' }} />;
+    return (
+      <canvas
+        ref="gameCanvas"
+        width={width}
+        height={height}
+        style={{ border: "black solid 1px" }}
+      />
+    );
   }
 }

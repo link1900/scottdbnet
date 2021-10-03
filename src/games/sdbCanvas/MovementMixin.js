@@ -1,4 +1,4 @@
-const MovementMixin = Base =>
+const MovementMixin = (Base) =>
   class extends Base {
     constructor(props) {
       super(props);

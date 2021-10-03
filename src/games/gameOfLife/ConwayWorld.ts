@@ -1,11 +1,10 @@
-import { GridCellProps, randomInteger } from '../gameEngine';
+import { GridCellProps, randomInteger } from "../gameEngine";
 import { WorldGrid, WorldGridProps } from "../gameEngine";
 import { ConwayCell } from "./ConwayCell";
 
 export interface ConwayWorldProps extends WorldGridProps {}
 
 export class ConwayWorld extends WorldGrid {
-
   public cellBuilder(defaultProps: GridCellProps): ConwayCell {
     return new ConwayCell({
       living: randomInteger(1, 10) === 1,
@@ -26,7 +25,7 @@ export class ConwayWorld extends WorldGrid {
       }
     }
 
-    updates.forEach(update => {
+    updates.forEach((update) => {
       cells[update.y][update.x].setLiving(update.state);
     });
   }

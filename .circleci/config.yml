@@ -11,7 +11,7 @@ jobs:
   client-test-deploy:
     executor:
       name: node/default
-      tag: '12.18'
+      tag: "12.18"
     steps:
       - checkout
       - aws-cli/install

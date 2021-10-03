@@ -1,11 +1,11 @@
-import Rect from '../sdbCanvas/Rect';
+import Rect from "../sdbCanvas/Rect";
 
 export default class Paddle extends Rect {
   simulate() {
     if (!this.active) {
       return null;
     }
-    const ball = this.state.getActorByName('ball');
+    const ball = this.state.getActorByName("ball");
     if (this.getYCenter() < ball.y) {
       this.setY(this.y + 3);
     }

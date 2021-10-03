@@ -54,11 +54,11 @@ export class World {
   }
 
   public render() {
-    this.entities.forEach(e => e.runRender());
+    this.entities.forEach((e) => e.runRender());
   }
 
   public simulate() {
-    this.entities = this.entities.filter(e => e.alive);
-    this.entities.forEach(e => e.runSimulate());
+    this.entities = this.entities.filter((e) => e.alive);
+    this.entities.forEach((e) => e.runSimulate());
   }
 }

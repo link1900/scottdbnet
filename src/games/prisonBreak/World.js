@@ -310,7 +310,7 @@ export function itemsAtLocation(state, location) {
   const { entities } = state.world;
   return filter(
     entities,
-    entity =>
+    (entity) =>
       location && entity.locationId === location.id && isItem(entity.type)
   );
 }
@@ -322,7 +322,7 @@ export function monstersAtLocation(state, location) {
   const { entities } = state.world;
   return filter(
     entities,
-    entity =>
+    (entity) =>
       location && entity.locationId === location.id && isMonster(entity.type)
   );
 }

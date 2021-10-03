@@ -12,10 +12,13 @@ export function Games() {
         <Route exact path={path}>
           <GameList />
         </Route>
-        {gameDefinitions.map(gameDefinition => {
+        {gameDefinitions.map((gameDefinition) => {
           const Game = gameDefinition.component;
           return (
-            <Route key={gameDefinition.name} path={`${path}/${gameDefinition.name}`}>
+            <Route
+              key={gameDefinition.name}
+              path={`${path}/${gameDefinition.name}`}
+            >
               <Game />
             </Route>
           );

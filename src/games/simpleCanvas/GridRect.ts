@@ -1,5 +1,5 @@
-import CanvasRect from '../simpleCanvas/CanvasRect';
-import { CanvasRectProps } from './CanvasRect';
+import CanvasRect from "../simpleCanvas/CanvasRect";
+import { CanvasRectProps } from "./CanvasRect";
 
 export interface GridRectProps extends CanvasRectProps {
   gridx: number;

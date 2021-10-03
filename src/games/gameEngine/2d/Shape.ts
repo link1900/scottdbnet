@@ -1,5 +1,5 @@
-import Entity, { EntityProps } from '../base/Entity';
-import { World2D } from './World2D';
+import Entity, { EntityProps } from "../base/Entity";
+import { World2D } from "./World2D";
 
 export interface ShapeProps extends EntityProps {
   x?: number;
@@ -33,7 +33,7 @@ export default class Shape extends Entity {
       ySpeed = 0,
       height = 10,
       width = 10,
-      color = 'black',
+      color = "black",
       facingDegree = 0,
       world
     } = props;
@@ -78,7 +78,7 @@ export default class Shape extends Entity {
     const maxY = this.world.height - this.height;
     const outOfBounds = y < 0 || y > maxY;
     if (outOfBounds) {
-      if (this.world.boundType === 'wall') {
+      if (this.world.boundType === "wall") {
         if (y <= 0) {
           y = 0;
         }
@@ -86,7 +86,7 @@ export default class Shape extends Entity {
           y = maxY;
         }
       }
-      if (this.world.boundType === 'wrap') {
+      if (this.world.boundType === "wrap") {
         if (y <= 0) {
           y = maxY - this.height;
         }
@@ -94,7 +94,7 @@ export default class Shape extends Entity {
           y = 0;
         }
       }
-      if (this.world.boundType === 'delete') {
+      if (this.world.boundType === "delete") {
         this.kill();
       }
     }
@@ -107,7 +107,7 @@ export default class Shape extends Entity {
     const maxX = this.world.width - this.width;
     const outOfBounds = x < 0 || x > maxX;
     if (outOfBounds) {
-      if (this.world.boundType === 'wall') {
+      if (this.world.boundType === "wall") {
         if (x <= 0) {
           x = 0;
         }
@@ -115,7 +115,7 @@ export default class Shape extends Entity {
           x = maxX;
         }
       }
-      if (this.world.boundType === 'wrap') {
+      if (this.world.boundType === "wrap") {
         if (x <= 0) {
           x = maxX - this.width;
         }
@@ -123,7 +123,7 @@ export default class Shape extends Entity {
           x = 0;
         }
       }
-      if (this.world.boundType === 'delete') {
+      if (this.world.boundType === "delete") {
         this.kill();
       }
     }
@@ -132,7 +132,12 @@ export default class Shape extends Entity {
   }
 
   public containsPoint(pointX: number, pointY: number): boolean {
-    return pointY > this.top && pointY < this.bottom && pointX > this.left && pointX < this.right;
+    return (
+      pointY > this.top &&
+      pointY < this.bottom &&
+      pointX > this.left &&
+      pointX < this.right
+    );
   }
 
   public onClick() {}

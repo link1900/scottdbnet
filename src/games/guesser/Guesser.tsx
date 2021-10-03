@@ -24,14 +24,8 @@ const initState = {
 
 export function Guesser() {
   const [gameState, setGameState] = useState<State>(initState);
-  const {
-    guessCount,
-    guessLimit,
-    currentGuess,
-    finished,
-    theNumber,
-    history
-  } = gameState;
+  const { guessCount, guessLimit, currentGuess, finished, theNumber, history } =
+    gameState;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGameState({ ...gameState, currentGuess: event.target.value });

@@ -1,4 +1,4 @@
-import Shape, { ShapeProps } from './Shape';
+import Shape, { ShapeProps } from "./Shape";
 
 export interface RectProps extends ShapeProps {
   borderColor?: string;
@@ -11,7 +11,7 @@ export class Rect extends Shape {
 
   constructor(props: RectProps) {
     super(props);
-    const { hasBorder = false, borderColor = 'black' } = props;
+    const { hasBorder = false, borderColor = "black" } = props;
     this.hasBorder = hasBorder;
     this.borderColor = borderColor;
   }

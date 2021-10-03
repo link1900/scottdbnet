@@ -13,7 +13,7 @@ export interface Props {
   toggleMenu: () => void;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginLeft: -theme.spacing(1)
   }
@@ -32,19 +32,19 @@ function SiteHeader(props: Props) {
     >
       <Toolbar>
         <Grid container spacing={1} alignItems="center">
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={toggleMenu}
-                className={classes.menuButton}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <Typography variant="h6">Linkin Games</Typography>
-            </Grid>
+          <Grid item>
+            <IconButton
+              color="inherit"
+              aria-label="Open drawer"
+              onClick={toggleMenu}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6">Linkin Games</Typography>
+          </Grid>
           <Grid item xs />
         </Grid>
       </Toolbar>

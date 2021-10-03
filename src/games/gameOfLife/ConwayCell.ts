@@ -1,4 +1,4 @@
-import { GridCell, GridCellProps } from '../gameEngine';
+import { GridCell, GridCellProps } from "../gameEngine";
 
 export interface ConwayCellProps extends GridCellProps {
   living: boolean;
@@ -15,7 +15,7 @@ export class ConwayCell extends GridCell {
   }
 
   public getCellColor() {
-    return this.living ? 'blue' : 'white';
+    return this.living ? "blue" : "white";
   }
 
   public setLiving(living: boolean) {
@@ -34,7 +34,7 @@ export class ConwayCell extends GridCell {
 
   public newState(): boolean {
     const neighbours = this.getCellNeighbours() as ConwayCell[];
-    const liveNeighbours = neighbours.filter(i => i.getLiving()).length;
+    const liveNeighbours = neighbours.filter((i) => i.getLiving()).length;
     if (this.living) {
       if (liveNeighbours < 2) {
         return false;

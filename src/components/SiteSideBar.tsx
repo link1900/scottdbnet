@@ -40,7 +40,7 @@ function SiteSideBar(props: SiteSideBarProps) {
           <ListItemText primary="Games" />
         </ListItem>
         <Divider />
-        {gameDefinitions.map(gameDefinition => {
+        {gameDefinitions.map((gameDefinition) => {
           return (
             <ListItem
               key={gameDefinition.name}

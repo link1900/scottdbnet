@@ -1,5 +1,5 @@
-import CanvasElement from './CanvasElement';
-import { CanvasElementProps } from './CanvasElement';
+import CanvasElement from "./CanvasElement";
+import { CanvasElementProps } from "./CanvasElement";
 
 export interface CanvasShapeProps extends CanvasElementProps {
   x?: number;
@@ -31,8 +31,8 @@ export default class CanvasShape extends CanvasElement {
     ySpeed = 0,
     height = 0,
     width = 0,
-    fillColor = 'black',
-    lineColor = 'black',
+    fillColor = "black",
+    lineColor = "black",
     facingDegree = 0,
     ...rest
   }: CanvasShapeProps) {
@@ -65,6 +65,11 @@ export default class CanvasShape extends CanvasElement {
   }
 
   public containsPoint(pointX: number, pointY: number): boolean {
-    return pointY > this.top && pointY < this.bottom && pointX > this.left && pointX < this.right;
+    return (
+      pointY > this.top &&
+      pointY < this.bottom &&
+      pointX > this.left &&
+      pointX < this.right
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Rect, RectProps } from './Rect';
+import { Rect, RectProps } from "./Rect";
 
 export interface TextRectProps extends RectProps {
   text?: string;
@@ -17,7 +17,14 @@ export class TextRect extends Rect {
 
   constructor(props: TextRectProps) {
     super(props);
-    const { text = '', color = 'white', textColor = 'black', font = 'serif', textSize = 20, textAlign = 'center' } = props;
+    const {
+      text = "",
+      color = "white",
+      textColor = "black",
+      font = "serif",
+      textSize = 20,
+      textAlign = "center"
+    } = props;
     this.color = color;
     this.text = text;
     this.font = font;
@@ -30,7 +37,7 @@ export class TextRect extends Rect {
     super.render();
     const context = this.world.renderContext;
     context.font = `${this.textSize}px ${this.font}`;
-    context.textAlign = 'center';
+    context.textAlign = "center";
     context.fillStyle = this.textColor;
     context.fillText(this.text, this.x, this.y);
   }

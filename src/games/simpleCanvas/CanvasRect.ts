@@ -1,5 +1,5 @@
-import { CanvasShapeProps } from './CanvasShape';
-import CanvasShape from './CanvasShape';
+import { CanvasShapeProps } from "./CanvasShape";
+import CanvasShape from "./CanvasShape";
 
 export type CanvasRectProps = {} & CanvasShapeProps;
 
@@ -9,7 +9,7 @@ export default class CanvasRect extends CanvasShape {
   }
 
   public draw(canvas: HTMLCanvasElement) {
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext("2d");
     if (!context) {
       return;
     }

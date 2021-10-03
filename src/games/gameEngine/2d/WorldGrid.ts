@@ -1,5 +1,5 @@
-import { GridCell, GridCellProps } from './GridCell';
-import { World2D, World2DProps } from './World2D';
+import { GridCell, GridCellProps } from "./GridCell";
+import { World2D, World2DProps } from "./World2D";
 
 export interface WorldGridProps extends World2DProps {
   gridSize?: number;
@@ -23,7 +23,9 @@ export class WorldGrid extends World2D {
     return new GridCell(defaultProps);
   }
 
-  public buildCellGrid(cellBuilder: (defaultProps: GridCellProps) => GridCell = this.cellBuilder) {
+  public buildCellGrid(
+    cellBuilder: (defaultProps: GridCellProps) => GridCell = this.cellBuilder
+  ) {
     const heightSize = this.height / this.gridSize;
     const widthSize = this.width / this.gridSize;
     for (let y = 0; y < this.gridSize; y += 1) {
@@ -38,7 +40,7 @@ export class WorldGrid extends World2D {
           width: widthSize,
           height: heightSize,
           hasBorder: this.cellBorder,
-          color: 'white'
+          color: "white"
         });
         this.cells[y][x] = cell;
         this.addEntity(cell);
@@ -63,6 +65,11 @@ export class WorldGrid extends World2D {
   }
 
   public isValidCellLocation(gridY: number, gridX: number): boolean {
-    return gridX >= 0 && gridX <= this.gridSize - 1 && gridY >= 0 && gridY <= this.gridSize - 1;
+    return (
+      gridX >= 0 &&
+      gridX <= this.gridSize - 1 &&
+      gridY >= 0 &&
+      gridY <= this.gridSize - 1
+    );
   }
 }

@@ -18,7 +18,7 @@ export default class CommandLine extends React.Component {
     }
   };
 
-  handleInputRef = ref => {
+  handleInputRef = (ref) => {
     this.mainCommandInput = ref;
   };
 

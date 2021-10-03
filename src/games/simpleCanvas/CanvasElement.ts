@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 
 export interface CanvasElementProps {
   id?: string;
@@ -13,7 +13,12 @@ export default class CanvasElement {
   public visible: boolean;
   public active: boolean;
 
-  constructor({ id = uuid(), name = '', visible = true, active = true }: CanvasElementProps) {
+  constructor({
+    id = uuid(),
+    name = "",
+    visible = true,
+    active = true
+  }: CanvasElementProps) {
     this.id = id;
     this.name = name;
     this.visible = visible;

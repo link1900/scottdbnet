@@ -1,6 +1,14 @@
-import React from 'react';
-import { Button, Card, CardContent, Grid, Typography, Container, Box } from '@material-ui/core';
-import { Error as ErrorIcon } from '@material-ui/icons';
+import React from "react";
+import {
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  Container,
+  Box
+} from "@material-ui/core";
+import { Error as ErrorIcon } from "@material-ui/icons";
 
 interface Props {
   error?: Error;
@@ -24,14 +32,19 @@ export class ErrorZone extends React.PureComponent<Props, State> {
     if (error) {
       return (
         <Container>
-          <Grid container direction={'column'} alignItems={'center'}>
+          <Grid container direction={"column"} alignItems={"center"}>
             <Grid item xs={6}>
               <Box height={128} />
             </Grid>
             <Grid item xs={6}>
               <Card>
                 <CardContent>
-                  <Grid container direction={'column'} alignItems={'center'} spacing={2}>
+                  <Grid
+                    container
+                    direction={"column"}
+                    alignItems={"center"}
+                    spacing={2}
+                  >
                     <Grid item>
                       <ErrorIcon />
                     </Grid>
@@ -41,7 +54,11 @@ export class ErrorZone extends React.PureComponent<Props, State> {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Button variant="outlined" onClick={() => window.location.reload()} data-id="button-reload-page">
+                      <Button
+                        variant="outlined"
+                        onClick={() => window.location.reload()}
+                        data-id="button-reload-page"
+                      >
                         Try again
                       </Button>
                     </Grid>

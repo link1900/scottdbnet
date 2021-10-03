@@ -1,7 +1,7 @@
-import Shape from './Shape';
-import { World, WorldProps } from '../base/World';
+import Shape from "./Shape";
+import { World, WorldProps } from "../base/World";
 
-export type BoundType = 'wall' | 'wrap' | 'delete';
+export type BoundType = "wall" | "wrap" | "delete";
 
 export interface World2DProps extends WorldProps {
   height?: number;
@@ -22,21 +22,29 @@ export class World2D extends World {
 
   constructor(props: World2DProps) {
     super(props);
-    const { height = 600, width = 600, backgroundColor = 'white', boundType = 'delete', canvas } = props;
+    const {
+      height = 600,
+      width = 600,
+      backgroundColor = "white",
+      boundType = "delete",
+      canvas
+    } = props;
     this.height = height;
     this.width = width;
     this.backgroundColor = backgroundColor;
     this.boundType = boundType;
     this.canvas = canvas;
     this.mouseEngaged = false;
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext("2d");
     if (!context) {
-      throw new Error('unable to get render context');
+      throw new Error("unable to get render context");
     }
-    this.canvas.addEventListener('mousedown', (event) => this.mouseDown(event));
-    this.canvas.addEventListener('mousemove', (event) => this.mouseMove(event));
-    this.canvas.addEventListener('mouseup', (event) => this.mouseUp(event));
-    this.canvas.addEventListener('mouseleave', (event) => this.mouseLeave(event));
+    this.canvas.addEventListener("mousedown", (event) => this.mouseDown(event));
+    this.canvas.addEventListener("mousemove", (event) => this.mouseMove(event));
+    this.canvas.addEventListener("mouseup", (event) => this.mouseUp(event));
+    this.canvas.addEventListener("mouseleave", (event) =>
+      this.mouseLeave(event)
+    );
     this.renderContext = context;
   }
 
@@ -71,7 +79,7 @@ export class World2D extends World {
 
   public onClick(event: MouseEvent) {
     const { mouseX, mouseY } = this.getMousePosition(event);
-    this.entities.forEach(entity => {
+    this.entities.forEach((entity) => {
       if (entity instanceof Shape) {
         if (entity.containsPoint(mouseX, mouseY)) {
           entity.onClick();

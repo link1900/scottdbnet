@@ -1,13 +1,13 @@
-import Rect from '../sdbCanvas/Rect';
-import Ball from './Ball';
-import PlayerPaddle from './PlayerPaddle';
-import Paddle from './Paddle';
-import Text from '../sdbCanvas/Text';
+import Rect from "../sdbCanvas/Rect";
+import Ball from "./Ball";
+import PlayerPaddle from "./PlayerPaddle";
+import Paddle from "./Paddle";
+import Text from "../sdbCanvas/Text";
 
 export default class SimpleTennisGame {
   constructor(canvas) {
     this.canvas = canvas;
-    this.context = canvas.getContext('2d');
+    this.context = canvas.getContext("2d");
     this.actors = [];
     this.maxScore = 3;
     this.screen = new Rect({
@@ -16,8 +16,8 @@ export default class SimpleTennisGame {
       width: canvas.width,
       x: 0,
       y: 0,
-      color: 'black',
-      type: 'rect'
+      color: "black",
+      type: "rect"
     });
 
     for (let i = 0; i < this.screen.height; i += 40) {
@@ -29,7 +29,7 @@ export default class SimpleTennisGame {
           y: i,
           width: 2,
           height: 20,
-          color: 'white'
+          color: "white"
         })
       );
     }
@@ -37,10 +37,10 @@ export default class SimpleTennisGame {
     this.actors.push(
       new Ball({
         state: this,
-        name: 'ball',
+        name: "ball",
         speedX: 6,
         speedY: 0,
-        color: 'white',
+        color: "white",
         x: (this.screen.getXCenter() - 20) / 2,
         y: (this.screen.getYCenter() - 20) / 2,
         radius: 10
@@ -50,72 +50,74 @@ export default class SimpleTennisGame {
     this.actors.push(
       new PlayerPaddle({
         state: this,
-        name: 'playerPaddle',
+        name: "playerPaddle",
         x: 0,
         y: this.screen.getYCenter() - 50,
         height: 100,
         width: 10,
-        color: 'white'
+        color: "white"
       })
     );
 
     this.actors.push(
       new Paddle({
         state: this,
-        name: 'aiPaddle',
+        name: "aiPaddle",
         x: this.screen.width - 10,
         y: this.screen.getYCenter() - 50,
         height: 100,
         width: 10,
-        color: 'white'
+        color: "white"
       })
     );
 
     this.actors.push(
       new Text({
         state: this,
-        name: 'playerScore',
+        name: "playerScore",
         x: 100,
         y: 100,
         text: 0,
         size: 20,
-        color: 'white'
+        color: "white"
       })
     );
 
     this.actors.push(
       new Text({
         state: this,
-        name: 'aiScore',
+        name: "aiScore",
         x: this.screen.width - 100,
         y: 100,
         text: 0,
         size: 20,
-        color: 'white'
+        color: "white"
       })
     );
 
     this.actors.push(
       new Text({
         state: this,
-        name: 'winText',
+        name: "winText",
         size: 30,
         x: this.screen.getXCenter(),
         y: this.screen.getYCenter(),
-        text: 'Player wins! Click to continue!',
+        text: "Player wins! Click to continue!",
         visible: false,
-        color: 'white'
+        color: "white"
       })
     );
 
-    canvas.addEventListener('mousemove', evt => {
+    canvas.addEventListener("mousemove", (evt) => {
       const mousePos = this.calculateMousePos(evt);
-      const playerPaddle = this.actors.find(actor => actor.name === 'playerPaddle');
+      const playerPaddle = this.actors.find(
+        (actor) => actor.name === "playerPaddle"
+      );
       playerPaddle.setY(mousePos.y - playerPaddle.height / 2);
     });
 
-    canvas.addEventListener('mousedown', () => {
-      const winText = this.actors.find(actor => actor.name === 'winText');
+    canvas.addEventListener("mousedown", () => {
+      const winText = this.actors.find((actor) => actor.name === "winText");
       if (winText.visible) {
         this.reset();
       }
@@ -130,10 +132,10 @@ export default class SimpleTennisGame {
   }
 
   gameOver() {
-    const ball = this.getActorByName('ball');
-    const playerPaddle = this.getActorByName('playerPaddle');
-    const aiPaddle = this.getActorByName('aiPaddle');
-    const winText = this.getActorByName('winText');
+    const ball = this.getActorByName("ball");
+    const playerPaddle = this.getActorByName("playerPaddle");
+    const aiPaddle = this.getActorByName("aiPaddle");
+    const winText = this.getActorByName("winText");
     ball.disable();
     playerPaddle.disable();
     aiPaddle.disable();
@@ -141,12 +143,12 @@ export default class SimpleTennisGame {
   }
 
   reset() {
-    const playerScore = this.getActorByName('playerScore');
-    const aiScore = this.getActorByName('aiScore');
-    const ball = this.getActorByName('ball');
-    const playerPaddle = this.getActorByName('playerPaddle');
-    const aiPaddle = this.getActorByName('aiPaddle');
-    const winText = this.getActorByName('winText');
+    const playerScore = this.getActorByName("playerScore");
+    const aiScore = this.getActorByName("aiScore");
+    const ball = this.getActorByName("ball");
+    const playerPaddle = this.getActorByName("playerPaddle");
+    const aiPaddle = this.getActorByName("aiPaddle");
+    const winText = this.getActorByName("winText");
     playerScore.text = 0;
     aiScore.text = 0;
 
@@ -168,20 +170,20 @@ export default class SimpleTennisGame {
   }
 
   simulate() {
-    this.actors.forEach(actor => actor.simulate());
+    this.actors.forEach((actor) => actor.simulate());
   }
 
   render() {
     this.screen.render();
-    this.actors.forEach(actor => actor.render());
+    this.actors.forEach((actor) => actor.render());
   }
 
   getActorByName(name) {
-    return this.actors.find(actor => actor.name === name);
+    return this.actors.find((actor) => actor.name === name);
   }
 
   getActorsByClass(clazz) {
-    return this.actors.filter(actor => actor instanceof clazz);
+    return this.actors.filter((actor) => actor instanceof clazz);
   }
 
   calculateMousePos(evt) {

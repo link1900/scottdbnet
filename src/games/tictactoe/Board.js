@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function Square(props) {
   return (
@@ -10,7 +10,12 @@ function Square(props) {
 
 export default class Board extends React.Component {
   renderSquare(i) {
-    return <Square value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />;
+    return (
+      <Square
+        value={this.props.squares[i]}
+        onClick={() => this.props.onClick(i)}
+      />
+    );
   }
 
   render() {

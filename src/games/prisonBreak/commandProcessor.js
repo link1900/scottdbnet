@@ -56,7 +56,7 @@ export function processCommand(state, command, allowedCommands) {
   if (!isAllowedCommand(firstWord, allowedCommands)) {
     return invalidInput(state, command);
   }
-  const commandDef = find(commandList, cd => includes(cd.keys, firstWord));
+  const commandDef = find(commandList, (cd) => includes(cd.keys, firstWord));
   if (!commandDef) {
     return error(state, command);
   }
@@ -137,7 +137,7 @@ function itemLook(state, location) {
     <span>
       You can see the following item{items.length === 1 ? "" : "s"}:
       <ul>
-        {items.map(item => (
+        {items.map((item) => (
           <li key={item.id}>
             <CommandRef command={`take ${item.name}`} label={item.name} />
           </li>
@@ -156,7 +156,7 @@ function monsterLook(state, location) {
     <span>
       You can see the following enemies:
       <ul>
-        {monsters.map(monster => (
+        {monsters.map((monster) => (
           <li key={monster.id}>
             <CommandRef
               command={`attack ${monster.name}`}
@@ -175,11 +175,10 @@ function possibleDirections(state, location) {
   }
   return (
     <span>
-      You can move in the following direction{location.paths.length === 1
-        ? ""
-        : "s"}:
+      You can move in the following direction
+      {location.paths.length === 1 ? "" : "s"}:
       <ul>
-        {location.paths.map(path => {
+        {location.paths.map((path) => {
           if (!path) {
             return null;
           }
@@ -199,8 +198,8 @@ function possibleDirections(state, location) {
 
 export function help(state, command) {
   const commandKeys = commandList
-    .filter(cl => cl.hidden !== true)
-    .map(commandDef => first(commandDef.keys));
+    .filter((cl) => cl.hidden !== true)
+    .map((commandDef) => first(commandDef.keys));
   return updateLog(
     state,
     command,
@@ -212,7 +211,7 @@ export function help(state, command) {
       Here is the list of valid commands:
       <br />
       <ul>
-        {commandKeys.sort().map(key => {
+        {commandKeys.sort().map((key) => {
           return (
             <li key={key}>
               <CommandRef command={key} />
@@ -261,7 +260,7 @@ export function move(state, command) {
       </span>
     );
   }
-  const path = playerLocation.paths.find(p => p.direction === direction);
+  const path = playerLocation.paths.find((p) => p.direction === direction);
   if (!path) {
     return updateLog(
       state,
@@ -310,7 +309,8 @@ export function move(state, command) {
     updatedState,
     command,
     <span>
-      You moved from <b>{oldLocation.name}</b> into <b>{newLocation.name}</b>.<br />
+      You moved from <b>{oldLocation.name}</b> into <b>{newLocation.name}</b>.
+      <br />
     </span>
   );
 
@@ -381,7 +381,7 @@ function restart(state, command) {
     ...state,
     prompt: {
       onYes: resetWorld,
-      onNo: someState => {
+      onNo: (someState) => {
         const otherUpdateState = {
           ...someState,
           prompt: null
@@ -399,8 +399,8 @@ function restart(state, command) {
     command,
     <span>
       Are you sure you want to <CommandRef command="restart" /> from the
-      beginning? All saved progress up to this point will be lost. (<CommandRef command="yes" />{" "}
-      / <CommandRef command="no" />)
+      beginning? All saved progress up to this point will be lost. (
+      <CommandRef command="yes" /> / <CommandRef command="no" />)
     </span>
   );
 }
@@ -455,10 +455,12 @@ function isAllowedCommand(command, allowedCommands) {
   const firstWord = first(commandWords);
   const allowedCommandList = filter(
     commandList,
-    commandDef => intersection(commandDef.keys, allowedCommands).length > 0
+    (commandDef) => intersection(commandDef.keys, allowedCommands).length > 0
   );
   return !isNil(
-    find(allowedCommandList, commandDef => includes(commandDef.keys, firstWord))
+    find(allowedCommandList, (commandDef) =>
+      includes(commandDef.keys, firstWord)
+    )
   );
 }
 
@@ -481,7 +483,7 @@ function status(state, command) {
     <span>
       My current status is:
       <br />
-      {stats.map(stat => (
+      {stats.map((stat) => (
         <span key={stat.name}>
           {stat.name}: {` ${stat.value}`}
           <br />
@@ -551,7 +553,7 @@ function playerEquipment(state) {
   return (
     <p>
       {"I'm"} currently holding: <br />
-      {items.map(item => {
+      {items.map((item) => {
         return (
           <span key={item.id}>
             {item.name} - {item.description}
@@ -569,7 +571,7 @@ function take(state, command) {
   const items = itemsAtLocation(state, location);
   const foundItem = find(
     items,
-    item => item.name.toLowerCase() === commandTail.trim().toLowerCase()
+    (item) => item.name.toLowerCase() === commandTail.trim().toLowerCase()
   );
   const player = getPlayer(state);
   if (!foundItem || !player) {
@@ -630,7 +632,7 @@ export function updateLocationForState(state, location) {
     world: {
       ...state.world,
       locations: state.world.locations
-        .filter(e => e.id !== location.id)
+        .filter((e) => e.id !== location.id)
         .concat(location)
     }
   };
@@ -642,7 +644,7 @@ export function updateEntityForState(state, entity) {
     world: {
       ...state.world,
       entities: state.world.entities
-        .filter(e => e.id !== entity.id)
+        .filter((e) => e.id !== entity.id)
         .concat(entity)
     }
   };
@@ -654,7 +656,7 @@ function equip(state, command) {
   const player = getPlayer(state);
   const foundItem = find(
     playerItems,
-    item => item.name.toLowerCase() === commandTail.trim().toLowerCase()
+    (item) => item.name.toLowerCase() === commandTail.trim().toLowerCase()
   );
 
   if (!foundItem || !player) {
@@ -709,7 +711,7 @@ function equip(state, command) {
     updateState,
     player.id,
     "itemIds",
-    player.itemIds.filter(itemId => itemId !== foundItem.id)
+    player.itemIds.filter((itemId) => itemId !== foundItem.id)
   );
 
   return updateLog(
@@ -725,7 +727,7 @@ function unequip(state, command) {
   const player = getPlayer(state);
   const foundItem = find(
     pe,
-    item => item.name.toLowerCase() === commandTail.trim().toLowerCase()
+    (item) => item.name.toLowerCase() === commandTail.trim().toLowerCase()
   );
 
   if (!foundItem || !player) {
@@ -776,7 +778,7 @@ function getPlayerItems(state) {
   if (!player) {
     return [];
   }
-  return player.itemIds.map(itemId =>
+  return player.itemIds.map((itemId) =>
     find(state.world.entities, { id: itemId })
   );
 }
@@ -805,7 +807,7 @@ export function unlock(state, command) {
   if (!currentLocation) {
     return updateLog(state, command, <span>What door</span>);
   }
-  const lockedPaths = currentLocation.paths.filter(p => p.locked);
+  const lockedPaths = currentLocation.paths.filter((p) => p.locked);
   if (lockedPaths === 0) {
     return updateLog(
       state,
@@ -813,11 +815,11 @@ export function unlock(state, command) {
       <span>There are no locked doors here.</span>
     );
   }
-  const connectedLocations = lockedPaths.map(p =>
+  const connectedLocations = lockedPaths.map((p) =>
     find(state.world.locations, { id: p.toLocationId })
   );
   let allowedDirection = "";
-  const updatePaths = currentLocation.paths.map(p => {
+  const updatePaths = currentLocation.paths.map((p) => {
     if (!p.locked) {
       return p;
     }
@@ -833,8 +835,8 @@ export function unlock(state, command) {
     "paths",
     updatePaths
   );
-  connectedLocations.forEach(loc => {
-    const otherPaths = loc.paths.map(poa => {
+  connectedLocations.forEach((loc) => {
+    const otherPaths = loc.paths.map((poa) => {
       if (!poa.locked || poa.direction !== allowedDirection) {
         return poa;
       }
@@ -856,7 +858,7 @@ export function unlock(state, command) {
 export function revealMap(state, command) {
   let updatedState = state;
 
-  state.world.locations.forEach(location => {
+  state.world.locations.forEach((location) => {
     updatedState = updateLocation(updatedState, location.id, "visited", true);
   });
 
@@ -904,8 +906,7 @@ export function battle(state, command, creature1, creature2) {
     updateState,
     <span>
       {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs.{" "}
-      {fighter2.name} HP: {fighter2.currentHP}/
-      {fighter2.maxHP}
+      {fighter2.name} HP: {fighter2.currentHP}/{fighter2.maxHP}
     </span>
   );
   // check for win/loss condition
@@ -925,8 +926,7 @@ export function battle(state, command, creature1, creature2) {
     updateState,
     <span>
       {fighter1.name} HP: {fighter1.currentHP}/{fighter1.maxHP} vs.{" "}
-      {fighter2.name} HP: {fighter2.currentHP}/
-      {fighter2.maxHP}
+      {fighter2.name} HP: {fighter2.currentHP}/{fighter2.maxHP}
     </span>
   );
 }
@@ -1010,7 +1010,7 @@ export function use(state, command) {
   const player = getPlayer(state);
   const foundItem = find(
     playerItems,
-    item => item.name.toLowerCase() === commandTail.trim().toLowerCase()
+    (item) => item.name.toLowerCase() === commandTail.trim().toLowerCase()
   );
 
   if (!foundItem || !player) {
@@ -1037,7 +1037,7 @@ export function use(state, command) {
     updateState,
     player.id,
     "itemIds",
-    player.itemIds.filter(itemId => itemId !== foundItem.id)
+    player.itemIds.filter((itemId) => itemId !== foundItem.id)
   );
 
   return updateLog(

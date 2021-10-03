@@ -73,7 +73,7 @@ function getBorderRight(cell) {
 function getCells(cellSize, cells) {
   return flatten(
     cells
-      .map(cell => {
+      .map((cell) => {
         const { x, y, size, show } = cell;
         if (!show) {
           return null;
@@ -95,8 +95,8 @@ function getCells(cellSize, cells) {
           .concat(getBorderLeft(cell))
           .concat(getBorderRight(cell));
       })
-      .filter(c => c)
-  ).filter(c => c);
+      .filter((c) => c)
+  ).filter((c) => c);
 }
 
 function getCurrentLocation(currentLocationX, currentLocationY, cellSize) {

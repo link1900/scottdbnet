@@ -1,4 +1,4 @@
-import Shape from './Shape';
+import Shape from "./Shape";
 
 export default class Circle extends Shape {
   constructor(props) {
@@ -16,7 +16,14 @@ export default class Circle extends Shape {
     const { context } = this.state;
     context.fillStyle = this.color;
     context.beginPath();
-    context.arc(this.x + this.width / 2, this.y + this.height / 2, this.radius, 0, Math.PI * 2, true);
+    context.arc(
+      this.x + this.width / 2,
+      this.y + this.height / 2,
+      this.radius,
+      0,
+      Math.PI * 2,
+      true
+    );
     context.fill();
     return null;
   }

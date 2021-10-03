@@ -77,7 +77,7 @@ export default class Tic extends React.Component {
           <Grid item>
             <Board
               squares={current.squares}
-              onClick={i => this.handleClick(i)}
+              onClick={(i) => this.handleClick(i)}
             />
           </Grid>
           <Grid item>

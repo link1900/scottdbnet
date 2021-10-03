@@ -3,19 +3,19 @@ import { connect } from "react-redux";
 import { createActionCommandSelected } from "./PrisonBreakReducer";
 import "./commandLine.css";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return state;
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onClick: command => {
+    onClick: (command) => {
       dispatch(createActionCommandSelected(command));
     }
   };
 };
 
-const CommandRef = props => {
+const CommandRef = (props) => {
   const { command, onClick, label } = props;
   const displayName = label || command;
   return (

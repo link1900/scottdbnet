@@ -1,7 +1,7 @@
-import isString from 'lodash/isString';
-import isEmpty from 'lodash/isEmpty';
-import { processCommand, newline } from './commandProcessor';
-import { createWorld } from './World';
+import isString from "lodash/isString";
+import isEmpty from "lodash/isEmpty";
+import { processCommand, newline } from "./commandProcessor";
+import { createWorld } from "./World";
 
 function initState() {
   const world = createWorld();
@@ -10,16 +10,16 @@ function initState() {
     log: [],
     history: [],
     historyPosition: 0,
-    currentInput: '',
+    currentInput: "",
     prompt: null,
     world
   };
 }
 
 export const ACTION_TYPES = {
-  INPUT_CHANGED: 'INPUT_CHANGED',
-  KEY_PRESSED: 'KEY_PRESSED',
-  COMMAND_SELECTED: 'COMMAND_SELECTED'
+  INPUT_CHANGED: "INPUT_CHANGED",
+  KEY_PRESSED: "KEY_PRESSED",
+  COMMAND_SELECTED: "COMMAND_SELECTED"
 };
 
 export function createActionInputChanged(value) {
@@ -51,7 +51,7 @@ function handleInputChanged(state, value) {
 }
 
 function handleKeyPressed(state, key) {
-  if (key === 'ArrowUp') {
+  if (key === "ArrowUp") {
     const newHistoryPosition = state.historyPosition - 1;
     if (newHistoryPosition < 0) {
       return state;
@@ -62,12 +62,12 @@ function handleKeyPressed(state, key) {
       historyPosition: newHistoryPosition
     };
   }
-  if (key === 'ArrowDown') {
+  if (key === "ArrowDown") {
     const newHistoryPosition = state.historyPosition + 1;
     if (newHistoryPosition > state.history.length - 1) {
       return {
         ...state,
-        currentInput: '',
+        currentInput: "",
         historyPosition: state.history.length
       };
     }
@@ -77,7 +77,7 @@ function handleKeyPressed(state, key) {
       historyPosition: newHistoryPosition
     };
   }
-  if (key === 'Enter') {
+  if (key === "Enter") {
     return runCommand(state, state.currentInput);
   }
   return state;
@@ -90,7 +90,7 @@ function runCommand(state, command) {
   command = command.trim().toLowerCase();
 
   if (state.prompt) {
-    return processCommand(state, command, ['yes', 'no']);
+    return processCommand(state, command, ["yes", "no"]);
   }
 
   return processCommand(state, command);

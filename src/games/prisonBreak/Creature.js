@@ -1,3 +1,3 @@
 export function isMonster(type) {
-  return type === 'monster';
+  return type === "monster";
 }

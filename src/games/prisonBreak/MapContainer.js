@@ -1,21 +1,21 @@
-import find from 'lodash/find';
-import { connect } from 'react-redux';
-import Map from './Map';
-import { getPlayerLocation } from './Player';
+import find from "lodash/find";
+import { connect } from "react-redux";
+import Map from "./Map";
+import { getPlayerLocation } from "./Player";
 
 function borderForPath(paths, direction) {
   const somePath = find(paths, { direction });
   if (!somePath) {
     return {
       show: true,
-      color: 'black'
+      color: "black"
     };
   }
 
   if (somePath.locked) {
     return {
       show: true,
-      color: 'red'
+      color: "red"
     };
   }
   return {
@@ -23,17 +23,17 @@ function borderForPath(paths, direction) {
   };
 }
 
-const mapStateToProps = state => {
-  const cells = state.world.locations.map(location => {
+const mapStateToProps = (state) => {
+  const cells = state.world.locations.map((location) => {
     return {
       x: location.x,
       y: location.y,
       size: 30,
       show: location.visited,
-      borderTop: borderForPath(location.paths, 'north'),
-      borderBottom: borderForPath(location.paths, 'south'),
-      borderRight: borderForPath(location.paths, 'east'),
-      borderLeft: borderForPath(location.paths, 'west')
+      borderTop: borderForPath(location.paths, "north"),
+      borderBottom: borderForPath(location.paths, "south"),
+      borderRight: borderForPath(location.paths, "east"),
+      borderLeft: borderForPath(location.paths, "west")
     };
   });
   const currentLocation = getPlayerLocation(state);
@@ -56,9 +56,6 @@ const mapDispatchToProps = () => {
   return {};
 };
 
-const MapContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Map);
+const MapContainer = connect(mapStateToProps, mapDispatchToProps)(Map);
 
 export default MapContainer;

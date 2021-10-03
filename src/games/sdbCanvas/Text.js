@@ -1,9 +1,9 @@
-import Entity from './Entity';
+import Entity from "./Entity";
 
 export default class Text extends Entity {
   constructor(props) {
     super(props);
-    const { text, x, y, color, size = 12, font = 'serif' } = props;
+    const { text, x, y, color, size = 12, font = "serif" } = props;
     this.text = text;
     this.x = x;
     this.y = y;
@@ -18,7 +18,7 @@ export default class Text extends Entity {
     }
     const { context } = this.state;
     context.font = `${this.size}px ${this.font}`;
-    context.textAlign = 'center';
+    context.textAlign = "center";
     context.fillStyle = this.color;
     context.fillText(this.text, this.x, this.y);
     return null;

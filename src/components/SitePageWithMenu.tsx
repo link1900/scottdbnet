@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SiteSideBar from "./SiteSideBar";
 import SiteHeader from "./SiteHeader";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flex: 1,
