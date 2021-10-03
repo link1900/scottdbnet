@@ -40,7 +40,9 @@
     "stats": "yarn build -- --stats && npx webpack-bundle-analyzer ./build/bundle-stats.json",
     "start:prod": "yarn build && npx serve -s build",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "type:check": "tsc --noEmit",
+    "validate": "yarn format:check && yarn type:check && yarn test"
   },
   "eslintConfig": {
     "extends": [
