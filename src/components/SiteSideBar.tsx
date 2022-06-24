@@ -6,18 +6,24 @@ import {
   ListItemText,
   Divider
 } from "@material-ui/core";
-import { gameDefinitions } from "../games/gameDefinitons";
 import { useHistory, useRouteMatch } from "react-router-dom";
+
+export interface MenuItemDefinition {
+  label: string;
+  url: string;
+}
 
 export interface SiteSideBarProps {
   variant: "permanent" | "temporary";
   open?: boolean;
   close?: () => void;
   onClose?: () => void;
+  rootLabel: string;
+  menuItems: MenuItemDefinition[];
 }
 
 function SiteSideBar(props: SiteSideBarProps) {
-  const { variant, open, onClose, close } = props;
+  const { variant, open, onClose, close, rootLabel, menuItems } = props;
   let { url } = useRouteMatch();
   const history = useHistory();
 
@@ -36,18 +42,18 @@ function SiteSideBar(props: SiteSideBarProps) {
       onClose={onClose}
     >
       <List>
-        <ListItem key="games" button onClick={() => goToPage(`${url}`)}>
-          <ListItemText primary="Games" />
+        <ListItem key={rootLabel} button onClick={() => goToPage(`${url}`)}>
+          <ListItemText primary={rootLabel} />
         </ListItem>
         <Divider />
-        {gameDefinitions.map((gameDefinition) => {
+        {menuItems.map(menuItem => {
           return (
             <ListItem
-              key={gameDefinition.name}
+              key={menuItem.url}
               button
-              onClick={() => goToPage(`${url}/${gameDefinition.name}`)}
+              onClick={() => goToPage(`${url}/${menuItem.url}`)}
             >
-              <ListItemText primary={gameDefinition.title} />
+              <ListItemText primary={menuItem.label} />
             </ListItem>
           );
         })}

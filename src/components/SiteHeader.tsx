@@ -11,16 +11,17 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 export interface Props {
   toggleMenu: () => void;
+  title: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   menuButton: {
     marginLeft: -theme.spacing(1)
   }
 }));
 
 function SiteHeader(props: Props) {
-  const { toggleMenu } = props;
+  const { toggleMenu, title } = props;
   const classes = useStyles();
 
   return (
@@ -43,7 +44,7 @@ function SiteHeader(props: Props) {
             </IconButton>
           </Grid>
           <Grid item>
-            <Typography variant="h6">Linkin Games</Typography>
+            <Typography variant="h6">{title}</Typography>
           </Grid>
           <Grid item xs />
         </Grid>

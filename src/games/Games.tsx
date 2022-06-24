@@ -1,13 +1,13 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
-import { SitePageWithMenu } from "../components/SitePageWithMenu";
 import { gameDefinitions } from "./gameDefinitons";
+import { GameLayout } from './GameLayout';
 import { GameList } from "./GameList";
 
 export function Games() {
   let { path } = useRouteMatch();
   return (
-    <SitePageWithMenu>
+    <GameLayout>
       <Switch>
         <Route exact path={path}>
           <GameList />
@@ -24,6 +24,6 @@ export function Games() {
           );
         })}
       </Switch>
-    </SitePageWithMenu>
+    </GameLayout>
   );
 }

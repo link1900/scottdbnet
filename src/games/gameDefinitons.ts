@@ -14,8 +14,8 @@ import { GuesserAI } from "./guesserAI/GuesserAI";
 import gameOfLifePreview from "./gameOfLife/conway_game_of_life.png";
 
 export interface GameDefinition {
-  name?: string;
-  title?: string;
+  name: string;
+  title: string;
   desc?: string;
   originalFramework?: string;
   originalLanguage?: string;

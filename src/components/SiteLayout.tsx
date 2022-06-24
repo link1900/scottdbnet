@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import SiteSideBar from "./SiteSideBar";
+import SiteSideBar, { MenuItemDefinition } from "./SiteSideBar";
 import SiteHeader from "./SiteHeader";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flex: 1,
@@ -33,12 +33,15 @@ const useStyles = makeStyles((theme) => ({
 
 export interface SiteLayoutProps {
   children: React.ReactNode;
+  title: string;
+  rootLabel: string;
+  menuItems: MenuItemDefinition[];
 }
 
-export function SitePageWithMenu(props: SiteLayoutProps) {
+export function SiteLayout(props: SiteLayoutProps) {
   const classes = useStyles();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { children } = props;
+  const { children, title, rootLabel, menuItems } = props;
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div className={classes.root}>
@@ -48,10 +51,12 @@ export function SitePageWithMenu(props: SiteLayoutProps) {
           open={isMenuOpen}
           close={() => setIsMenuOpen(false)}
           onClose={toggleMenu}
+          rootLabel={rootLabel}
+          menuItems={menuItems}
         />
       </nav>
       <div className={classes.pageArea}>
-        <SiteHeader toggleMenu={toggleMenu} />
+        <SiteHeader title={title} toggleMenu={toggleMenu} />
         {children}
       </div>
     </div>
