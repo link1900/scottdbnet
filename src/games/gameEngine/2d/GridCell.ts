@@ -1,4 +1,4 @@
-import { isPresent } from "../util/arrayHelper";
+import { isPresent } from "../../../util/arrayHelper";
 import { Rect, RectProps } from "./Rect";
 import { WorldGrid } from "./WorldGrid";
 
