@@ -6,6 +6,7 @@ import { Home } from "./home/Home";
 import { theme } from "./scottdbTheme";
 
 const GameLazy = lazy(() => import("./games/GameComponent"));
+const ToolLazy = lazy(() => import("./tools/ToolComponent"));
 
 export function App() {
   return (
@@ -16,6 +17,7 @@ export function App() {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/games" component={GameLazy} />
+              <Route path="/tools" component={ToolLazy} />
             </Switch>
           </Suspense>
         </Router>

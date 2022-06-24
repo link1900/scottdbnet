@@ -4,7 +4,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Divider
 } from "@material-ui/core";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
@@ -42,10 +41,12 @@ function SiteSideBar(props: SiteSideBarProps) {
       onClose={onClose}
     >
       <List>
+        <ListItem key="home" button onClick={() => goToPage("/")}>
+          <ListItemText primary="Home" />
+        </ListItem>
         <ListItem key={rootLabel} button onClick={() => goToPage(`${url}`)}>
           <ListItemText primary={rootLabel} />
         </ListItem>
-        <Divider />
         {menuItems.map(menuItem => {
           return (
             <ListItem

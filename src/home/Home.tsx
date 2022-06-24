@@ -16,6 +16,7 @@ import diceIcon from "./diceIcon.png";
 import gcaIcon from "./gcaLogo.png";
 import githubLogo from "./github.png";
 import siteIcon from "./icon.png";
+import toolIcon from "./toolIcon.png";
 import linkedinLogo from "./linkedin.png";
 import mailIcon from "./mailIcon.png";
 import { useGreyBody } from "./useBackgroundColor";
@@ -46,6 +47,12 @@ export function Home() {
                     <Avatar src={diceIcon} alt={"dice icon"} />
                   </ListItemAvatar>
                   <ListItemText primary="Linkin Games" />
+                </ListItem>
+                <ListItem button onClick={() => navTo("/tools")}>
+                  <ListItemAvatar>
+                    <Avatar src={toolIcon} alt={"tool icon"} />
+                  </ListItemAvatar>
+                  <ListItemText primary="Tools" />
                 </ListItem>
                 <ListItem
                   button

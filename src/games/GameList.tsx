@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Box,
   Card,
   CardActionArea,
   CardContent,
@@ -10,6 +9,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { SitePage } from "../components/SitePage";
+import { useGreyBody } from '../home/useBackgroundColor';
 import { gameDefinitions } from "./gameDefinitons";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
@@ -24,6 +24,7 @@ const useStyles = makeStyles({
 });
 
 export function GameList() {
+  useGreyBody();
   const classes = useStyles();
   const history = useHistory();
   let { url } = useRouteMatch();
@@ -41,11 +42,6 @@ export function GameList() {
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item>
-          <Box paddingTop={4}>
-            <Typography variant="h5">Click on game to play!</Typography>
-          </Box>
-        </Grid>
         <Grid item xs={12}>
           <Grid
             container
