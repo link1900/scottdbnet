@@ -46,7 +46,7 @@ export function Home() {
                   <ListItemAvatar>
                     <Avatar src={diceIcon} alt={"dice icon"} />
                   </ListItemAvatar>
-                  <ListItemText primary="Linkin Games" />
+                  <ListItemText primary="Games" />
                 </ListItem>
                 <ListItem button onClick={() => navTo("/tools")}>
                   <ListItemAvatar>

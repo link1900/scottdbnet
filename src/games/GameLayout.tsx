@@ -16,7 +16,7 @@ export function GameLayout({ children }: GameLayoutProps) {
   });
   return (
     <SiteLayout
-      title="Linkin Games"
+      title="Games"
       rootLabel="Games"
       menuItems={gameMenuItems}
     >
