@@ -31,6 +31,7 @@ export function ToolList() {
                 {toolDefinitions.map(toolDefinition => {
                   return (
                     <ListItem
+                      key={toolDefinition.name}
                       button
                       onClick={() => goToPage(`${url}/${toolDefinition.name}`)}
                     >
