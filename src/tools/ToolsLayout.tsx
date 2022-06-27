@@ -2,6 +2,7 @@ import React from "react";
 import { SiteLayout } from "../components/SiteLayout";
 import { MenuItemDefinition } from "../components/SiteSideBar";
 import { toolDefinitions } from "./toolDefinitions";
+import BuildIcon from "@material-ui/icons/Build";
 
 export interface ToolsLayoutProps {
   children: React.ReactNode;
@@ -15,7 +16,7 @@ export function ToolsLayout({ children }: ToolsLayoutProps) {
     };
   });
   return (
-    <SiteLayout title="Tools" rootLabel="Tools" menuItems={menuItems}>
+    <SiteLayout title="Tools" rootLabel="Tools" menuItems={menuItems} rootIcon={BuildIcon}>
       {children}
     </SiteLayout>
   );

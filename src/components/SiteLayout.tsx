@@ -35,13 +35,14 @@ export interface SiteLayoutProps {
   children: React.ReactNode;
   title: string;
   rootLabel: string;
+  rootIcon: any;
   menuItems: MenuItemDefinition[];
 }
 
 export function SiteLayout(props: SiteLayoutProps) {
   const classes = useStyles();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { children, title, rootLabel, menuItems } = props;
+  const { children, title, rootLabel, rootIcon, menuItems } = props;
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div className={classes.root}>
@@ -52,6 +53,7 @@ export function SiteLayout(props: SiteLayoutProps) {
           close={() => setIsMenuOpen(false)}
           onClose={toggleMenu}
           rootLabel={rootLabel}
+          rootIcon={rootIcon}
           menuItems={menuItems}
         />
       </nav>

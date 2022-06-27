@@ -1,11 +1,15 @@
 import React from "react";
 import {
+  Divider,
   Drawer,
   List,
   ListItem,
-  ListItemText,
+  ListItemIcon,
+  ListItemText
 } from "@material-ui/core";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import FeedbackIcon from "@material-ui/icons/Feedback";
+import HomeIcon from "@material-ui/icons/Home";
 
 export interface MenuItemDefinition {
   label: string;
@@ -18,14 +22,15 @@ export interface SiteSideBarProps {
   close?: () => void;
   onClose?: () => void;
   rootLabel: string;
+  rootIcon: any;
   menuItems: MenuItemDefinition[];
 }
 
 function SiteSideBar(props: SiteSideBarProps) {
-  const { variant, open, onClose, close, rootLabel, menuItems } = props;
+  const { variant, open, onClose, close, rootLabel, menuItems, rootIcon } = props;
   let { url } = useRouteMatch();
   const history = useHistory();
-
+  const RootIcon = rootIcon;
   const goToPage = async (location: string) => {
     if (close) {
       close();
@@ -42,11 +47,18 @@ function SiteSideBar(props: SiteSideBarProps) {
     >
       <List>
         <ListItem key="home" button onClick={() => goToPage("/")}>
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItem>
         <ListItem key={rootLabel} button onClick={() => goToPage(`${url}`)}>
+          <ListItemIcon>
+            <RootIcon />
+          </ListItemIcon>
           <ListItemText primary={rootLabel} />
         </ListItem>
+        <Divider key="items-section" />
         {menuItems.map(menuItem => {
           return (
             <ListItem
@@ -58,6 +70,18 @@ function SiteSideBar(props: SiteSideBarProps) {
             </ListItem>
           );
         })}
+        <Divider key="support-section" />
+        <ListItem
+          key="support"
+          button
+          component="a"
+          href="https://scottdb.atlassian.net/servicedesk/customer/portal/3"
+        >
+          <ListItemIcon>
+            <FeedbackIcon />
+          </ListItemIcon>
+          <ListItemText>Send feedback</ListItemText>
+        </ListItem>
       </List>
     </Drawer>
   );
