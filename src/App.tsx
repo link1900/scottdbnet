@@ -6,7 +6,7 @@ import { Home } from "./home/Home";
 import { theme } from "./scottdbTheme";
 
 const GameLazy = lazy(() => import("./games/GameComponent"));
-const ToolLazy = lazy(() => import("./tools/ToolComponent"));
+const ToolLazy = lazy(() => import("./tools/ToolSite"));
 
 export function App() {
   return (

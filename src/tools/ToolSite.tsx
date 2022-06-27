@@ -5,7 +5,7 @@ import { toolDefinitions } from "./toolDefinitions";
 import { ToolList } from "./ToolList";
 import { ToolsLayout } from './ToolsLayout';
 
-export function ToolsPage() {
+export default function ToolSite() {
   let { path } = useRouteMatch();
   useTitle('Tools');
   return (
