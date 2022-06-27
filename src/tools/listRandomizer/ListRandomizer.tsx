@@ -1,19 +1,23 @@
 import { shuffle } from "lodash";
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Grid,
   IconButton,
   Snackbar,
-  TextField
+  TextField,
+  Typography
 } from "@material-ui/core";
 import ShuffleIcon from "@material-ui/icons/Shuffle";
 import SortIcon from "@material-ui/icons/Sort";
 import ShareIcon from "@material-ui/icons/Share";
 import CloseIcon from "@material-ui/icons/Close";
+import MoodIcon from  "@material-ui/icons/Mood";
+import RotateRightIcon from "@material-ui/icons/RotateRight";
 import { useLocation } from "react-router-dom";
 
 import { SitePage } from "../../components/SitePage";
+import { makeValidJsonRequest } from "../../util/apiHelper";
 import {
   base64DecodeString,
   base64EncodeString
@@ -45,7 +49,8 @@ export function ListRandomizer() {
     textValue: startingListItems.join("\n")
   });
 
-  const [open, setOpen] = React.useState(false);
+  const [toastOpen, setToastOpen] = React.useState(false);
+  const [joke, setJoke] = useState<string>("");
 
   const handleTextChange = (event: any) => {
     const textValue = event.target.value;
@@ -76,13 +81,26 @@ export function ListRandomizer() {
     });
   };
 
+  const handleRotate = () => {
+    const item = value.listValue.shift();
+    if (item) {
+      value.listValue.push(item);
+      const listValue = value.listValue;
+      const textValue = listValue.join("\n");
+      setValue({
+        textValue,
+        listValue
+      });
+    }
+  }
+
   const handleShare = async () => {
     const url = new URL(window.location.toString());
     const params = new URLSearchParams();
     params.set("list", base64EncodeString(value.textValue));
     url.search = params.toString();
     await navigator.clipboard.writeText(url.toString());
-    setOpen(true);
+    setToastOpen(true);
   };
 
   const handleClose = (
@@ -93,7 +111,18 @@ export function ListRandomizer() {
       return;
     }
 
-    setOpen(false);
+    setToastOpen(false);
+  };
+
+  const generateJoke = async () => {
+    try {
+      const data = await makeValidJsonRequest<{ joke: string }>({
+        url: "https://icanhazdadjoke.com/"
+      });
+      setJoke(data.joke);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -103,7 +132,7 @@ export function ListRandomizer() {
           vertical: "bottom",
           horizontal: "left"
         }}
-        open={open}
+        open={toastOpen}
         autoHideDuration={6000}
         onClose={handleClose}
         message="Link copied to clipboard"
@@ -136,7 +165,7 @@ export function ListRandomizer() {
                 </Grid>
                 <Grid item>
                   <Button
-                    variant="contained"
+                    variant="outlined"
                     size="small"
                     color="primary"
                     startIcon={<SortIcon />}
@@ -147,13 +176,35 @@ export function ListRandomizer() {
                 </Grid>
                 <Grid item>
                   <Button
-                    variant="contained"
+                    variant="outlined"
                     size="small"
                     color="primary"
                     startIcon={<ShareIcon />}
                     onClick={() => handleShare()}
                   >
                     Share
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="primary"
+                    startIcon={<RotateRightIcon />}
+                    onClick={() => handleRotate()}
+                  >
+                    Rotate
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="primary"
+                    startIcon={<MoodIcon />}
+                    onClick={() => generateJoke()}
+                  >
+                    Joke
                   </Button>
                 </Grid>
               </Grid>
@@ -170,6 +221,11 @@ export function ListRandomizer() {
                 variant="outlined"
               />
             </Grid>
+            {joke.length > 0 ? (
+              <Grid item>
+                <Typography>{joke}</Typography>
+              </Grid>
+            ) : null}
           </Grid>
         </Grid>
       </Grid>

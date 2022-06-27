@@ -11,6 +11,7 @@ import {
   ListItemAvatar,
   ListItemText
 } from "@material-ui/core";
+import { useTitle } from 'react-use';
 import { SitePage } from "../components/SitePage";
 import diceIcon from "./diceIcon.png";
 import gcaIcon from "./gcaLogo.png";
@@ -23,6 +24,7 @@ import { useGreyBody } from "./useBackgroundColor";
 
 export function Home() {
   useGreyBody();
+  useTitle("Scott Brown");
   const history = useHistory();
 
   const navTo = (route: string) => {

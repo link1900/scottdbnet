@@ -1,11 +1,13 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { useTitle } from 'react-use';
 import { toolDefinitions } from "./toolDefinitions";
 import { ToolList } from "./ToolList";
 import { ToolsLayout } from './ToolsLayout';
 
 export function ToolsPage() {
   let { path } = useRouteMatch();
+  useTitle('Tools');
   return (
     <ToolsLayout>
       <Switch>
