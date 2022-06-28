@@ -5,7 +5,7 @@ import { ErrorZone } from "./components/ErrorZone";
 import { Home } from "./home/Home";
 import { theme } from "./scottdbTheme";
 
-const GameLazy = lazy(() => import("./games/GameComponent"));
+const GameLazy = lazy(() => import("./games/GameSite"));
 const ToolLazy = lazy(() => import("./tools/ToolSite"));
 
 export function App() {

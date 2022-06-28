@@ -5,7 +5,7 @@ import { gameDefinitions } from "./gameDefinitons";
 import { GameLayout } from "./GameLayout";
 import { GameList } from "./GameList";
 
-export function Games() {
+export default function GameSite() {
   let { path } = useRouteMatch();
   useTitle("Games");
   return (
