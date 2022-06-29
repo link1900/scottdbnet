@@ -12,10 +12,10 @@ import ShuffleIcon from "@material-ui/icons/Shuffle";
 import SortIcon from "@material-ui/icons/Sort";
 import ShareIcon from "@material-ui/icons/Share";
 import CloseIcon from "@material-ui/icons/Close";
-import MoodIcon from  "@material-ui/icons/Mood";
-import RotateRightIcon from "@material-ui/icons/RotateRight";
+import MoodIcon from "@material-ui/icons/Mood";
+import ClearIcon from "@material-ui/icons/Clear";
 import { useLocation } from "react-router-dom";
-
+import { useLocalStorage } from 'react-use';
 import { SitePage } from "../../components/SitePage";
 import { makeValidJsonRequest } from "../../util/apiHelper";
 import {
@@ -23,81 +23,85 @@ import {
   base64EncodeString
 } from "../../util/stringHelper";
 
-const defaultItems = ["Item1", "Item2", "Item3", "Item4"];
+export interface ListRandomizerStore {
+  mode: "text" | "checklist";
+  listValue: string[];
+  textValue: string;
+}
 
-function getDefaultList(urlSearch: string): string[] {
-  const listParameter = new URLSearchParams(urlSearch).get("list");
-  if (!listParameter) {
-    return defaultItems;
+const defaultListItems = ["Item1", "Item2", "Item3", "Item4"];
+const defaultStore: ListRandomizerStore = {
+  mode: "text",
+  listValue: defaultListItems,
+  textValue: listItemsToString(defaultListItems)
+};
+
+function listItemsToString(listItems: string[]): string {
+  return listItems.join("\n");
+}
+
+function stringToListItems(stringValue: string): string[] {
+  return stringValue.split("\n").filter((i: string) => i.trim().length > 0);
+}
+
+function getUrlStore(urlSearch: string): ListRandomizerStore | undefined {
+  const storeParameter = new URLSearchParams(urlSearch).get("store");
+  if (!storeParameter) {
+    return undefined;
   }
   try {
-    const decodedListString = base64DecodeString(listParameter);
-    return decodedListString.split("\n");
+    return JSON.parse(base64DecodeString(storeParameter));
   } catch {
-    return defaultItems;
+    return undefined;
   }
 }
 
 export function ListRandomizer() {
   const { search } = useLocation();
-  const startingListItems = getDefaultList(search);
-  const [value, setValue] = React.useState<{
-    listValue: string[];
-    textValue: string;
-  }>({
-    listValue: startingListItems,
-    textValue: startingListItems.join("\n")
-  });
-
+  const urlStore = getUrlStore(search);
+  const [localStore, setLocalStore, removeLocalStore] = useLocalStorage<ListRandomizerStore>('listRandomizer');
+  const [store, setStore] = React.useState<ListRandomizerStore>(urlStore?? localStore ?? defaultStore);
   const [toastOpen, setToastOpen] = React.useState(false);
   const [joke, setJoke] = useState<string>("");
 
+  const updateStore = (updatedStore: ListRandomizerStore) => {
+    setLocalStore(updatedStore);
+    setStore(updatedStore);
+  }
+
+  const updateList = (updatedList: string[]) => {
+    updateStore({
+      ...store,
+      textValue: listItemsToString(updatedList),
+      listValue: updatedList
+    });
+  };
+
+  const updateText = (updateText: string) => {
+    updateStore({
+      ...store,
+      textValue: updateText,
+      listValue: stringToListItems(updateText)
+    });
+  }
+
   const handleTextChange = (event: any) => {
     const textValue = event.target.value;
-    const listValue = textValue
-      .split("\n")
-      .filter((i: string) => i.trim().length > 0);
-    setValue({
-      textValue,
-      listValue
-    });
+    updateText(textValue);
   };
 
   const handleShuffle = () => {
-    const listValue = shuffle(value.listValue);
-    const textValue = listValue.join("\n");
-    setValue({
-      textValue,
-      listValue
-    });
+    updateList(shuffle(store.listValue))
   };
 
   const handleSort = () => {
-    const listValue = value.listValue.sort();
-    const textValue = listValue.join("\n");
-    setValue({
-      textValue,
-      listValue
-    });
+    updateList(store.listValue.sort());
   };
-
-  const handleRotate = () => {
-    const item = value.listValue.shift();
-    if (item) {
-      value.listValue.push(item);
-      const listValue = value.listValue;
-      const textValue = listValue.join("\n");
-      setValue({
-        textValue,
-        listValue
-      });
-    }
-  }
 
   const handleShare = async () => {
     const url = new URL(window.location.toString());
     const params = new URLSearchParams();
-    params.set("list", base64EncodeString(value.textValue));
+    params.set("store", base64EncodeString(JSON.stringify(store)));
     url.search = params.toString();
     await navigator.clipboard.writeText(url.toString());
     setToastOpen(true);
@@ -113,6 +117,11 @@ export function ListRandomizer() {
 
     setToastOpen(false);
   };
+
+  const handleReset = () => {
+    updateStore(defaultStore);
+    removeLocalStore();
+  }
 
   const generateJoke = async () => {
     try {
@@ -190,10 +199,10 @@ export function ListRandomizer() {
                     variant="outlined"
                     size="small"
                     color="primary"
-                    startIcon={<RotateRightIcon />}
-                    onClick={() => handleRotate()}
+                    startIcon={<MoodIcon />}
+                    onClick={() => generateJoke()}
                   >
-                    Rotate
+                    Joke
                   </Button>
                 </Grid>
                 <Grid item>
@@ -201,10 +210,10 @@ export function ListRandomizer() {
                     variant="outlined"
                     size="small"
                     color="primary"
-                    startIcon={<MoodIcon />}
-                    onClick={() => generateJoke()}
+                    startIcon={<ClearIcon />}
+                    onClick={() => handleReset()}
                   >
-                    Joke
+                    Reset
                   </Button>
                 </Grid>
               </Grid>
@@ -216,7 +225,7 @@ export function ListRandomizer() {
                 multiline
                 fullWidth
                 minRows={20}
-                value={value.textValue}
+                value={store.textValue}
                 onChange={handleTextChange}
                 variant="outlined"
               />
