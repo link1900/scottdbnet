@@ -16,7 +16,7 @@ import MoodIcon from "@material-ui/icons/Mood";
 import ClearIcon from "@material-ui/icons/Clear";
 import { useLocation } from "react-router-dom";
 import { useLocalStorage } from 'react-use';
-import { SitePage } from "../../components/SitePage";
+import { Page } from "../../components/Page";
 import { makeValidJsonRequest } from "../../util/apiHelper";
 import {
   base64DecodeString,
@@ -135,7 +135,7 @@ export function ListRandomizer() {
   };
 
   return (
-    <SitePage>
+    <Page>
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",
@@ -238,6 +238,6 @@ export function ListRandomizer() {
           </Grid>
         </Grid>
       </Grid>
-    </SitePage>
+    </Page>
   );
 }

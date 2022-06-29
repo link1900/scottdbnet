@@ -1,7 +1,7 @@
 import React from "react";
 import every from "lodash/every";
 import { Button, Grid, MenuItem, Select, Typography } from "@material-ui/core";
-import { SitePage } from "../../components/SitePage";
+import { Page } from "../../components/Page";
 import SimpleCanvas from "../simpleCanvas/SimpleCanvas";
 import LightOnRect from "./LightOnRect";
 
@@ -94,7 +94,7 @@ export default class LightOn extends React.Component<Props, State> {
 
   public render() {
     return (
-      <SitePage>
+      <Page>
         <Grid container spacing={2} direction="column" alignItems="center">
           <Grid item>Light On</Grid>
           <Grid item>
@@ -144,7 +144,7 @@ export default class LightOn extends React.Component<Props, State> {
             </Grid>
           </Grid>
         </Grid>
-      </SitePage>
+      </Page>
     );
   }
 }

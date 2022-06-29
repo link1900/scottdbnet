@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export function SitePage(props: PropsWithChildren<{}>) {
+export function Page(props: PropsWithChildren<{}>) {
   const { children } = props;
   const classes = useStyles();
 

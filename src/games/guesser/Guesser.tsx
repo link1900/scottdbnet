@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
 import thinkingImage from "./thinking.jpg";
 import { randomInteger } from "../gameEngine";
-import { SitePage } from "../../components/SitePage";
+import { Page } from "../../components/Page";
 
 interface State {
   guessCount: number;
@@ -92,7 +92,7 @@ export function Guesser() {
   };
 
   return (
-    <SitePage>
+    <Page>
       <Grid container spacing={3} direction="column" alignItems="center">
         <Grid item>
           <img
@@ -136,6 +136,6 @@ export function Guesser() {
           </Grid>
         </Grid>
       </Grid>
-    </SitePage>
+    </Page>
   );
 }

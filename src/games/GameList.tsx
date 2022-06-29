@@ -8,7 +8,7 @@ import {
   Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { SitePage } from "../components/SitePage";
+import { Page } from "../components/Page";
 import { useGreyBody } from '../home/useBackgroundColor';
 import { gameDefinitions } from "./gameDefinitons";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -34,7 +34,7 @@ export function GameList() {
   };
 
   return (
-    <SitePage>
+    <Page>
       <Grid
         container
         spacing={2}
@@ -75,6 +75,6 @@ export function GameList() {
           </Grid>
         </Grid>
       </Grid>
-    </SitePage>
+    </Page>
   );
 }

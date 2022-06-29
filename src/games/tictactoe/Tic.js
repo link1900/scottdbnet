@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Grid, Typography } from "@material-ui/core";
 import "./Tic.css";
 import Board from "./Board";
-import { SitePage } from "../../components/SitePage";
+import { Page } from "../../components/Page";
 
 export default class Tic extends React.Component {
   constructor() {
@@ -69,7 +69,7 @@ export default class Tic extends React.Component {
     }
 
     return (
-      <SitePage>
+      <Page>
         <Grid container spacing={2} direction="column" alignItems="center">
           <Grid item>
             <Typography>Noughts and Crosses</Typography>
@@ -91,7 +91,7 @@ export default class Tic extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-      </SitePage>
+      </Page>
     );
   }
 }

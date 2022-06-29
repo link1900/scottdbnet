@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import last from "lodash/last";
 import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
 import thinkingImage from "./thinkingAI.png";
-import { SitePage } from "../../components/SitePage";
+import { Page } from "../../components/Page";
 
 interface GuessAttempt {
   guessNumber: number;
@@ -132,7 +132,7 @@ export function GuesserAI() {
   };
 
   return (
-    <SitePage>
+    <Page>
       <Grid container spacing={3} direction="column" alignItems="center">
         <Grid item>
           <img
@@ -207,6 +207,6 @@ export function GuesserAI() {
           </React.Fragment>
         ) : null}
       </Grid>
-    </SitePage>
+    </Page>
   );
 }

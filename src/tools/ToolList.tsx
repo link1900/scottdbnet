@@ -7,7 +7,7 @@ import {
   ListItem,
   ListItemText
 } from "@material-ui/core";
-import { SitePage } from "../components/SitePage";
+import { Page } from "../components/Page";
 import { useGreyBody } from "../home/useBackgroundColor";
 import { toolDefinitions } from "./toolDefinitions";
 import { useHistory, useRouteMatch } from "react-router-dom";
@@ -22,7 +22,7 @@ export function ToolList() {
   };
 
   return (
-    <SitePage>
+    <Page>
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Card>
@@ -44,6 +44,6 @@ export function ToolList() {
           </Card>
         </Grid>
       </Grid>
-    </SitePage>
+    </Page>
   );
 }
