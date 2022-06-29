@@ -1,13 +1,14 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
-import { useTitle } from 'react-use';
+import { useTitle } from "react-use";
+import { Page } from "../components/Page";
 import { toolDefinitions } from "./toolDefinitions";
 import { ToolList } from "./ToolList";
-import { ToolsLayout } from './ToolsLayout';
+import { ToolsLayout } from "./ToolsLayout";
 
 export default function ToolSite() {
   let { path } = useRouteMatch();
-  useTitle('Tools');
+  useTitle("Tools");
   return (
     <ToolsLayout>
       <Switch>
@@ -21,7 +22,9 @@ export default function ToolSite() {
               key={toolDefinition.name}
               path={`${path}/${toolDefinition.name}`}
             >
-              <Tool />
+              <Page title={toolDefinition.title}>
+                <Tool />
+              </Page>
             </Route>
           );
         })}

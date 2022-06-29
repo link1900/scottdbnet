@@ -22,7 +22,7 @@ export function ToolList() {
   };
 
   return (
-    <Page>
+    <Page title={"Tools"}>
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Card>

@@ -8,9 +8,9 @@ import {
   Typography
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import { useAppContext } from "./AppContext";
 
 export interface Props {
-  toggleMenu: () => void;
   title: string;
 }
 
@@ -21,8 +21,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function SiteHeader(props: Props) {
-  const { toggleMenu, title } = props;
+  const { context, setContext } = useAppContext();
+  const { title } = props;
   const classes = useStyles();
+
+  const toggleMenu = () => {
+    setContext({
+      menuOpen: !context.menuOpen
+    });
+  };
 
   return (
     <AppBar

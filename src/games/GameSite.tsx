@@ -1,6 +1,7 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import { useTitle } from "react-use";
+import { Page } from '../components/Page';
 import { gameDefinitions } from "./gameDefinitons";
 import { GameLayout } from "./GameLayout";
 import { GameList } from "./GameList";
@@ -21,7 +22,9 @@ export default function GameSite() {
               key={gameDefinition.name}
               path={`${path}/${gameDefinition.name}`}
             >
-              <Game />
+              <Page title={gameDefinition.title}>
+                <Game />
+              </Page>
             </Route>
           );
         })}

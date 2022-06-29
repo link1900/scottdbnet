@@ -16,7 +16,6 @@ import MoodIcon from "@material-ui/icons/Mood";
 import ClearIcon from "@material-ui/icons/Clear";
 import { useLocation } from "react-router-dom";
 import { useLocalStorage } from 'react-use';
-import { Page } from "../../components/Page";
 import { makeValidJsonRequest } from "../../util/apiHelper";
 import {
   base64DecodeString,
@@ -135,28 +134,27 @@ export function ListRandomizer() {
   };
 
   return (
-    <Page>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left"
-        }}
-        open={toastOpen}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message="Link copied to clipboard"
-        action={
-          <IconButton
-            size="small"
-            aria-label="close"
-            color="inherit"
-            onClick={handleClose}
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        }
-      />
       <Grid container justifyContent="center" spacing={2}>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          open={toastOpen}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Link copied to clipboard"
+          action={
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleClose}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          }
+        />
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Grid container direction={"column"} spacing={2}>
             <Grid item>
@@ -238,6 +236,5 @@ export function ListRandomizer() {
           </Grid>
         </Grid>
       </Grid>
-    </Page>
   );
 }

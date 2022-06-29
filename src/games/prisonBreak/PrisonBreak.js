@@ -8,7 +8,6 @@ import {
   PrisonBreakRootReducer
 } from "./PrisonBreakReducer";
 import MapContainer from "./MapContainer";
-import { Page } from "../../components/Page";
 import { Grid } from "@material-ui/core";
 
 const store = createStore(
@@ -40,7 +39,6 @@ export default class PrisonBreak extends React.Component {
     }
     return (
       <Provider store={store}>
-        <Page>
           <Grid container spacing={4} direction="row">
             <Grid item>
               <MapContainer />
@@ -49,7 +47,6 @@ export default class PrisonBreak extends React.Component {
               <PrisonBreakContainer name="Prison Break" />
             </Grid>
           </Grid>
-        </Page>
       </Provider>
     );
   }

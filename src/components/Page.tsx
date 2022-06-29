@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import SiteHeader from './SiteHeader';
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -17,8 +18,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export function Page(props: PropsWithChildren<{}>) {
-  const { children } = props;
+export interface PageProps {
+  siteHeader?: boolean;
+  title?: string;
+}
+
+export function Page(props: PropsWithChildren<PageProps>) {
+  const { children, title, siteHeader = true } = props;
   const classes = useStyles();
 
   if (!children) {
@@ -27,6 +33,7 @@ export function Page(props: PropsWithChildren<{}>) {
 
   return (
     <div className={classes.pageContent}>
+      {siteHeader ? <SiteHeader title={title ?? ""}/> : null}
       <main className={classes.mainContent}>
         <Container>{children}</Container>
       </main>

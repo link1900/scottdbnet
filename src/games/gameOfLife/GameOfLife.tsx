@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Grid, Typography } from "@material-ui/core";
-import { Page } from "../../components/Page";
 import { ConwayWorld } from "./ConwayWorld";
 
 interface Props {}
@@ -27,8 +26,7 @@ export class GameOfLife extends React.Component<Props> {
 
   public render() {
     return (
-      <Page>
-        <Grid container spacing={2} direction="column" alignItems="center">
+      <Grid container spacing={2} direction="column" alignItems="center">
           <Grid item>
             <Typography>Conways Game of Life</Typography>
           </Grid>
@@ -81,7 +79,6 @@ export class GameOfLife extends React.Component<Props> {
             </Grid>
           </Grid>
         </Grid>
-      </Page>
     );
   }
 }

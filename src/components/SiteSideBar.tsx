@@ -10,6 +10,9 @@ import {
 import { useHistory, useRouteMatch } from "react-router-dom";
 import FeedbackIcon from "@material-ui/icons/Feedback";
 import HomeIcon from "@material-ui/icons/Home";
+import GameIcon from "@material-ui/icons/SportsEsports";
+import BuildIcon from "@material-ui/icons/Build";
+import { useAppContext } from './AppContext';
 
 export interface MenuItemDefinition {
   label: string;
@@ -18,23 +21,21 @@ export interface MenuItemDefinition {
 
 export interface SiteSideBarProps {
   variant: "permanent" | "temporary";
-  open?: boolean;
-  close?: () => void;
-  onClose?: () => void;
-  rootLabel: string;
-  rootIcon: any;
   menuItems: MenuItemDefinition[];
 }
 
 function SiteSideBar(props: SiteSideBarProps) {
-  const { variant, open, onClose, close, rootLabel, menuItems, rootIcon } = props;
+  const { context, setContext } = useAppContext();
+  const { variant, menuItems } = props;
   let { url } = useRouteMatch();
   const history = useHistory();
-  const RootIcon = rootIcon;
+
+  const handleClose = () => {
+    setContext({ menuOpen: false })
+  }
+
   const goToPage = async (location: string) => {
-    if (close) {
-      close();
-    }
+    handleClose()
     history.push(location);
   };
 
@@ -42,8 +43,8 @@ function SiteSideBar(props: SiteSideBarProps) {
     <Drawer
       variant={variant}
       PaperProps={{ style: { width: 256 } }}
-      open={open}
-      onClose={onClose}
+      open={context.menuOpen}
+      onClose={handleClose}
     >
       <List>
         <ListItem key="home" button onClick={() => goToPage("/")}>
@@ -52,11 +53,17 @@ function SiteSideBar(props: SiteSideBarProps) {
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem key={rootLabel} button onClick={() => goToPage(`${url}`)}>
+        <ListItem key="games" button onClick={() => goToPage("/games")}>
           <ListItemIcon>
-            <RootIcon />
+            <GameIcon />
           </ListItemIcon>
-          <ListItemText primary={rootLabel} />
+          <ListItemText primary="Games" />
+        </ListItem>
+        <ListItem key="tools" button onClick={() => goToPage("/tools")}>
+          <ListItemIcon>
+            <BuildIcon />
+          </ListItemIcon>
+          <ListItemText primary="Tools" />
         </ListItem>
         <Divider key="items-section" />
         {menuItems.map(menuItem => {

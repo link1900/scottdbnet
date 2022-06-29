@@ -1,7 +1,6 @@
 import React from "react";
 import every from "lodash/every";
 import { Button, Grid, MenuItem, Select, Typography } from "@material-ui/core";
-import { Page } from "../../components/Page";
 import SimpleCanvas from "../simpleCanvas/SimpleCanvas";
 import LightOnRect from "./LightOnRect";
 
@@ -58,7 +57,7 @@ export default class LightOn extends React.Component<Props, State> {
   public actionTaken = () => {
     const hasWon = every(this.state.gridElements, "lit");
     if (hasWon) {
-      this.state.gridElements.forEach((gridElement) => {
+      this.state.gridElements.forEach(gridElement => {
         gridElement.active = false;
       });
     }
@@ -94,57 +93,52 @@ export default class LightOn extends React.Component<Props, State> {
 
   public render() {
     return (
-      <Page>
-        <Grid container spacing={2} direction="column" alignItems="center">
-          <Grid item>Light On</Grid>
-          <Grid item>
-            <SimpleCanvas
-              width={CANVAS_SIZE}
-              height={CANVAS_SIZE}
-              elements={this.state.gridElements}
-            />
-          </Grid>
-          <Grid item>
-            <Grid container direction="row" spacing={2}>
-              <Grid item>
-                <Typography>Difficultly</Typography>
-              </Grid>
-              <Grid item>
-                <Select
-                  value={this.state.value}
-                  onChange={(event: any) => this.handleSizeChange(event)}
-                >
-                  <MenuItem value={"easy"}>Easy</MenuItem>
-                  <MenuItem value={"medium"}>Medium</MenuItem>
-                  <MenuItem value={"hard"}>Hard</MenuItem>
-                </Select>
-              </Grid>
+      <Grid container spacing={2} direction="column" alignItems="center">
+        <Grid item>Light On</Grid>
+        <Grid item>
+          <SimpleCanvas
+            width={CANVAS_SIZE}
+            height={CANVAS_SIZE}
+            elements={this.state.gridElements}
+          />
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing={2}>
+            <Grid item>
+              <Typography>Difficultly</Typography>
             </Grid>
-          </Grid>
-          <Grid item>
-            <Grid container direction="row" spacing={2}>
-              <Grid item>
-                <Button
-                  color="primary"
-                  onClick={() => this.restart(this.state.gridSize)}
-                >
-                  {this.state.hasWon ? "Again?" : "Restart"}
-                </Button>
-              </Grid>
-              <Grid item>
-                {this.state.hasWon ? (
-                  <Typography>
-                    {" "}
-                    You won in {this.state.clicks} clicks
-                  </Typography>
-                ) : (
-                  <Typography> Clicks: {this.state.clicks}</Typography>
-                )}
-              </Grid>
+            <Grid item>
+              <Select
+                value={this.state.value}
+                onChange={(event: any) => this.handleSizeChange(event)}
+              >
+                <MenuItem value={"easy"}>Easy</MenuItem>
+                <MenuItem value={"medium"}>Medium</MenuItem>
+                <MenuItem value={"hard"}>Hard</MenuItem>
+              </Select>
             </Grid>
           </Grid>
         </Grid>
-      </Page>
+        <Grid item>
+          <Grid container direction="row" spacing={2}>
+            <Grid item>
+              <Button
+                color="primary"
+                onClick={() => this.restart(this.state.gridSize)}
+              >
+                {this.state.hasWon ? "Again?" : "Restart"}
+              </Button>
+            </Grid>
+            <Grid item>
+              {this.state.hasWon ? (
+                <Typography> You won in {this.state.clicks} clicks</Typography>
+              ) : (
+                <Typography> Clicks: {this.state.clicks}</Typography>
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     );
   }
 }

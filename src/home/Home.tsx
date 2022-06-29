@@ -31,7 +31,7 @@ export function Home() {
     history.push(route);
   };
   return (
-    <Page>
+    <Page siteHeader={false}>
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Card>

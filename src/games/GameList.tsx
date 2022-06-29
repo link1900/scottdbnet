@@ -34,7 +34,7 @@ export function GameList() {
   };
 
   return (
-    <Page>
+    <Page title={"Games"}>
       <Grid
         container
         spacing={2}

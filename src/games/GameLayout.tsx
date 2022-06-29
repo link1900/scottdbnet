@@ -1,5 +1,4 @@
 import React from "react";
-import GameIcon from "@material-ui/icons/SportsEsports";
 import { SiteLayout } from "../components/SiteLayout";
 import { MenuItemDefinition } from "../components/SiteSideBar";
 import { gameDefinitions } from "./gameDefinitons";
@@ -17,9 +16,6 @@ export function GameLayout({ children }: GameLayoutProps) {
   });
   return (
     <SiteLayout
-      title="Games"
-      rootLabel="Games"
-      rootIcon={GameIcon}
       menuItems={gameMenuItems}
     >
       {children}

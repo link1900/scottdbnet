@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import { ThemeProvider } from "@material-ui/core";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { AppContextProvider } from './components/AppContext';
 import { ErrorZone } from "./components/ErrorZone";
 import { Home } from "./home/Home";
 import { theme } from "./scottdbTheme";
@@ -11,6 +12,7 @@ const ToolLazy = lazy(() => import("./tools/ToolSite"));
 export function App() {
   return (
     <ErrorZone>
+      <AppContextProvider>
       <ThemeProvider theme={theme}>
         <Router>
           <Suspense fallback={<div>Loading...</div>}>
@@ -22,6 +24,7 @@ export function App() {
           </Suspense>
         </Router>
       </ThemeProvider>
+      </AppContextProvider>
     </ErrorZone>
   );
 }
