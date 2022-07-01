@@ -7,12 +7,12 @@ import {
   ListItemIcon,
   ListItemText
 } from "@material-ui/core";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FeedbackIcon from "@material-ui/icons/Feedback";
 import HomeIcon from "@material-ui/icons/Home";
 import GameIcon from "@material-ui/icons/SportsEsports";
 import BuildIcon from "@material-ui/icons/Build";
-import { useAppContext } from './AppContext';
+import { useAppContext } from "./AppContext";
 
 export interface MenuItemDefinition {
   label: string;
@@ -27,16 +27,15 @@ export interface SiteSideBarProps {
 function SiteSideBar(props: SiteSideBarProps) {
   const { context, setContext } = useAppContext();
   const { variant, menuItems } = props;
-  let { url } = useRouteMatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClose = () => {
-    setContext({ menuOpen: false })
-  }
+    setContext({ menuOpen: false });
+  };
 
   const goToPage = async (location: string) => {
-    handleClose()
-    history.push(location);
+    handleClose();
+    navigate(location);
   };
 
   return (
@@ -66,12 +65,12 @@ function SiteSideBar(props: SiteSideBarProps) {
           <ListItemText primary="Tools" />
         </ListItem>
         <Divider key="items-section" />
-        {menuItems.map(menuItem => {
+        {menuItems.map((menuItem) => {
           return (
             <ListItem
               key={menuItem.url}
               button
-              onClick={() => goToPage(`${url}/${menuItem.url}`)}
+              onClick={() => goToPage(menuItem.url)}
             >
               <ListItemText primary={menuItem.label} />
             </ListItem>

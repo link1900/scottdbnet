@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Avatar,
   Card,
@@ -11,7 +11,7 @@ import {
   ListItemAvatar,
   ListItemText
 } from "@material-ui/core";
-import { useTitle } from 'react-use';
+import { useTitle } from "react-use";
 import { Page } from "../components/Page";
 import diceIcon from "./diceIcon.png";
 import gcaIcon from "./gcaLogo.png";
@@ -25,10 +25,10 @@ import { useGreyBody } from "./useBackgroundColor";
 export function Home() {
   useGreyBody();
   useTitle("Scott Brown");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const navTo = (route: string) => {
-    history.push(route);
+    navigate(route);
   };
   return (
     <Page siteHeader={false}>

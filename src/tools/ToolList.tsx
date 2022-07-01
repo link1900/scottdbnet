@@ -10,15 +10,14 @@ import {
 import { Page } from "../components/Page";
 import { useGreyBody } from "../home/useBackgroundColor";
 import { toolDefinitions } from "./toolDefinitions";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function ToolList() {
   useGreyBody();
-  const history = useHistory();
-  let { url } = useRouteMatch();
+  const navigate = useNavigate();
 
   const goToPage = async (location: string) => {
-    history.push(location);
+    navigate(location);
   };
 
   return (
@@ -28,12 +27,12 @@ export function ToolList() {
           <Card>
             <CardContent>
               <List>
-                {toolDefinitions.map(toolDefinition => {
+                {toolDefinitions.map((toolDefinition) => {
                   return (
                     <ListItem
                       key={toolDefinition.name}
                       button
-                      onClick={() => goToPage(`${url}/${toolDefinition.name}`)}
+                      onClick={() => goToPage(toolDefinition.name)}
                     >
                       <ListItemText primary={toolDefinition.title} />
                     </ListItem>

@@ -9,9 +9,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Page } from "../components/Page";
-import { useGreyBody } from '../home/useBackgroundColor';
+import { useGreyBody } from "../home/useBackgroundColor";
 import { gameDefinitions } from "./gameDefinitons";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles({
   card: {
@@ -26,11 +26,10 @@ const useStyles = makeStyles({
 export function GameList() {
   useGreyBody();
   const classes = useStyles();
-  const history = useHistory();
-  let { url } = useRouteMatch();
+  const navigate = useNavigate();
 
   const goToPage = async (location: string) => {
-    history.push(location);
+    navigate(location);
   };
 
   return (
@@ -55,7 +54,7 @@ export function GameList() {
                 <Grid key={gameDefinition.name} item>
                   <Card className={classes.card}>
                     <CardActionArea
-                      onClick={() => goToPage(`${url}/${gameDefinition.name}`)}
+                      onClick={() => goToPage(gameDefinition.name)}
                     >
                       <CardMedia
                         className={classes.cardMedia}
