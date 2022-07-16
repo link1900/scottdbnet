@@ -1,5 +1,6 @@
 import { ListRandomizer } from "./listRandomizer/ListRandomizer";
 import { Compressor } from "./compressor/Compressor";
+import { RandomJoke } from "./randomJoke/RandomJoke";
 
 export interface ToolDefinition {
   name: string;
@@ -18,5 +19,10 @@ export const toolDefinitions: ToolDefinition[] = [
     name: "compressor",
     title: "Compressor",
     component: Compressor
+  },
+  {
+    name: "randomJoke",
+    title: "Random Joke",
+    component: RandomJoke
   }
 ];
