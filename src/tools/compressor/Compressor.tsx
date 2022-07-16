@@ -24,6 +24,7 @@ import {
 } from "../../util/stringHelper";
 
 export interface CompressResult {
+  operation: string;
   time: string;
   originalSize: string;
   compressedSize: string;
@@ -67,11 +68,13 @@ export function Compressor() {
     const compressed = compress(compressorStore.raw, {
       format: compressorStore.compressFormat
     });
+    const operation = "compress";
     const time = getBenchmarkEndTimeString(start);
     const originalSizeBytes = getStringSizeInBytes(compressorStore.raw);
     const compressedSizeBytes = getStringSizeInBytes(compressed);
     const reductionSizeBytes = originalSizeBytes - compressedSizeBytes;
     const compressResult = {
+      operation,
       time,
       originalSize: formatBytes(originalSizeBytes),
       compressedSize: formatBytes(compressedSizeBytes),
@@ -86,6 +89,7 @@ export function Compressor() {
       decompress(compressorStore.compressed, {
         format: compressorStore.compressFormat
       }) ?? "";
+    const operation = "decompress";
     const time = getBenchmarkEndTimeString(start);
     const originalSizeBytes = getStringSizeInBytes(raw);
     const compressedSizeBytes = getStringSizeInBytes(
@@ -93,6 +97,7 @@ export function Compressor() {
     );
     const reductionSizeBytes = originalSizeBytes - compressedSizeBytes;
     const compressResult = {
+      operation,
       time,
       originalSize: formatBytes(originalSizeBytes),
       compressedSize: formatBytes(compressedSizeBytes),
@@ -128,6 +133,7 @@ export function Compressor() {
               multiline
               fullWidth
               minRows={10}
+              maxRows={10}
               value={compressorStore.raw}
               onChange={handleTextChange}
               variant="outlined"
@@ -186,6 +192,7 @@ export function Compressor() {
               multiline
               fullWidth
               minRows={10}
+              maxRows={10}
               value={compressorStore.compressed}
               onChange={handleCompressInputChange}
               variant="outlined"
@@ -193,6 +200,11 @@ export function Compressor() {
           </Grid>
           {compressorStore.compressResult ? (
             <Grid item>
+              <Grid item>
+                <Typography>
+                  Operation: {compressorStore.compressResult.operation}
+                </Typography>
+              </Grid>
               <Grid item>
                 <Typography>
                   Time taken: {compressorStore.compressResult.time}
