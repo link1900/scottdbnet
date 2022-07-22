@@ -23,9 +23,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import MoodIcon from "@material-ui/icons/Mood";
 import ClearIcon from "@material-ui/icons/Clear";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
-import { makeValidJsonRequest } from "../../util/apiHelper";
 import {
   base64DecodeString,
   base64EncodeString
@@ -106,6 +105,13 @@ function getTotalFirstChartOptions(results: SimulationResult): any {
         text: "Firsts"
       }
     },
+    plotOptions: {
+      bar: {
+        dataLabels: {
+          enabled: true
+        }
+      }
+    },
     legend: {
       enabled: false
     },
@@ -125,18 +131,13 @@ function getTotalFirstChartOptions(results: SimulationResult): any {
 function getDiffChartOptions(results: SimulationResult): any {
   const expected = results.expectedAmount;
   const categories = results.items.map((item) => item.name);
-  const dataPos = results.items.map((item) =>
-    Math.min(expected - item.amount, 0)
-  );
-  const dataNeg = results.items.map((item) =>
-    Math.max(expected - item.amount, 0)
-  );
+  const dataPos = results.items.map((item) => item.amount - expected);
   return {
     chart: {
       type: "bar"
     },
     title: {
-      text: "Distribution"
+      text: "Distance from average"
     },
     xAxis: [
       {
@@ -164,16 +165,17 @@ function getDiffChartOptions(results: SimulationResult): any {
     plotOptions: {
       series: {
         stacking: "normal"
+      },
+      bar: {
+        dataLabels: {
+          enabled: true
+        }
       }
     },
     legend: {
       enabled: false
     },
     series: [
-      {
-        name: "Difference",
-        data: dataNeg
-      },
       {
         name: "Difference",
         data: dataPos
@@ -187,6 +189,7 @@ function getDiffChartOptions(results: SimulationResult): any {
 
 export function ListRandomizer() {
   const { search } = useLocation();
+  const navigate = useNavigate();
   const urlStore = getUrlStore(search);
   const [localStore, setLocalStore, removeLocalStore] = useLocalStorage<
     Partial<ListRandomizerStore>
@@ -195,9 +198,11 @@ export function ListRandomizer() {
     flattenStores([urlStore, localStore])
   );
   const [toastOpen, setToastOpen] = React.useState(false);
-  const [joke, setJoke] = useState<string>("");
   const [chartOptions, setChartOptions] = useState(undefined);
   const [chartDiffOptions, setChartDiffOptions] = useState(undefined);
+  const [chartAverage, setChartAverage] = useState<number | undefined>(
+    undefined
+  );
 
   const updateStore = (updatedStore: Partial<ListRandomizerStore>) => {
     const toChange = {
@@ -261,14 +266,7 @@ export function ListRandomizer() {
   };
 
   const generateJoke = async () => {
-    try {
-      const data = await makeValidJsonRequest<{ joke: string }>({
-        url: "https://icanhazdadjoke.com/"
-      });
-      setJoke(data.joke);
-    } catch (error) {
-      console.error(error);
-    }
+    navigate("../randomJoke");
   };
 
   const handleSimulationAmountChange = (
@@ -302,7 +300,7 @@ export function ListRandomizer() {
       results.items[slots[0]].amount++;
       results.currentSimulations++;
     }
-
+    setChartAverage(results.expectedAmount);
     setChartOptions(getTotalFirstChartOptions(results));
     setChartDiffOptions(getDiffChartOptions(results));
     return true;
@@ -423,11 +421,6 @@ export function ListRandomizer() {
                 variant="outlined"
               />
             </Grid>
-            {joke.length > 0 ? (
-              <Grid item>
-                <Typography>{joke}</Typography>
-              </Grid>
-            ) : null}
           </Grid>
         </Grid>
         {store.advancedMode ? (
@@ -469,6 +462,11 @@ export function ListRandomizer() {
                     </Select>
                   </FormControl>
                 </Grid>
+                {chartAverage ? (
+                  <Grid item>
+                    <Typography>Expected average: {chartAverage}</Typography>
+                  </Grid>
+                ) : null}
                 {chartOptions ? (
                   <Grid item>
                     <HighchartsReact
