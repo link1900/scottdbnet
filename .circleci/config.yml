@@ -68,6 +68,8 @@ workflows:
             branches:
               ignore: master
       - test-and-deploy:
+          context:
+            - scottdb
           filters:
             branches:
               only: master
