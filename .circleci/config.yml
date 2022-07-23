@@ -1,43 +1,73 @@
 version: 2.1
 orbs:
-  node: circleci/node@4.1.0
+  node: circleci/node@5.0.2
   aws-cli: circleci/aws-cli@1.3.1
 executors:
   default:
     docker:
-      - image: cimg/node:12.18
+      - image: cimg/node:16.16
 
-jobs:
-  client-test-deploy:
-    executor:
-      name: node/default
-      tag: "12.18"
+commands:
+  restore_cache_cmd:
     steps:
-      - checkout
-      - aws-cli/install
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
+
+  yarn_install_cmd:
+    steps:
       - run:
           name: Install Dependencies
           command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+
+  save_cache_cmd:
+    steps:
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+
+  test_cmd:
+    steps:
       - run:
           command: yarn test
+
+  deploy_cmd:
+    steps:
       - run:
           command: yarn deploy
 
+  setup_cmd:
+    steps:
+      - checkout
+      - aws-cli/install
+      - restore_cache_cmd
+      - yarn_install_cmd
+      - save_cache_cmd
+
+jobs:
+  test:
+    executor: default
+    steps:
+      - setup_cmd
+      - test_cmd
+  test-and-deploy:
+    executor: default
+    steps:
+      - setup_cmd
+      - test_cmd
+      - deploy_cmd
+
 workflows:
-  test-and-deploy-all:
+  build:
     jobs:
-      - client-test-deploy:
-          context:
-            - scottdb
+      - test:
+          filters:
+            branches:
+              ignore: master
+      - test-and-deploy:
           filters:
             branches:
               only: master
