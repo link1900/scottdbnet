@@ -15,12 +15,6 @@ commands:
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
 
-  yarn_install_cmd:
-    steps:
-      - run:
-          name: Install Dependencies
-          command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
-
   save_cache_cmd:
     steps:
       - save_cache:
@@ -29,23 +23,49 @@ commands:
           paths:
             - ~/.cache/yarn
 
+  client_install_cmd:
+    steps:
+      - run:
+          name: Install Client Dependencies
+          working_directory: ~/project
+          command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+
+  cdk_install_cmd:
+    steps:
+      - node/install-packages:
+          app-dir: ~/project/cdk
+
   test_cmd:
     steps:
       - run:
           command: yarn test
-
-  deploy_cmd:
-    steps:
-      - run:
-          command: yarn deploy
 
   setup_cmd:
     steps:
       - checkout
       - aws-cli/install
       - restore_cache_cmd
-      - yarn_install_cmd
+      - cdk_install_cmd
+      - client_install_cmd
       - save_cache_cmd
+
+  test_client:
+    steps:
+      - run:
+          command: yarn test
+          working_directory: ~/project/client
+
+  deploy_cmd:
+    steps:
+      - run:
+          command: yarn build
+          working_directory: ~/project
+      - run:
+          command: npm run build
+          working_directory: ~/project/cdk
+      - run:
+          command: npm run deploy
+          working_directory: ~/project/cdk
 
 jobs:
   test:

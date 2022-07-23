@@ -1,20 +1,21 @@
 #!/usr/bin/env node
-import * as acm from "@aws-cdk/aws-certificatemanager";
-import * as cloudfront from "@aws-cdk/aws-cloudfront";
-import { PriceClass } from "@aws-cdk/aws-cloudfront";
-import * as cloudwatch from "@aws-cdk/aws-cloudwatch";
-import * as iam from "@aws-cdk/aws-iam";
-import * as route53 from "@aws-cdk/aws-route53";
-import * as targets from "@aws-cdk/aws-route53-targets";
-import * as s3 from "@aws-cdk/aws-s3";
-import * as s3deploy from "@aws-cdk/aws-s3-deployment";
-import * as cdk from "@aws-cdk/core";
-import { Construct, Stack } from "@aws-cdk/core";
+import { PriceClass } from "aws-cdk-lib/aws-cloudfront";
+import * as route53 from "aws-cdk-lib/aws-route53";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import * as targets from "aws-cdk-lib/aws-route53-targets";
+import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
+import * as cloudwatch from "aws-cdk-lib/aws-cloudwatch";
+import * as iam from "aws-cdk-lib/aws-iam";
+import { Aws, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { Construct } from "constructs";
+import { CacheControl } from "aws-cdk-lib/aws-s3-deployment";
 
 export interface StaticSiteProps {
   domainName: string;
   siteSubDomain?: string;
-  deployFiles?: boolean;
+  codePath: string;
 }
 
 /**
@@ -42,13 +43,13 @@ export class StaticSite extends Construct {
       }
     );
 
-    new cdk.CfnOutput(this, "Site", { value: "https://" + siteDomain });
+    new CfnOutput(this, "Site", { value: "https://" + siteDomain });
 
     // Content bucket
     const siteBucket = new s3.Bucket(this, "SiteBucket", {
       bucketName: siteDomain,
       websiteIndexDocument: "index.html",
-      websiteErrorDocument: "index.html",
+      websiteErrorDocument: "error.html",
       publicReadAccess: false,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
 
@@ -57,7 +58,7 @@ export class StaticSite extends Construct {
        * the new bucket, and it will remain in your account until manually deleted. By setting the policy to
        * DESTROY, cdk destroy will attempt to delete the bucket, but will error if the bucket is not empty.
        */
-      removalPolicy: cdk.RemovalPolicy.DESTROY, // NOT recommended for production code
+      removalPolicy: RemovalPolicy.DESTROY, // NOT recommended for production code
 
       /**
        * For sample purposes only, if you create an S3 bucket then populate it, stack destruction fails.  This
@@ -65,7 +66,8 @@ export class StaticSite extends Construct {
        */
       autoDeleteObjects: true // NOT recommended for production code
     });
-    // Grant access to cloudfront
+
+    // grant access to cloudfront
     siteBucket.addToResourcePolicy(
       new iam.PolicyStatement({
         actions: ["s3:GetObject"],
@@ -77,7 +79,7 @@ export class StaticSite extends Construct {
         ]
       })
     );
-    new cdk.CfnOutput(this, "Bucket", { value: siteBucket.bucketName });
+    new CfnOutput(this, "Bucket", { value: siteBucket.bucketName });
 
     // TLS certificate
     const certificateArn = new acm.DnsValidatedCertificate(
@@ -89,18 +91,19 @@ export class StaticSite extends Construct {
         region: "us-east-1" // Cloudfront only checks this region for certificates.
       }
     ).certificateArn;
-    new cdk.CfnOutput(this, "Certificate", { value: certificateArn });
+    new CfnOutput(this, "Certificate", { value: certificateArn });
 
     // Specifies you want viewers to use HTTPS & TLS v1.1 to request your objects
     const viewerCertificate = cloudfront.ViewerCertificate.fromAcmCertificate(
       {
         certificateArn: certificateArn,
         env: {
-          region: cdk.Aws.REGION,
-          account: cdk.Aws.ACCOUNT_ID
+          region: Aws.REGION,
+          account: Aws.ACCOUNT_ID
         },
         node: this.node,
         stack: parent,
+        applyRemovalPolicy: () => {},
         metricDaysToExpiry: () =>
           new cloudwatch.Metric({
             namespace: "TLS Viewer Certificate Validity",
@@ -151,7 +154,7 @@ export class StaticSite extends Construct {
         ]
       }
     );
-    new cdk.CfnOutput(this, "DistributionId", {
+    new CfnOutput(this, "DistributionId", {
       value: distribution.distributionId
     });
 
@@ -164,14 +167,35 @@ export class StaticSite extends Construct {
       zone
     });
 
-    if (props.deployFiles === true) {
-      // Deploy site contents to S3 bucket
-      new s3deploy.BucketDeployment(this, "DeployWithInvalidation", {
-        sources: [s3deploy.Source.asset("../build")],
-        destinationBucket: siteBucket,
-        distribution,
-        distributionPaths: ["/*"]
-      });
-    }
+    // Deploy site contents to S3 bucket
+    new s3deploy.BucketDeployment(this, "DeployNewCode", {
+      sources: [
+        s3deploy.Source.asset(props.codePath, { exclude: ["index.html"] })
+      ],
+      destinationBucket: siteBucket,
+      distribution,
+      distributionPaths: ["/*"],
+      cacheControl: [
+        CacheControl.maxAge(Duration.seconds(604800)),
+        CacheControl.setPublic(),
+        CacheControl.fromString("immutable")
+      ],
+      prune: false
+    });
+
+    new s3deploy.BucketDeployment(this, "DeployNewIndex", {
+      sources: [
+        s3deploy.Source.asset(props.codePath, { exclude: ["*", "!index.html"] })
+      ],
+      destinationBucket: siteBucket,
+      distribution,
+      distributionPaths: ["/*"],
+      cacheControl: [
+        CacheControl.setPublic(),
+        CacheControl.maxAge(Duration.seconds(0)),
+        CacheControl.sMaxAge(Duration.seconds(0))
+      ],
+      prune: false
+    });
   }
 }

@@ -1,14 +1,15 @@
-import * as cdk from "@aws-cdk/core";
+import { Stack, StackProps } from "aws-cdk-lib";
+import { Construct } from "constructs";
 import { StaticSite } from "./static-site";
 
-export class ScottdbnetStack extends cdk.Stack {
-  constructor(parent: cdk.App, props: cdk.StackProps) {
+export class ScottdbnetStack extends Stack {
+  constructor(scope: Construct, props?: StackProps) {
     const name = "scottdbnet";
-    super(parent, name, props);
+    super(scope, name, props);
 
-    new StaticSite(this, `${name}-frontend`, {
+    const staticSite = new StaticSite(this, `Site`, {
       domainName: "scottdb.net",
-      deployFiles: false
+      codePath: "../build"
     });
   }
 }
