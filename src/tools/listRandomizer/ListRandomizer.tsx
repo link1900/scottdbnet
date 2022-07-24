@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { shuffle } from "lodash";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import {
@@ -11,6 +10,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Slider,
   Snackbar,
   Switch,
   TextField,
@@ -25,16 +25,25 @@ import ClearIcon from "@material-ui/icons/Clear";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
+import { copyArray } from "../../util/arrayHelper";
+import { randomBoolean, shuffle } from "../../util/randomHelper";
 import {
   base64DecodeString,
   base64EncodeString
 } from "../../util/stringHelper";
 
+export interface ListItem {
+  value: string;
+  amount: number;
+  bias: number;
+}
+
 export interface ListRandomizerStore {
   mode: "text" | "checklist";
-  listValue: string[];
+  list: ListItem[];
   textValue: string;
-  advancedMode: boolean;
+  showSimulator: boolean;
+  showBias: boolean;
   simulationAmount: number;
 }
 
@@ -42,24 +51,39 @@ export interface SimulationResult {
   currentSimulations: number;
   totalSimulations: number;
   expectedAmount: number;
-  items: Array<{ name: string; amount: number }>;
+  items: ListItem[];
 }
 
-const defaultListItems = ["Item1", "Item2", "Item3", "Item4"];
+const defaultListItems = [
+  { value: "Item1", bias: 0, amount: 0 },
+  { value: "Item2", bias: 0, amount: 0 },
+  { value: "Item3", bias: 0, amount: 0 },
+  { value: "Item4", bias: 0, amount: 0 }
+];
 const defaultStore: ListRandomizerStore = {
   mode: "text",
-  listValue: defaultListItems,
+  list: defaultListItems,
   textValue: listItemsToString(defaultListItems),
-  advancedMode: false,
+  showSimulator: false,
+  showBias: false,
   simulationAmount: 10000
 };
 
-function listItemsToString(listItems: string[]): string {
-  return listItems.join("\n");
+function listItemsToString(listItems: ListItem[]): string {
+  return listItems.map((i) => i.value).join("\n");
 }
 
-function stringToListItems(stringValue: string): string[] {
-  return stringValue.split("\n").filter((i: string) => i.trim().length > 0);
+function stringToListItems(stringValue: string): ListItem[] {
+  return stringValue
+    .split("\n")
+    .filter((i: string) => i.trim().length > 0)
+    .map((i) => {
+      return {
+        value: i,
+        bias: 0,
+        amount: 0
+      };
+    });
 }
 
 function getUrlStore(
@@ -88,7 +112,7 @@ function flattenStores(
 }
 
 function getTotalFirstChartOptions(results: SimulationResult): any {
-  const categories = results.items.map((item) => item.name);
+  const categories = results.items.map((item) => item.value);
   const data = results.items.map((item) => item.amount);
   return {
     title: {
@@ -130,7 +154,7 @@ function getTotalFirstChartOptions(results: SimulationResult): any {
 
 function getDiffChartOptions(results: SimulationResult): any {
   const expected = results.expectedAmount;
-  const categories = results.items.map((item) => item.name);
+  const categories = results.items.map((item) => item.value);
   const dataPos = results.items.map((item) => item.amount - expected);
   return {
     chart: {
@@ -142,16 +166,6 @@ function getDiffChartOptions(results: SimulationResult): any {
     xAxis: [
       {
         categories,
-        reversed: false,
-        labels: {
-          step: 1
-        }
-      },
-      {
-        categories,
-        opposite: true,
-        reversed: true,
-        linkedTo: 0,
         labels: {
           step: 1
         }
@@ -163,9 +177,6 @@ function getDiffChartOptions(results: SimulationResult): any {
       }
     },
     plotOptions: {
-      series: {
-        stacking: "normal"
-      },
       bar: {
         dataLabels: {
           enabled: true
@@ -185,6 +196,33 @@ function getDiffChartOptions(results: SimulationResult): any {
       enabled: false
     }
   };
+}
+
+function listItemSort(a: ListItem, b: ListItem): number {
+  return a.value.localeCompare(b.value);
+}
+
+function shuffleWithBias(list: ListItem[]) {
+  const shuffledItems = shuffle(list);
+  for (let i = 0; i < shuffledItems.length; i++) {
+    const checkItem = shuffledItems[i];
+    if (checkItem.bias > 0) {
+      if (randomBoolean({ likelihood: checkItem.bias })) {
+        const moved = shuffledItems[0];
+        shuffledItems[0] = checkItem;
+        shuffledItems[i] = moved;
+      }
+    }
+  }
+  return shuffledItems;
+}
+
+function valueLabelFormat(value: number): string {
+  return `${value}%`;
+}
+
+function sortedItemList(itemList: ListItem[]): ListItem[] {
+  return copyArray(itemList).sort(listItemSort);
 }
 
 export function ListRandomizer() {
@@ -213,17 +251,18 @@ export function ListRandomizer() {
     setStore(toChange);
   };
 
-  const updateList = (updatedList: string[]) => {
+  const updateList = (updatedList: ListItem[]) => {
     updateStore({
       textValue: listItemsToString(updatedList),
-      listValue: updatedList
+      list: updatedList
     });
   };
 
   const updateText = (updateText: string) => {
+    const list = stringToListItems(updateText);
     updateStore({
       textValue: updateText,
-      listValue: stringToListItems(updateText)
+      list
     });
   };
 
@@ -233,11 +272,11 @@ export function ListRandomizer() {
   };
 
   const handleShuffle = () => {
-    updateList(shuffle(store.listValue));
+    updateList(shuffleWithBias(store.list));
   };
 
   const handleSort = () => {
-    updateList(store.listValue.sort());
+    updateList(store.list.sort(listItemSort));
   };
 
   const handleShare = async () => {
@@ -277,39 +316,53 @@ export function ListRandomizer() {
   };
 
   const runSimulation = () => {
-    if (store.listValue.length === 0) {
+    if (store.list.length === 0) {
       return false;
     }
     const results: SimulationResult = {
       currentSimulations: 0,
       totalSimulations: store.simulationAmount,
-      expectedAmount: Math.round(
-        store.simulationAmount / store.listValue.length
-      ),
-      items: store.listValue.sort().map((item) => {
+      expectedAmount: Math.round(store.simulationAmount / store.list.length),
+      items: store.list.sort(listItemSort).map((item) => {
         return {
-          name: item,
+          value: item.value,
+          bias: item.bias,
           amount: 0
         };
       })
     };
     setChartOptions(getTotalFirstChartOptions(results));
-    let slots = results.items.map((item, index) => index);
     for (let i = 0; i < results.totalSimulations; i++) {
-      slots = shuffle(slots);
-      results.items[slots[0]].amount++;
+      results.items = shuffleWithBias(results.items);
+      results.items[0].amount++;
       results.currentSimulations++;
     }
+    results.items.sort(listItemSort);
     setChartAverage(results.expectedAmount);
     setChartOptions(getTotalFirstChartOptions(results));
     setChartDiffOptions(getDiffChartOptions(results));
     return true;
   };
 
-  const handleAdvancedModeChange = (
+  const handleShowSimulatorChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    updateStore({ advancedMode: event.target.checked });
+    updateStore({ showSimulator: event.target.checked });
+  };
+
+  const handleShowBiasChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    updateStore({ showBias: event.target.checked });
+  };
+
+  const handleBiasChange = (value: string, amount: number) => {
+    const list = copyArray(store.list);
+    const foundItem = list.find((i) => i.value === value);
+    if (foundItem) {
+      foundItem.bias = amount;
+      updateStore({
+        list
+      });
+    }
   };
 
   return (
@@ -334,9 +387,14 @@ export function ListRandomizer() {
           </IconButton>
         }
       />
-      <Grid container justifyContent="center" spacing={4}>
+      <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Grid container direction={"column"} spacing={2}>
+            <Grid item>
+              <Typography variant="h5" component="h2">
+                List Randomizer
+              </Typography>
+            </Grid>
             <Grid item>
               <Grid container direction="row" spacing={1}>
                 <Grid item>
@@ -398,13 +456,26 @@ export function ListRandomizer() {
                   <FormControlLabel
                     control={
                       <Switch
-                        checked={store.advancedMode}
-                        onChange={handleAdvancedModeChange}
-                        name="advancedModeSwitch"
+                        checked={store.showSimulator}
+                        onChange={handleShowSimulatorChange}
+                        name="showSimulatorSwitch"
                         color="primary"
                       />
                     }
-                    label="Advanced"
+                    label="Simulator"
+                  />
+                </Grid>
+                <Grid item>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={store.showBias}
+                        onChange={handleShowBiasChange}
+                        name="showBiasSwitch"
+                        color="primary"
+                      />
+                    }
+                    label="Bias"
                   />
                 </Grid>
               </Grid>
@@ -423,69 +494,102 @@ export function ListRandomizer() {
             </Grid>
           </Grid>
         </Grid>
-        {store.advancedMode ? (
-          <React.Fragment>
-            <Grid item xs={12} sm={6} md={4} lg={3}>
-              <Grid container direction={"column"} spacing={2}>
-                <Grid item>
-                  <Grid container direction="row" spacing={2}>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        color="primary"
-                        startIcon={<ShowChartIcon />}
-                        onClick={() => runSimulation()}
-                      >
-                        Run simulation
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item>
-                  <FormControl>
-                    <InputLabel id="format-select-outlined-label">
-                      Amount
-                    </InputLabel>
-                    <Select
-                      labelId="sim-amount-select-outlined-label"
-                      id="sim-amount-select-outlined"
-                      value={store.simulationAmount}
-                      onChange={handleSimulationAmountChange}
-                      label="Amount"
-                    >
-                      <MenuItem value={100}>100</MenuItem>
-                      <MenuItem value={1000}>1k</MenuItem>
-                      <MenuItem value={10000}>10k</MenuItem>
-                      <MenuItem value={100000}>100k</MenuItem>
-                      <MenuItem value={1000000}>1m</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                {chartAverage ? (
-                  <Grid item>
-                    <Typography>Expected average: {chartAverage}</Typography>
-                  </Grid>
-                ) : null}
-                {chartOptions ? (
-                  <Grid item>
-                    <HighchartsReact
-                      highcharts={Highcharts}
-                      options={chartOptions}
-                    />
-                  </Grid>
-                ) : null}
-                {chartDiffOptions ? (
-                  <Grid item>
-                    <HighchartsReact
-                      highcharts={Highcharts}
-                      options={chartDiffOptions}
-                    />
-                  </Grid>
-                ) : null}
+        {store.showSimulator ? (
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Grid container direction={"column"} spacing={2}>
+              <Grid item>
+                <Typography variant="h5" component="h2">
+                  Simulator
+                </Typography>
               </Grid>
+              <Grid item>
+                <Grid container direction="row" spacing={2}>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      color="primary"
+                      startIcon={<ShowChartIcon />}
+                      onClick={() => runSimulation()}
+                    >
+                      Run
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item>
+                <FormControl>
+                  <InputLabel id="format-select-outlined-label">
+                    Amount
+                  </InputLabel>
+                  <Select
+                    labelId="sim-amount-select-outlined-label"
+                    id="sim-amount-select-outlined"
+                    value={store.simulationAmount}
+                    onChange={handleSimulationAmountChange}
+                    label="Amount"
+                  >
+                    <MenuItem value={100}>100</MenuItem>
+                    <MenuItem value={1000}>1k</MenuItem>
+                    <MenuItem value={10000}>10k</MenuItem>
+                    <MenuItem value={100000}>100k</MenuItem>
+                    <MenuItem value={1000000}>1m</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              {chartAverage ? (
+                <Grid item>
+                  <Typography>Expected average: {chartAverage}</Typography>
+                </Grid>
+              ) : null}
+              {chartOptions ? (
+                <Grid item>
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={chartOptions}
+                  />
+                </Grid>
+              ) : null}
+              {chartDiffOptions ? (
+                <Grid item>
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={chartDiffOptions}
+                  />
+                </Grid>
+              ) : null}
             </Grid>
-          </React.Fragment>
+          </Grid>
+        ) : null}
+        {store.showBias ? (
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Grid container direction={"column"} spacing={2}>
+              <Grid item>
+                <Typography variant="h5" component="h2">
+                  Bias
+                </Typography>
+              </Grid>
+              {sortedItemList(store.list).map((item) => {
+                return (
+                  <Grid key={item.value} item xs>
+                    <Typography gutterBottom>{item.value}</Typography>
+                    <Slider
+                      valueLabelDisplay="auto"
+                      value={item.bias}
+                      valueLabelFormat={valueLabelFormat}
+                      onChange={(event: any, newValue: number | number[]) =>
+                        handleBiasChange(item.value, newValue as number)
+                      }
+                      step={10}
+                      marks
+                      min={0}
+                      max={100}
+                    />
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </Grid>
         ) : null}
       </Grid>
     </React.Fragment>

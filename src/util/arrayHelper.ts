@@ -22,3 +22,7 @@ export function groupArray<T>(items: T[]) {
 export function isPresent<T>(t: T | undefined | null | void): t is T {
   return t !== undefined && t !== null;
 }
+
+export function copyArray<T>(items: T[]): T[] {
+  return [...items];
+}
