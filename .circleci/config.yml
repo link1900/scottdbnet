@@ -30,6 +30,13 @@ commands:
           working_directory: ~/project
           command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
 
+  server_install_cmd:
+    steps:
+      - run:
+          name: Install Server Dependencies
+          working_directory: ~/project/server
+          command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+
   cdk_install_cmd:
     steps:
       - node/install-packages:
@@ -46,6 +53,7 @@ commands:
       - aws-cli/install
       - restore_cache_cmd
       - cdk_install_cmd
+      - server_install_cmd
       - client_install_cmd
       - save_cache_cmd
 
@@ -55,8 +63,17 @@ commands:
           command: yarn test
           working_directory: ~/project/client
 
+  test_server:
+    steps:
+      - run:
+          command: yarn test:ci
+          working_directory: ~/project/server
+
   deploy_cmd:
     steps:
+      - run:
+          command: ./scripts/build.sh
+          working_directory: ~/project/server
       - run:
           command: yarn build
           working_directory: ~/project
@@ -72,11 +89,13 @@ jobs:
     executor: default
     steps:
       - setup_cmd
+      - test_server
       - test_cmd
   test-and-deploy:
     executor: default
     steps:
       - setup_cmd
+      - test_server
       - test_cmd
       - deploy_cmd
 
