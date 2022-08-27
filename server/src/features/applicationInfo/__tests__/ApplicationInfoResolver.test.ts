@@ -15,7 +15,7 @@ describe("ApplicationInfoResolver", () => {
   it("return the correct app info", async () => {
     const appInfo = await runAppInfoQuery();
     expect(appInfo).toEqual({
-      name: "tipstar"
+      name: "scottdbnet-api"
     });
   });
 });
