@@ -3,7 +3,7 @@
 set -e
 trap "exit" INT
 
-echo "Building in progress..."
+echo "Building in progress...."
 
 echo "building source"
 rm -rf dist/
