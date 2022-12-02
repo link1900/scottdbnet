@@ -52,7 +52,7 @@ export class GraphqlLambdaApi extends Construct {
     this.lambdaFunction = new Function(this, "Lambda", {
       functionName: `${props.name}-graphql`,
       handler: "src/index.handler",
-      runtime: Runtime.NODEJS_16_X,
+      runtime: Runtime.NODEJS_18_X,
       code: new AssetCode(props.codePath),
       memorySize: 1024,
       timeout: Duration.seconds(30),
