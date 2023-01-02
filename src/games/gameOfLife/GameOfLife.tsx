@@ -6,7 +6,7 @@ interface Props {}
 
 const CANVAS_SIZE = 600;
 
-export class GameOfLife extends React.Component<Props> {
+export default class GameOfLife extends React.Component<Props> {
   // @ts-ignore
   private world: ConwayWorld;
 
@@ -27,58 +27,58 @@ export class GameOfLife extends React.Component<Props> {
   public render() {
     return (
       <Grid container spacing={2} direction="column" alignItems="center">
-          <Grid item>
-            <Typography>Conways Game of Life</Typography>
-          </Grid>
-          <Grid item>
-            <canvas
-              ref="gameCanvas"
-              width={CANVAS_SIZE}
-              height={CANVAS_SIZE}
-              style={{ border: "black solid 1px" }}
-            />
-          </Grid>
-          <Grid item>
-            <Grid container spacing={2} direction="row">
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => this.world.start()}
-                >
-                  Start
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => this.world.stop()}
-                >
-                  Stop
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => this.world.step()}
-                >
-                  Step
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => this.world.reset()}
-                >
-                  Restart
-                </Button>
-              </Grid>
+        <Grid item>
+          <Typography>Conways Game of Life</Typography>
+        </Grid>
+        <Grid item>
+          <canvas
+            ref="gameCanvas"
+            width={CANVAS_SIZE}
+            height={CANVAS_SIZE}
+            style={{ border: "black solid 1px" }}
+          />
+        </Grid>
+        <Grid item>
+          <Grid container spacing={2} direction="row">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => this.world.start()}
+              >
+                Start
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => this.world.stop()}
+              >
+                Stop
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => this.world.step()}
+              >
+                Step
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => this.world.reset()}
+              >
+                Restart
+              </Button>
             </Grid>
           </Grid>
         </Grid>
+      </Grid>
     );
   }
 }

@@ -225,7 +225,7 @@ function sortedItemList(itemList: ListItem[]): ListItem[] {
   return copyArray(itemList).sort(listItemSort);
 }
 
-export function ListRandomizer() {
+export default function ListRandomizer() {
   const { search } = useLocation();
   const navigate = useNavigate();
   const urlStore = getUrlStore(search);

@@ -4,7 +4,7 @@ import { Button, Grid, Typography } from "@material-ui/core";
 import { DataZone } from "../../components/DataZone";
 import { makeValidJsonRequest } from "../../util/apiHelper";
 
-export function RandomJoke() {
+export default function RandomJoke() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | unknown>();
   const [joke, setJoke] = useState<string>("");

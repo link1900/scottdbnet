@@ -38,7 +38,7 @@ export interface CompressorStore {
   compressFormat: CompressionFormat;
 }
 
-export function Compressor() {
+export default function Compressor() {
   const [compressorStore, setCompressorStore] = React.useState<CompressorStore>(
     {
       raw: "This is an example value",

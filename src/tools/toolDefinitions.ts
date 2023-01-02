@@ -1,6 +1,4 @@
-import { ListRandomizer } from "./listRandomizer/ListRandomizer";
-import { Compressor } from "./compressor/Compressor";
-import { RandomJoke } from "./randomJoke/RandomJoke";
+import { lazy } from "react";
 
 export interface ToolDefinition {
   name: string;
@@ -13,16 +11,16 @@ export const toolDefinitions: ToolDefinition[] = [
   {
     name: "listRandomizer",
     title: "List Randomizer",
-    component: ListRandomizer
+    component: lazy(() => import("./listRandomizer/ListRandomizer"))
   },
   {
     name: "compressor",
     title: "Compressor",
-    component: Compressor
+    component: lazy(() => import("./compressor/Compressor"))
   },
   {
     name: "randomJoke",
     title: "Random Joke",
-    component: RandomJoke
+    component: lazy(() => import("./randomJoke/RandomJoke"))
   }
 ];

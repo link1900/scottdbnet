@@ -89,7 +89,7 @@ function calculateAnswer(targetNumber: number, maxAttempts: number) {
   };
 }
 
-export function GuesserAI() {
+export default function GuesserAI() {
   const [gameState, setGameState] = useState<State>(initState);
   const {
     input,
@@ -131,79 +131,79 @@ export function GuesserAI() {
   };
 
   return (
-      <Grid container spacing={3} direction="column" alignItems="center">
-        <Grid item>
-          <img
-            src={thinkingImage}
-            alt="question mark"
-            style={{ width: "320px", height: "226px" }}
-          />
-        </Grid>
-        {targetNumber === undefined ? (
-          <>
-            <Grid item>
-              <Typography>
-                Think of a number between 1 and 100 and I will guess it within
-                10 attempts.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Box width={500}>
-                <TextField
-                  label="Enter a number between 1 and 100"
-                  value={input}
-                  onChange={handleChange}
-                  error={inputError !== undefined}
-                  helperText={inputError}
-                  fullWidth
-                />
-              </Box>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={() => submitAnswer()}>
-                Submit to AI
-              </Button>
-            </Grid>
-          </>
-        ) : null}
-        {targetNumber !== undefined ? (
-          <React.Fragment>
-            {!finished ? (
-              <Grid item>
-                Attempting to guess number {targetNumber}
-                <Button variant="contained" onClick={() => restart()}>
-                  Stop
-                </Button>
-              </Grid>
-            ) : null}
-            {guessAttempts.map((guessAttempt, i) => {
-              return (
-                <Grid item>
-                  <Typography key={`${guessAttempt.guessNumber}.${i}`}>
-                    Guessed {guessAttempt.guessNumber} it must be{" "}
-                    {nameForResult(guessAttempt.result)}
-                  </Typography>
-                </Grid>
-              );
-            })}
-          </React.Fragment>
-        ) : null}
-        {finished ? (
-          <React.Fragment>
-            <Grid item>
-              <Typography>
-                {guessCount < guessLimit
-                  ? `I solved it in ${guessCount} attempts`
-                  : "I failed to solve it"}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" onClick={() => restart()}>
-                Again?
-              </Button>
-            </Grid>
-          </React.Fragment>
-        ) : null}
+    <Grid container spacing={3} direction="column" alignItems="center">
+      <Grid item>
+        <img
+          src={thinkingImage}
+          alt="question mark"
+          style={{ width: "320px", height: "226px" }}
+        />
       </Grid>
+      {targetNumber === undefined ? (
+        <>
+          <Grid item>
+            <Typography>
+              Think of a number between 1 and 100 and I will guess it within 10
+              attempts.
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Box width={500}>
+              <TextField
+                label="Enter a number between 1 and 100"
+                value={input}
+                onChange={handleChange}
+                error={inputError !== undefined}
+                helperText={inputError}
+                fullWidth
+              />
+            </Box>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={() => submitAnswer()}>
+              Submit to AI
+            </Button>
+          </Grid>
+        </>
+      ) : null}
+      {targetNumber !== undefined ? (
+        <React.Fragment>
+          {!finished ? (
+            <Grid item>
+              Attempting to guess number {targetNumber}
+              <Button variant="contained" onClick={() => restart()}>
+                Stop
+              </Button>
+            </Grid>
+          ) : null}
+          {guessAttempts.map((guessAttempt, i) => {
+            return (
+              <Grid item>
+                <Typography key={`${guessAttempt.guessNumber}.${i}`}>
+                  Guessed {guessAttempt.guessNumber} it must be{" "}
+                  {nameForResult(guessAttempt.result)}
+                </Typography>
+              </Grid>
+            );
+          })}
+        </React.Fragment>
+      ) : null}
+      {finished ? (
+        <React.Fragment>
+          <Grid item>
+            <Typography>
+              {guessCount < guessLimit
+                ? `I solved it in ${guessCount} attempts`
+                : "I failed to solve it"}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={() => restart()}>
+              Again?
+            </Button>
+          </Grid>
+        </React.Fragment>
+      ) : null}
+    </Grid>
   );
 }

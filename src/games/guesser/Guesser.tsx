@@ -21,7 +21,7 @@ const initState = {
   history: "You have 10 guesses left"
 };
 
-export function Guesser() {
+export default function Guesser() {
   const [gameState, setGameState] = useState<State>(initState);
   const { guessCount, guessLimit, currentGuess, finished, theNumber, history } =
     gameState;
@@ -91,48 +91,48 @@ export function Guesser() {
   };
 
   return (
-      <Grid container spacing={3} direction="column" alignItems="center">
-        <Grid item>
-          <img
-            src={thinkingImage}
-            alt="question mark"
-            style={{ width: "320px", height: "226px" }}
-          />
-        </Grid>
-        <Grid item>
-          <Typography>Can you guess the number I am thinking of?</Typography>
-        </Grid>
-        {!finished ? (
-          <Grid item xs={12}>
-            <Box width={500}>
-              <TextField
-                label="Enter a number between 1 and 100"
-                value={currentGuess}
-                onChange={handleChange}
-                fullWidth
-              />
-            </Box>
-          </Grid>
-        ) : null}
+    <Grid container spacing={3} direction="column" alignItems="center">
+      <Grid item>
+        <img
+          src={thinkingImage}
+          alt="question mark"
+          style={{ width: "320px", height: "226px" }}
+        />
+      </Grid>
+      <Grid item>
+        <Typography>Can you guess the number I am thinking of?</Typography>
+      </Grid>
+      {!finished ? (
         <Grid item xs={12}>
-          <Typography>{history}</Typography>
+          <Box width={500}>
+            <TextField
+              label="Enter a number between 1 and 100"
+              value={currentGuess}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Box>
         </Grid>
-        <Grid item xs={12}>
-          <Grid container direction="row" spacing={2}>
-            {!finished ? (
-              <Grid item>
-                <Button variant="contained" onClick={() => submitGuess()}>
-                  Submit
-                </Button>
-              </Grid>
-            ) : null}
+      ) : null}
+      <Grid item xs={12}>
+        <Typography>{history}</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Grid container direction="row" spacing={2}>
+          {!finished ? (
             <Grid item>
-              <Button variant="contained" onClick={() => restart()}>
-                {!finished ? "Restart" : "Again?"}
+              <Button variant="contained" onClick={() => submitGuess()}>
+                Submit
               </Button>
             </Grid>
+          ) : null}
+          <Grid item>
+            <Button variant="contained" onClick={() => restart()}>
+              {!finished ? "Restart" : "Again?"}
+            </Button>
           </Grid>
         </Grid>
       </Grid>
+    </Grid>
   );
 }

@@ -1,16 +1,11 @@
-import { GameOfLife } from "./gameOfLife/GameOfLife";
-import SimpleTennis from "./simpleTennis/SimpleTennis";
+import { lazy } from "react";
 import tennisPreview from "./simpleTennis/tennisPreview.png";
 import LightOn from "./lightOn/LightOn";
 import lightOnPreview from "./lightOn/lightOnPreview.png";
 import prisonBreakPreview from "./prisonBreak/prisonBreakPreview.png";
-import PrisonBreak from "./prisonBreak/PrisonBreak";
-import { Guesser } from "./guesser/Guesser";
-import Tic from "./tictactoe/Tic";
 import ticPreview from "./tictactoe/ticPreview.png";
 import GuesserPreview from "./guesser/thinking.jpg";
 import GuesserAIPreview from "./guesserAI/thinkingAI.png";
-import { GuesserAI } from "./guesserAI/GuesserAI";
 import gameOfLifePreview from "./gameOfLife/conway_game_of_life.png";
 
 export interface GameDefinition {
@@ -32,7 +27,7 @@ export const gameDefinitions: GameDefinition[] = [
     originalLanguage: "Javascript",
     year: "2017",
     image: tennisPreview,
-    component: SimpleTennis,
+    component: lazy(() => import("./simpleTennis/SimpleTennis")),
     author: "Scott Brown"
   },
   {
@@ -52,7 +47,7 @@ export const gameDefinitions: GameDefinition[] = [
     originalLanguage: "C++",
     year: "2007",
     image: prisonBreakPreview,
-    component: PrisonBreak,
+    component: lazy(() => import("./prisonBreak/PrisonBreak")),
     author: "Scott Brown"
   },
   {
@@ -62,7 +57,7 @@ export const gameDefinitions: GameDefinition[] = [
     originalLanguage: "Basic",
     image: GuesserPreview,
     year: "2002",
-    component: Guesser,
+    component: lazy(() => import("./guesser/Guesser")),
     author: "Scott Brown"
   },
   {
@@ -71,7 +66,7 @@ export const gameDefinitions: GameDefinition[] = [
     originalLanguage: "Javascript",
     image: GuesserAIPreview,
     year: "2018",
-    component: GuesserAI,
+    component: lazy(() => import("./guesserAI/GuesserAI")),
     author: "Scott Brown"
   },
   {
@@ -80,7 +75,7 @@ export const gameDefinitions: GameDefinition[] = [
     originalFramework: "React",
     originalLanguage: "Javascript",
     year: "2016",
-    component: Tic,
+    component: lazy(() => import("./tictactoe/Tic")),
     image: ticPreview,
     author: "Scott Brown"
   },
@@ -90,7 +85,7 @@ export const gameDefinitions: GameDefinition[] = [
     originalFramework: "React",
     originalLanguage: "Typescript",
     year: "2021",
-    component: GameOfLife,
+    component: lazy(() => import("./gameOfLife/GameOfLife")),
     image: gameOfLifePreview,
     author: "Scott Brown"
   }
