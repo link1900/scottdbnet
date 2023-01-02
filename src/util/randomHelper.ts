@@ -1,4 +1,5 @@
-import { shuffle as lodashShuffle, random } from "lodash";
+import lodashShuffle from "lodash/shuffle";
+import random from "lodash/random";
 import { generateArray } from "./arrayHelper";
 
 export function randomInteger(

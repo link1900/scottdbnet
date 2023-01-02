@@ -40,11 +40,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
-    "deploy": "yarn build && yarn deploy:build && yarn deploy:index && yarn deploy:invalidate",
-    "deploy:build": "aws s3 sync build s3://scottdb.net/ --exclude index.html --cache-control max-age=604800,public",
-    "deploy:index": "aws s3 cp build/index.html s3://scottdb.net/index.html --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html",
-    "deploy:invalidate": "aws cloudfront create-invalidation --distribution-id E2ESZP3QQOLMV --paths /",
-    "stats": "yarn build -- --stats && npx webpack-bundle-analyzer ./build/bundle-stats.json",
+    "size": "webpack-bundle-analyzer ./build/bundle-stats.json",
     "start:prod": "yarn build && npx serve -s build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -72,6 +68,7 @@
   "devDependencies": {
     "@types/lodash": "4.14.172",
     "@types/lz-string": "1.3.34",
-    "prettier": "2.4.1"
+    "prettier": "2.4.1",
+    "webpack-bundle-analyzer": "4.7.0"
   }
 }
