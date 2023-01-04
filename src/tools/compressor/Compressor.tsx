@@ -1,6 +1,9 @@
-import React from "react";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import React, { useRef } from "react";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ClearIcon from "@material-ui/icons/Clear";
+import CopyIcon from "@material-ui/icons/FileCopy";
+import PasteIcon from "@material-ui/icons/FileCopyOutlined";
+
 import {
   Button,
   FormControl,
@@ -8,7 +11,11 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   Typography
 } from "@material-ui/core";
 import {
@@ -17,14 +24,19 @@ import {
 } from "../../util/dateTimeHelper";
 import {
   compress,
+  CompressionAlgorithm,
+  compressionAlgorithmLabel,
   CompressionFormat,
-  decompress,
+  compressionFormatLabel,
   formatBytes,
   getStringSizeInBytes
 } from "../../util/stringHelper";
+import SampleGeneratorDialog from "../components/SampleGeneratorDialog";
+import ScreenLoader from "../components/ScreenLoader";
 
 export interface CompressResult {
-  operation: string;
+  compressAlgorithm: CompressionAlgorithm;
+  compressFormat: CompressionFormat;
   time: string;
   originalSize: string;
   compressedSize: string;
@@ -32,21 +44,24 @@ export interface CompressResult {
 }
 
 export interface CompressorStore {
-  raw: string;
-  compressed: string;
   compressResult: CompressResult | undefined;
+  compressAlgorithm: CompressionAlgorithm;
   compressFormat: CompressionFormat;
+  loading: boolean;
 }
 
+const initState: CompressorStore = {
+  compressResult: undefined,
+  compressAlgorithm: CompressionAlgorithm.LZ_STRING,
+  compressFormat: CompressionFormat.BASE64,
+  loading: false
+};
+
 export default function Compressor() {
-  const [compressorStore, setCompressorStore] = React.useState<CompressorStore>(
-    {
-      raw: "This is an example value",
-      compressed: "",
-      compressResult: undefined,
-      compressFormat: CompressionFormat.BASE64_ENCODED
-    }
-  );
+  const [compressorStore, setCompressorStore] =
+    React.useState<CompressorStore>(initState);
+  const rawInputRef = useRef<HTMLTextAreaElement>(null);
+  const compressedInputRef = useRef<HTMLTextAreaElement>(null);
 
   const updateStore = (updatedStore: Partial<CompressorStore>) => {
     setCompressorStore({
@@ -55,70 +70,84 @@ export default function Compressor() {
     });
   };
 
-  const handleTextChange = (event: any) => {
-    updateStore({ raw: event.target.value });
-  };
-
-  const handleCompressInputChange = (event: any) => {
-    updateStore({ compressed: event.target.value });
-  };
-
   const handleCompress = () => {
+    updateStore({ loading: true });
     const start = getBenchmarkStartTime();
-    const compressed = compress(compressorStore.raw, {
-      format: compressorStore.compressFormat
+    const rawInput = getRawInput();
+    const compressed = compress(rawInput, {
+      format: compressorStore.compressFormat,
+      algorithm: compressorStore.compressAlgorithm
     });
-    const operation = "compress";
     const time = getBenchmarkEndTimeString(start);
-    const originalSizeBytes = getStringSizeInBytes(compressorStore.raw);
+    const originalSizeBytes = getStringSizeInBytes(rawInput);
     const compressedSizeBytes = getStringSizeInBytes(compressed);
     const reductionSizeBytes = originalSizeBytes - compressedSizeBytes;
     const compressResult = {
-      operation,
+      compressAlgorithm: compressorStore.compressAlgorithm,
+      compressFormat: compressorStore.compressFormat,
       time,
       originalSize: formatBytes(originalSizeBytes),
       compressedSize: formatBytes(compressedSizeBytes),
       reductionSize: formatBytes(reductionSizeBytes)
     };
-    updateStore({ compressed, compressResult });
-  };
-
-  const handleDecompress = () => {
-    const start = getBenchmarkStartTime();
-    const raw =
-      decompress(compressorStore.compressed, {
-        format: compressorStore.compressFormat
-      }) ?? "";
-    const operation = "decompress";
-    const time = getBenchmarkEndTimeString(start);
-    const originalSizeBytes = getStringSizeInBytes(raw);
-    const compressedSizeBytes = getStringSizeInBytes(
-      compressorStore.compressed
-    );
-    const reductionSizeBytes = originalSizeBytes - compressedSizeBytes;
-    const compressResult = {
-      operation,
-      time,
-      originalSize: formatBytes(originalSizeBytes),
-      compressedSize: formatBytes(compressedSizeBytes),
-      reductionSize: formatBytes(reductionSizeBytes)
-    };
-    updateStore({ raw, compressResult });
+    setCompressedInput(compressed);
+    updateStore({ loading: false, compressResult });
   };
 
   const handleFormatChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const selectedValue = event.target.value;
-    if (selectedValue === CompressionFormat.BASE64_ENCODED) {
-      updateStore({ compressFormat: CompressionFormat.BASE64_ENCODED });
+    updateStore({ compressFormat: selectedValue as CompressionFormat });
+  };
+
+  const handleAlgoChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const selectedValue = event.target.value;
+    updateStore({ compressAlgorithm: selectedValue as CompressionAlgorithm });
+  };
+
+  const handleExampleGenerate = (generated: string) => {
+    setRawInput(generated);
+  };
+
+  const handleClear = () => {
+    setCompressorStore(initState);
+    setRawInput("");
+    setCompressedInput("");
+  };
+
+  const handlePaste = async () => {
+    const text = await navigator.clipboard.readText();
+    setRawInput(text);
+  };
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(getCompressedInput());
+  };
+
+  const getRawInput = (): string => {
+    if (rawInputRef.current) {
+      return rawInputRef.current.value;
+    } else {
+      return "";
     }
-    if (selectedValue === CompressionFormat.UTF16) {
-      updateStore({ compressFormat: CompressionFormat.UTF16 });
+  };
+
+  const setRawInput = (value: string) => {
+    if (rawInputRef.current) {
+      rawInputRef.current.value = value;
     }
-    if (selectedValue === CompressionFormat.UTF16_SAFE) {
-      updateStore({ compressFormat: CompressionFormat.UTF16_SAFE });
+  };
+
+  const setCompressedInput = (value: string) => {
+    if (compressedInputRef.current) {
+      compressedInputRef.current.value = value;
     }
-    if (selectedValue === CompressionFormat.BASE64) {
-      updateStore({ compressFormat: CompressionFormat.BASE64 });
+  };
+
+  const getCompressedInput = (): string => {
+    if (compressedInputRef.current) {
+      return compressedInputRef.current.value;
+    } else {
+      return "";
     }
   };
 
@@ -126,110 +155,235 @@ export default function Compressor() {
     <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={12} sm={8}>
         <Grid container direction={"column"} spacing={2}>
-          <Grid item>
-            <TextField
-              id="raw-text-input"
-              label="Text to compress"
-              multiline
-              fullWidth
-              minRows={10}
-              maxRows={10}
-              value={compressorStore.raw}
-              onChange={handleTextChange}
-              variant="outlined"
-            />
+          <Grid data-id="title-section" item>
+            <Typography variant="h4" component="h1">
+              Compressor
+            </Typography>
           </Grid>
-          <Grid item>
-            <FormControl>
-              <InputLabel id="format-select-outlined-label">Format</InputLabel>
-              <Select
-                labelId="format-select-outlined-label"
-                id="format-select-outlined"
-                value={compressorStore.compressFormat}
-                onChange={handleFormatChange}
-                label="Format"
-              >
-                <MenuItem value={CompressionFormat.BASE64_ENCODED}>
-                  Base64 url safe
-                </MenuItem>
-                <MenuItem value={CompressionFormat.BASE64}>Base64</MenuItem>
-                <MenuItem value={CompressionFormat.UTF16_SAFE}>
-                  UTF16 Safe
-                </MenuItem>
-                <MenuItem value={CompressionFormat.UTF16}>UTF16</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid data-id="options" item>
-            <Grid container direction="row" alignItems="center" spacing={1}>
+          <Grid
+            data-id="input-section"
+            item
+            container
+            direction={"column"}
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h6">Enter data</Typography>
+            </Grid>
+            <Grid item>
+              <textarea
+                id="raw-text-input"
+                rows={10}
+                ref={rawInputRef}
+                style={{ width: "100%" }}
+                placeholder={"Enter or paste text here"}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+              />
+            </Grid>
+            <Grid
+              data-id="input-section-controls"
+              container
+              item
+              direction="row"
+              spacing={1}
+            >
               <Grid item>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
-                  startIcon={<ArrowDownwardIcon />}
-                  onClick={() => handleCompress()}
+                  size="small"
+                  startIcon={<PasteIcon fontSize="small" />}
+                  onClick={() => handlePaste()}
                 >
-                  Compress
+                  Paste
                 </Button>
+              </Grid>
+              <Grid item>
+                <SampleGeneratorDialog onGenerate={handleExampleGenerate} />
               </Grid>
               <Grid item>
                 <Button
                   variant="outlined"
                   color="primary"
-                  startIcon={<ArrowUpwardIcon />}
-                  onClick={() => handleDecompress()}
+                  size="small"
+                  startIcon={<ClearIcon fontSize="small" />}
+                  onClick={() => handleClear()}
                 >
-                  Decompress
+                  Clear
                 </Button>
               </Grid>
-              <Grid />
             </Grid>
           </Grid>
-          <Grid item>
-            <TextField
-              id="input-compressed"
-              label="Compressed text"
-              multiline
-              fullWidth
-              minRows={10}
-              maxRows={10}
-              value={compressorStore.compressed}
-              onChange={handleCompressInputChange}
-              variant="outlined"
-            />
+
+          <Grid
+            data-id="options-section"
+            item
+            container
+            direction={"column"}
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h6">Select options</Typography>
+            </Grid>
+            <Grid item container direction="row" spacing={2}>
+              <Grid item>
+                <FormControl variant="outlined">
+                  <InputLabel id="algo-select-outlined-label">
+                    Algorithm
+                  </InputLabel>
+                  <Select
+                    labelId="algo-select-outlined-label"
+                    id="algo-select-outlined"
+                    value={compressorStore.compressAlgorithm}
+                    onChange={handleAlgoChange}
+                    label="Algorithm"
+                  >
+                    <MenuItem value={CompressionAlgorithm.LZ_STRING}>
+                      {compressionAlgorithmLabel(
+                        CompressionAlgorithm.LZ_STRING
+                      )}
+                    </MenuItem>
+                    <MenuItem value={CompressionAlgorithm.ZLIB}>
+                      {compressionAlgorithmLabel(CompressionAlgorithm.ZLIB)}
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <FormControl variant="outlined">
+                  <InputLabel id="format-select-outlined-label">
+                    Format
+                  </InputLabel>
+                  <Select
+                    labelId="format-select-outlined-label"
+                    id="format-select-outlined"
+                    value={compressorStore.compressFormat}
+                    onChange={handleFormatChange}
+                    label="Format"
+                  >
+                    <MenuItem value={CompressionFormat.BASE64}>
+                      {compressionFormatLabel(CompressionFormat.BASE64)}
+                    </MenuItem>
+                    <MenuItem value={CompressionFormat.UTF16}>
+                      {compressionFormatLabel(CompressionFormat.UTF16)}
+                    </MenuItem>
+                    <MenuItem value={CompressionFormat.UTF8}>
+                      {compressionFormatLabel(CompressionFormat.UTF8)}
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid
+            data-id="output-section"
+            container
+            item
+            direction={"column"}
+            spacing={1}
+          >
+            <Grid item>
+              <Typography variant="h6">Generate output</Typography>
+            </Grid>
+            <Grid data-id="generate-actions" item>
+              <Grid container direction="row" alignItems="center" spacing={1}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<ArrowDownwardIcon />}
+                    onClick={() => handleCompress()}
+                  >
+                    Compress
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <textarea
+                id="compressed-input"
+                rows={10}
+                ref={compressedInputRef}
+                style={{ width: "100%" }}
+                placeholder="Output results"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+              />
+            </Grid>
+            <Grid item>
+              <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                startIcon={<CopyIcon fontSize="small" />}
+                onClick={() => handleCopy()}
+              >
+                Copy
+              </Button>
+            </Grid>
           </Grid>
           {compressorStore.compressResult ? (
-            <Grid item>
+            <Grid
+              data-id="results-section"
+              container
+              item
+              direction={"column"}
+              spacing={1}
+            >
               <Grid item>
-                <Typography>
-                  Operation: {compressorStore.compressResult.operation}
-                </Typography>
+                <Typography variant="h6">Results</Typography>
               </Grid>
               <Grid item>
-                <Typography>
-                  Time taken: {compressorStore.compressResult.time}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography>
-                  Original size: {compressorStore.compressResult.originalSize}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography>
-                  Compressed size:{" "}
-                  {compressorStore.compressResult.compressedSize}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography>
-                  Saved: {compressorStore.compressResult.reductionSize}
-                </Typography>
+                <Table aria-label="results table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Algorithm</TableCell>
+                      <TableCell>Format</TableCell>
+                      <TableCell>Time taken</TableCell>
+                      <TableCell>Original size</TableCell>
+                      <TableCell>Compressed size</TableCell>
+                      <TableCell>Saving</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        {compressionAlgorithmLabel(
+                          compressorStore.compressResult.compressAlgorithm
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {compressionFormatLabel(
+                          compressorStore.compressResult.compressFormat
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {compressorStore.compressResult.time}
+                      </TableCell>
+                      <TableCell>
+                        {compressorStore.compressResult.originalSize}
+                      </TableCell>
+                      <TableCell>
+                        {compressorStore.compressResult.compressedSize}
+                      </TableCell>
+                      <TableCell>
+                        {compressorStore.compressResult.reductionSize}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
               </Grid>
             </Grid>
           ) : null}
         </Grid>
       </Grid>
+      <ScreenLoader loading={compressorStore.loading} />
     </Grid>
   );
 }
