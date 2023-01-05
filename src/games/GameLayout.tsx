@@ -8,17 +8,11 @@ export interface GameLayoutProps {
 }
 
 export function GameLayout({ children }: GameLayoutProps) {
-  const gameMenuItems: MenuItemDefinition[] = gameDefinitions.map(gameDef => {
+  const gameMenuItems: MenuItemDefinition[] = gameDefinitions.map((gameDef) => {
     return {
       label: gameDef.title,
       url: gameDef.name
     };
   });
-  return (
-    <SiteLayout
-      menuItems={gameMenuItems}
-    >
-      {children}
-    </SiteLayout>
-  );
+  return <SiteLayout menuItems={gameMenuItems}>{children}</SiteLayout>;
 }

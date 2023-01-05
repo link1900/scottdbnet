@@ -73,7 +73,10 @@ export default class Tic extends React.Component {
           <Typography>Noughts and Crosses</Typography>
         </Grid>
         <Grid item>
-          <Board squares={current.squares} onClick={i => this.handleClick(i)} />
+          <Board
+            squares={current.squares}
+            onClick={(i) => this.handleClick(i)}
+          />
         </Grid>
         <Grid item>
           <Grid container spacing={2} direction="row">

@@ -14,7 +14,7 @@ export interface Props {
   title: string;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginLeft: -theme.spacing(1)
   }

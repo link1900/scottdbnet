@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import SiteSideBar, { MenuItemDefinition } from "./SiteSideBar";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flex: 1,
@@ -41,14 +41,9 @@ export function SiteLayout(props: SiteLayoutProps) {
   return (
     <div className={classes.root}>
       <nav>
-        <SiteSideBar
-          variant="temporary"
-          menuItems={menuItems}
-        />
+        <SiteSideBar variant="temporary" menuItems={menuItems} />
       </nav>
-      <div className={classes.pageArea}>
-        {children}
-      </div>
+      <div className={classes.pageArea}>{children}</div>
     </div>
   );
 }

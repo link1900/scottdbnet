@@ -39,14 +39,14 @@ export default class PrisonBreak extends React.Component {
     }
     return (
       <Provider store={store}>
-          <Grid container spacing={4} direction="row">
-            <Grid item>
-              <MapContainer />
-            </Grid>
-            <Grid item>
-              <PrisonBreakContainer name="Prison Break" />
-            </Grid>
+        <Grid container spacing={4} direction="row">
+          <Grid item>
+            <MapContainer />
           </Grid>
+          <Grid item>
+            <PrisonBreakContainer name="Prison Break" />
+          </Grid>
+        </Grid>
       </Provider>
     );
   }

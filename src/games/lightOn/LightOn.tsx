@@ -57,7 +57,7 @@ export default class LightOn extends React.Component<Props, State> {
   public actionTaken = () => {
     const hasWon = every(this.state.gridElements, "lit");
     if (hasWon) {
-      this.state.gridElements.forEach(gridElement => {
+      this.state.gridElements.forEach((gridElement) => {
         gridElement.active = false;
       });
     }

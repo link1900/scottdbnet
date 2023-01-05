@@ -8,15 +8,11 @@ export interface ToolsLayoutProps {
 }
 
 export function ToolsLayout({ children }: ToolsLayoutProps) {
-  const menuItems: MenuItemDefinition[] = toolDefinitions.map(toolDef => {
+  const menuItems: MenuItemDefinition[] = toolDefinitions.map((toolDef) => {
     return {
       label: toolDef.title,
       url: toolDef.name
     };
   });
-  return (
-    <SiteLayout menuItems={menuItems}>
-      {children}
-    </SiteLayout>
-  );
+  return <SiteLayout menuItems={menuItems}>{children}</SiteLayout>;
 }

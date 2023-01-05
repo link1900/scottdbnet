@@ -1,6 +1,6 @@
-import React from 'react';
-import { Card, CardContent, Typography, Grid } from '@material-ui/core';
-import { LoadingSpinner } from './LoadingSpinner';
+import React from "react";
+import { Card, CardContent, Typography, Grid } from "@material-ui/core";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 interface Props {
   minHeight?: number;

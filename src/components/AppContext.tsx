@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext } from "react";
 
 export interface User {
   id: string;
@@ -20,13 +20,16 @@ export const AppContext = createContext<IAppContext>({
   setContext: () => undefined
 });
 
-export const mergeContext = ({ setContext, context }: IAppContext) => (nextContext: Partial<IContext>): void =>
-  setContext({
-    ...context,
-    ...nextContext
-  });
+export const mergeContext =
+  ({ setContext, context }: IAppContext) =>
+  (nextContext: Partial<IContext>): void =>
+    setContext({
+      ...context,
+      ...nextContext
+    });
 
-export const useAppContext = (): IAppContext => useContext<IAppContext>(AppContext);
+export const useAppContext = (): IAppContext =>
+  useContext<IAppContext>(AppContext);
 
 export const AppContextProvider: React.FC = ({ children }) => {
   const [context, setContext] = useState<IContext>({});
