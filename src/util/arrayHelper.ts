@@ -1,3 +1,5 @@
+import lodashShuffle from "lodash/shuffle";
+
 export function generateArray<T>(
   length: number,
   generateFunction: () => T
@@ -25,4 +27,8 @@ export function isPresent<T>(t: T | undefined | null | void): t is T {
 
 export function copyArray<T>(items: T[]): T[] {
   return [...items];
+}
+
+export function shuffle<T>(items: T[]): T[] {
+  return lodashShuffle(items);
 }

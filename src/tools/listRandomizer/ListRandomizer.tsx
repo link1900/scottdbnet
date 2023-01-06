@@ -25,8 +25,8 @@ import ClearIcon from "@material-ui/icons/Clear";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
-import { copyArray } from "../../util/arrayHelper";
-import { randomBoolean, shuffle } from "../../util/randomHelper";
+import { copyArray, shuffle } from "../../util/arrayHelper";
+import { randomBoolean } from "../../util/randomHelper";
 import {
   base64DecodeString,
   base64EncodeString

@@ -12,28 +12,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
-import {
-  randomCsv,
-  randomJson,
-  randomString,
-  randomText,
-  randomXml
-} from "../../util/randomHelper";
-
-export enum SampleType {
-  STRING = "STRING",
-  TEXT = "TEXT",
-  JSON = "JSON",
-  XML = "XML",
-  CSV = "CSV"
-}
+import { SampleGeneratorOptions, SampleType } from "../../util/sampleHelper";
+import { useWorker } from "../workers/useWorker";
+import { createSampleWorker } from "../workers/workerFactories";
+import LoadingDialog from "./LoadingDialog";
 
 export interface SampleGeneratorDialogProps {
   onGenerate?: (generated: string) => void;
-}
-
-export function getSizeFloor(byteSize: number, baseFactor: number = 1): number {
-  return Math.max(Math.floor(byteSize / baseFactor), 1);
 }
 
 export default function SampleGeneratorDialog(
@@ -42,6 +27,14 @@ export default function SampleGeneratorDialog(
   const [open, setOpen] = React.useState(false);
   const [size, setSize] = React.useState<string>("10240");
   const [type, setType] = React.useState<SampleType>(SampleType.TEXT);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const { runWorker: generateSample } = useWorker<
+    SampleGeneratorOptions,
+    string
+  >({
+    workerFactory: createSampleWorker
+  });
+
   const { onGenerate } = props;
 
   const handleClickOpen = () => {
@@ -52,34 +45,17 @@ export default function SampleGeneratorDialog(
     setOpen(false);
   };
 
-  const handleSampleGenerate = () => {
+  const handleSampleGenerate = async () => {
     if (onGenerate) {
-      const byteSize = parseInt(size, 10);
-      switch (type) {
-        case SampleType.STRING:
-          onGenerate(randomString(byteSize));
-          break;
-        case SampleType.TEXT:
-          onGenerate(randomText(getSizeFloor(byteSize, 6)));
-          break;
-        case SampleType.JSON:
-          onGenerate(
-            JSON.stringify(
-              randomJson("wrapped-array", getSizeFloor(byteSize, 300)),
-              null,
-              2
-            )
-          );
-          break;
-        case SampleType.CSV:
-          onGenerate(randomCsv(getSizeFloor(byteSize, 140)));
-          break;
-        case SampleType.XML:
-          onGenerate(randomXml(getSizeFloor(byteSize, 380)));
-          break;
-      }
+      const sizeInBytes = parseInt(size, 10);
+      setLoading(true);
+      setOpen(false);
+      const result = await generateSample({ type, sizeInBytes });
+      setLoading(false);
+      onGenerate(result);
+    } else {
+      setOpen(false);
     }
-    handleClose();
   };
 
   return (
@@ -95,6 +71,7 @@ export default function SampleGeneratorDialog(
           Sample
         </Button>
       </Grid>
+      <LoadingDialog open={loading} title={"Generating..."} />
       <Dialog
         open={open}
         onClose={handleClose}
@@ -151,9 +128,9 @@ export default function SampleGeneratorDialog(
                     <MenuItem value="1024">1 kB</MenuItem>
                     <MenuItem value="10240">10 kB</MenuItem>
                     <MenuItem value="102400">100 kB</MenuItem>
-                    <MenuItem value="1048576">1 MB</MenuItem>
-                    <MenuItem value="10485760">10 MB</MenuItem>
-                    <MenuItem value="104857600">100 MB</MenuItem>
+                    {/*<MenuItem value="1048576">1 MB</MenuItem>*/}
+                    {/*<MenuItem value="10485760">10 MB</MenuItem>*/}
+                    {/*<MenuItem value="104857600">100 MB</MenuItem>*/}
                   </Select>
                 </FormControl>
               </Grid>

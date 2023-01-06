@@ -1,9 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ClearIcon from "@material-ui/icons/Clear";
 import CopyIcon from "@material-ui/icons/FileCopy";
 import PasteIcon from "@material-ui/icons/FileCopyOutlined";
-
 import {
   Button,
   FormControl,
@@ -19,20 +18,19 @@ import {
   Typography
 } from "@material-ui/core";
 import {
-  getBenchmarkEndTimeString,
-  getBenchmarkStartTime
-} from "../../util/dateTimeHelper";
-import {
-  compress,
   CompressionAlgorithm,
   compressionAlgorithmLabel,
   CompressionFormat,
   compressionFormatLabel,
-  formatBytes,
-  getStringSizeInBytes
-} from "../../util/stringHelper";
+  CompressionResult,
+  CompressionOptions,
+  CompressorOperations
+} from "../../util/compressorHelper";
+import { formatBytes } from "../../util/stringHelper";
+import { useWorker } from "../workers/useWorker";
 import SampleGeneratorDialog from "../components/SampleGeneratorDialog";
-import ScreenLoader from "../components/ScreenLoader";
+import LoadingDialog from "../components/LoadingDialog";
+import { createCompressorWorker } from "../workers/workerFactories";
 
 export interface CompressResult {
   compressAlgorithm: CompressionAlgorithm;
@@ -59,9 +57,16 @@ const initState: CompressorStore = {
 
 export default function Compressor() {
   const [compressorStore, setCompressorStore] =
-    React.useState<CompressorStore>(initState);
+    useState<CompressorStore>(initState);
   const rawInputRef = useRef<HTMLTextAreaElement>(null);
   const compressedInputRef = useRef<HTMLTextAreaElement>(null);
+
+  const { runWorker: runCompression } = useWorker<
+    CompressionOptions,
+    CompressionResult
+  >({
+    workerFactory: createCompressorWorker
+  });
 
   const updateStore = (updatedStore: Partial<CompressorStore>) => {
     setCompressorStore({
@@ -70,28 +75,27 @@ export default function Compressor() {
     });
   };
 
-  const handleCompress = () => {
+  const handleCompress = async () => {
     updateStore({ loading: true });
-    const start = getBenchmarkStartTime();
-    const rawInput = getRawInput();
-    const compressed = compress(rawInput, {
+
+    const result = await runCompression({
+      input: getRawInput(),
+      operation: CompressorOperations.COMPRESS,
       format: compressorStore.compressFormat,
       algorithm: compressorStore.compressAlgorithm
     });
-    const time = getBenchmarkEndTimeString(start);
-    const originalSizeBytes = getStringSizeInBytes(rawInput);
-    const compressedSizeBytes = getStringSizeInBytes(compressed);
-    const reductionSizeBytes = originalSizeBytes - compressedSizeBytes;
+
+    console.log(`got result ${result.time}`);
     const compressResult = {
       compressAlgorithm: compressorStore.compressAlgorithm,
       compressFormat: compressorStore.compressFormat,
-      time,
-      originalSize: formatBytes(originalSizeBytes),
-      compressedSize: formatBytes(compressedSizeBytes),
-      reductionSize: formatBytes(reductionSizeBytes)
+      time: result.time,
+      originalSize: formatBytes(result.originalSize),
+      compressedSize: formatBytes(result.compressedSize),
+      reductionSize: formatBytes(result.reductionSize)
     };
-    setCompressedInput(compressed);
     updateStore({ loading: false, compressResult });
+    setCompressedInput(result.output);
   };
 
   const handleFormatChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -383,7 +387,7 @@ export default function Compressor() {
           ) : null}
         </Grid>
       </Grid>
-      <ScreenLoader loading={compressorStore.loading} />
+      <LoadingDialog open={compressorStore.loading} title={"Compressing..."} />
     </Grid>
   );
 }

@@ -1,9 +1,6 @@
 import {
   base64DecodeString,
   base64EncodeString,
-  compress,
-  CompressionFormat,
-  decompress,
   formatBytes,
   getStringSizeInBytes
 } from "../stringHelper";
@@ -70,75 +67,5 @@ describe("getStringSizeInBytes()", () => {
 
   it("gets string bytes for emoji", async () => {
     expect(getStringSizeInBytes("😂👍")).toEqual(8);
-  });
-});
-
-describe("compress()", () => {
-  it("compresses the string using default options", async () => {
-    const result = compress("this is a string");
-    expect(result).toEqual("C4CwlgzgBJUIZQsATmAdgcyA");
-  });
-
-  it("compresses the string for base64", async () => {
-    const result = compress("this is a string", {
-      format: CompressionFormat.BASE64
-    });
-    expect(result).toEqual("C4CwlgzgBJUIZQsATmAdgcyA");
-  });
-
-  it("compresses the string for base64 encoded", async () => {
-    const result = compress("this is a string", {
-      format: CompressionFormat.BASE64_ENCODED
-    });
-    expect(result).toEqual("C4CwlgzgBJUIZQsATmAdgcyA");
-  });
-
-  it("compresses the string for UTF16", async () => {
-    const result = compress("this is a string", {
-      format: CompressionFormat.UTF16
-    });
-    expect(result).toEqual("஀낖ೠҕࡥ଀习ᶁ첀");
-  });
-
-  it("compresses the string for UTF16 safe", async () => {
-    const result = compress("this is a string", {
-      format: CompressionFormat.UTF16_SAFE
-    });
-    expect(result).toEqual("נⱅ䆼i⡣ᑌ¼怽䄆† ");
-  });
-});
-
-describe("decompress()", () => {
-  it("compresses the string using default options", async () => {
-    const result = decompress("C4CwlgzgBJUIZQsATmAdgcyA");
-    expect(result).toEqual("this is a string");
-  });
-
-  it("compresses the string for base64", async () => {
-    const result = decompress("C4CwlgzgBJUIZQsATmAdgcyA", {
-      format: CompressionFormat.BASE64
-    });
-    expect(result).toEqual("this is a string");
-  });
-
-  it("compresses the string for base64 encoded", async () => {
-    const result = decompress("C4CwlgzgBJUIZQsATmAdgcyA", {
-      format: CompressionFormat.BASE64_ENCODED
-    });
-    expect(result).toEqual("this is a string");
-  });
-
-  it("compresses the string for UTF16", async () => {
-    const result = decompress("஀낖ೠҕࡥ଀习ᶁ첀", {
-      format: CompressionFormat.UTF16
-    });
-    expect(result).toEqual("this is a string");
-  });
-
-  it("compresses the string for UTF16 safe", async () => {
-    const result = decompress("נⱅ䆼i⡣ᑌ¼怽䄆† ", {
-      format: CompressionFormat.UTF16_SAFE
-    });
-    expect(result).toEqual("this is a string");
   });
 });

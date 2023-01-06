@@ -1,4 +1,3 @@
-
 export interface ValidRequestOptions extends RequestInit {
   url: string;
 }
@@ -32,7 +31,9 @@ export async function makeValidRequest(
     return apiResponse;
   } else {
     const errorBodyText = await apiResponse.text();
-    throw new Error(`Error calling external api. http status code: ${apiResponse.status} body: ${errorBodyText}`);
+    throw new Error(
+      `Error calling external api. http status code: ${apiResponse.status} body: ${errorBodyText}`
+    );
   }
 }
 
@@ -52,7 +53,7 @@ export async function makeValidJsonRequest<ResponseType>(
     url,
     body: fetchBody,
     headers,
-    ...passedFetchOptions,
+    ...passedFetchOptions
   };
 
   const response = await makeValidRequest(fetchOptions);
@@ -73,9 +74,12 @@ export async function makeValidJsonRequest<ResponseType>(
   }
 }
 
-export function combineErrorMessages(message: string, error: Error | unknown): string {
+export function combineErrorMessages(
+  message: string,
+  error: Error | unknown
+): string {
   if (error instanceof Error) {
-    return `${message}. Original Error: ${error?.message}`
+    return `${message}. Original Error: ${error?.message}`;
   } else {
     return message;
   }

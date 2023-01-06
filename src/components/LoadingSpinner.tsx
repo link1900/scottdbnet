@@ -28,7 +28,7 @@ export function LoadingSpinner(props: Props) {
         container
         spacing={2}
         direction="column"
-        justify="center"
+        justifyContent="center"
         alignItems="center"
       >
         <Grid item>
