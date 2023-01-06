@@ -128,9 +128,9 @@ export default function SampleGeneratorDialog(
                     <MenuItem value="1024">1 kB</MenuItem>
                     <MenuItem value="10240">10 kB</MenuItem>
                     <MenuItem value="102400">100 kB</MenuItem>
-                    {/*<MenuItem value="1048576">1 MB</MenuItem>*/}
-                    {/*<MenuItem value="10485760">10 MB</MenuItem>*/}
-                    {/*<MenuItem value="104857600">100 MB</MenuItem>*/}
+                    <MenuItem value="1048576">1 MB</MenuItem>
+                    <MenuItem value="10485760">10 MB</MenuItem>
+                    <MenuItem value="104857600">100 MB</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

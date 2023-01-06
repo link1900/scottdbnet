@@ -1,8 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import ClearIcon from "@material-ui/icons/Clear";
-import CopyIcon from "@material-ui/icons/FileCopy";
-import PasteIcon from "@material-ui/icons/FileCopyOutlined";
 import {
   Button,
   FormControl,
@@ -27,8 +24,8 @@ import {
   CompressorOperations
 } from "../../util/compressorHelper";
 import { formatBytes } from "../../util/stringHelper";
+import LargeTextArea from "../components/LargeTextArea";
 import { useWorker } from "../workers/useWorker";
-import SampleGeneratorDialog from "../components/SampleGeneratorDialog";
 import LoadingDialog from "../components/LoadingDialog";
 import { createCompressorWorker } from "../workers/workerFactories";
 
@@ -58,8 +55,8 @@ const initState: CompressorStore = {
 export default function Compressor() {
   const [compressorStore, setCompressorStore] =
     useState<CompressorStore>(initState);
-  const rawInputRef = useRef<HTMLTextAreaElement>(null);
-  const compressedInputRef = useRef<HTMLTextAreaElement>(null);
+  const [input, setInput] = useState<string>("");
+  const [output, setOutput] = useState<string>("");
 
   const { runWorker: runCompression } = useWorker<
     CompressionOptions,
@@ -79,13 +76,11 @@ export default function Compressor() {
     updateStore({ loading: true });
 
     const result = await runCompression({
-      input: getRawInput(),
+      input,
       operation: CompressorOperations.COMPRESS,
       format: compressorStore.compressFormat,
       algorithm: compressorStore.compressAlgorithm
     });
-
-    console.log(`got result ${result.time}`);
     const compressResult = {
       compressAlgorithm: compressorStore.compressAlgorithm,
       compressFormat: compressorStore.compressFormat,
@@ -95,7 +90,7 @@ export default function Compressor() {
       reductionSize: formatBytes(result.reductionSize)
     };
     updateStore({ loading: false, compressResult });
-    setCompressedInput(result.output);
+    setOutput(result.output);
   };
 
   const handleFormatChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -106,53 +101,6 @@ export default function Compressor() {
   const handleAlgoChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const selectedValue = event.target.value;
     updateStore({ compressAlgorithm: selectedValue as CompressionAlgorithm });
-  };
-
-  const handleExampleGenerate = (generated: string) => {
-    setRawInput(generated);
-  };
-
-  const handleClear = () => {
-    setCompressorStore(initState);
-    setRawInput("");
-    setCompressedInput("");
-  };
-
-  const handlePaste = async () => {
-    const text = await navigator.clipboard.readText();
-    setRawInput(text);
-  };
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(getCompressedInput());
-  };
-
-  const getRawInput = (): string => {
-    if (rawInputRef.current) {
-      return rawInputRef.current.value;
-    } else {
-      return "";
-    }
-  };
-
-  const setRawInput = (value: string) => {
-    if (rawInputRef.current) {
-      rawInputRef.current.value = value;
-    }
-  };
-
-  const setCompressedInput = (value: string) => {
-    if (compressedInputRef.current) {
-      compressedInputRef.current.value = value;
-    }
-  };
-
-  const getCompressedInput = (): string => {
-    if (compressedInputRef.current) {
-      return compressedInputRef.current.value;
-    } else {
-      return "";
-    }
   };
 
   return (
@@ -175,50 +123,12 @@ export default function Compressor() {
               <Typography variant="h6">Enter data</Typography>
             </Grid>
             <Grid item>
-              <textarea
+              <LargeTextArea
                 id="raw-text-input"
-                rows={10}
-                ref={rawInputRef}
-                style={{ width: "100%" }}
+                value={input}
+                onChange={setInput}
                 placeholder={"Enter or paste text here"}
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
               />
-            </Grid>
-            <Grid
-              data-id="input-section-controls"
-              container
-              item
-              direction="row"
-              spacing={1}
-            >
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                  startIcon={<PasteIcon fontSize="small" />}
-                  onClick={() => handlePaste()}
-                >
-                  Paste
-                </Button>
-              </Grid>
-              <Grid item>
-                <SampleGeneratorDialog onGenerate={handleExampleGenerate} />
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="small"
-                  startIcon={<ClearIcon fontSize="small" />}
-                  onClick={() => handleClear()}
-                >
-                  Clear
-                </Button>
-              </Grid>
             </Grid>
           </Grid>
 
@@ -308,28 +218,12 @@ export default function Compressor() {
               </Grid>
             </Grid>
             <Grid item>
-              <textarea
+              <LargeTextArea
                 id="compressed-input"
-                rows={10}
-                ref={compressedInputRef}
-                style={{ width: "100%" }}
-                placeholder="Output results"
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
+                value={output}
+                onChange={setOutput}
+                placeholder={"Output results"}
               />
-            </Grid>
-            <Grid item>
-              <Button
-                variant="outlined"
-                color="primary"
-                size="small"
-                startIcon={<CopyIcon fontSize="small" />}
-                onClick={() => handleCopy()}
-              >
-                Copy
-              </Button>
             </Grid>
           </Grid>
           {compressorStore.compressResult ? (
