@@ -33,7 +33,7 @@ function getDecompressorTestOptions(
 
 describe("compress()", () => {
   it("compresses the string using BASE64", async () => {
-    const result = compress(
+    const result = await compress(
       getCompressorTestOptions({ input: "this is a string" })
     );
     expect(result).toEqual("C4CwlgzgBJUIZQsATmAdgcyA");
@@ -42,7 +42,7 @@ describe("compress()", () => {
 
 describe("decompress()", () => {
   it("compresses the string using BASE64", async () => {
-    const result = decompress(getDecompressorTestOptions());
+    const result = await decompress(getDecompressorTestOptions());
     expect(result).toEqual("this is a string");
   });
 });
