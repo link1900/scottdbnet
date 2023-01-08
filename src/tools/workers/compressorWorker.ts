@@ -1,13 +1,8 @@
 /* eslint-disable no-restricted-globals */
 
-import {
-  CompressionOptions,
-  runCompressionOperation
-} from "../../util/compressorHelper";
+import { runCompressionOperation } from "../../util/compressorHelper";
+import { workerOnMessageBuilderForPromise } from "./workerHelper";
 
-onmessage = (e: MessageEvent<CompressionOptions>) => {
-  const res = runCompressionOperation(e.data);
-  self.postMessage(res);
-};
+onmessage = workerOnMessageBuilderForPromise(runCompressionOperation);
 
 export {};

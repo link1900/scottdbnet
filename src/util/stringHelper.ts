@@ -1,4 +1,5 @@
 import prettyBytes from "pretty-bytes";
+import { v4 } from "uuid";
 
 export function base64EncodeString(value: string | null | undefined): string {
   if (!value) {
@@ -22,4 +23,8 @@ export function formatBytes(bytes: number): string {
 
 export function getStringSizeInBytes(value: string): number {
   return new Blob([value]).size;
+}
+
+export function uuid(): string {
+  return v4();
 }

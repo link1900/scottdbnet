@@ -1,13 +1,8 @@
 /* eslint-disable no-restricted-globals */
 
-import {
-  sampleGenerator,
-  SampleGeneratorOptions
-} from "../../util/sampleHelper";
+import { sampleGenerator } from "../../util/sampleHelper";
+import { workerOnMessageBuilder } from "./workerHelper";
 
-onmessage = (e: MessageEvent<SampleGeneratorOptions>) => {
-  const res = sampleGenerator(e.data);
-  self.postMessage(res);
-};
+onmessage = workerOnMessageBuilder(sampleGenerator);
 
 export {};

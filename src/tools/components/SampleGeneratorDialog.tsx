@@ -26,7 +26,7 @@ export default function SampleGeneratorDialog(
 ) {
   const [open, setOpen] = React.useState(false);
   const [size, setSize] = React.useState<string>("10240");
-  const [type, setType] = React.useState<SampleType>(SampleType.TEXT);
+  const [type, setType] = React.useState<SampleType>(SampleType.JSON);
   const [loading, setLoading] = React.useState<boolean>(false);
   const { runWorker: generateSample } = useWorker<
     SampleGeneratorOptions,
@@ -50,9 +50,15 @@ export default function SampleGeneratorDialog(
       const sizeInBytes = parseInt(size, 10);
       setLoading(true);
       setOpen(false);
-      const result = await generateSample({ type, sizeInBytes });
-      setLoading(false);
-      onGenerate(result);
+      try {
+        const result = await generateSample({ type, sizeInBytes });
+        setLoading(false);
+        onGenerate(result);
+      } catch (e) {
+        console.error(e);
+        setLoading(false);
+        onGenerate("Failed to generate sample.");
+      }
     } else {
       setOpen(false);
     }

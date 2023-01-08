@@ -13,6 +13,7 @@ export interface LargeTextAreaProps {
   placeholder?: string;
   onChange?: (value: string) => void;
   maxLength?: number;
+  showSample?: boolean;
 }
 
 export default function LargeTextArea(props: LargeTextAreaProps) {
@@ -22,7 +23,8 @@ export default function LargeTextArea(props: LargeTextAreaProps) {
     label,
     onChange,
     placeholder,
-    maxLength = 10000
+    maxLength = 10000,
+    showSample = false
   } = props;
   const [displayValue, setDisplayValue] = React.useState<string>("");
   const [showWarning, setShowWarning] = React.useState<boolean>(false);
@@ -118,9 +120,11 @@ export default function LargeTextArea(props: LargeTextAreaProps) {
             Paste
           </Button>
         </Grid>
-        <Grid item>
-          <SampleGeneratorDialog onGenerate={handleExampleGenerate} />
-        </Grid>
+        {showSample ? (
+          <Grid item>
+            <SampleGeneratorDialog onGenerate={handleExampleGenerate} />
+          </Grid>
+        ) : null}
         <Grid item>
           <Button
             variant="outlined"

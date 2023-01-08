@@ -1,4 +1,5 @@
 import { fromByteArray, toByteArray } from "base64-js";
+import JSZip from "jszip";
 import lzString from "lz-string";
 import pako from "pako";
 import {
@@ -9,12 +10,12 @@ import { getStringSizeInBytes } from "./stringHelper";
 
 export enum CompressionAlgorithm {
   LZ_STRING = "LZ_STRING",
-  ZLIB = "ZLIB"
+  ZLIB = "ZLIB",
+  ZIP = "ZIP"
 }
 
 export enum CompressionFormat {
-  UTF8 = "UTF8",
-  UTF16 = "UTF16",
+  BYTE_ARRAY = "BYTE_ARRAY",
   BASE64 = "BASE64"
 }
 
@@ -41,18 +42,12 @@ export interface CompressionResult {
   reductionSize: number;
 }
 
-const utf16Decoder = new TextDecoder("utf-16");
-const utf8Decoder = new TextDecoder("utf-8");
-const utf16Encoder = new TextEncoder();
-
 export function compressionFormatLabel(format: CompressionFormat): string {
   switch (format) {
     case CompressionFormat.BASE64:
       return "Base64";
-    case CompressionFormat.UTF16:
-      return "UTF-16";
-    case CompressionFormat.UTF8:
-      return "UTF-8";
+    case CompressionFormat.BYTE_ARRAY:
+      return "Byte array";
   }
 
   return "";
@@ -66,24 +61,26 @@ export function compressionAlgorithmLabel(
       return "LZ String";
     case CompressionAlgorithm.ZLIB:
       return "zlib";
+    case CompressionAlgorithm.ZIP:
+      return "zip";
   }
 
   return "";
 }
 
-export function runCompressionOperation(
+export async function runCompressionOperation(
   options: CompressionOptions
-): CompressionResult {
+): Promise<CompressionResult> {
   const { input, operation } = options;
   const start = getBenchmarkStartTime();
   let output: string = "";
 
   switch (operation) {
     case CompressorOperations.DECOMPRESS:
-      output = decompress(options);
+      output = await decompress(options);
       break;
     default:
-      output = compress(options);
+      output = await compress(options);
       break;
   }
 
@@ -103,71 +100,114 @@ export function runCompressionOperation(
   };
 }
 
-export function compress(options: CompressionOptions): string {
-  const {
-    input,
-    algorithm = CompressionAlgorithm.LZ_STRING,
-    format = CompressionFormat.BASE64
-  } = options;
-  if (algorithm === CompressionAlgorithm.LZ_STRING) {
-    if (format === CompressionFormat.BASE64) {
-      return lzString.compressToEncodedURIComponent(input);
-    }
-    if (format === CompressionFormat.UTF16) {
-      return lzString.compressToUTF16(input);
-    }
-    if (format === CompressionFormat.UTF8) {
-      return utf8Decoder.decode(lzString.compressToUint8Array(input));
-    }
-  }
+export async function compress(options: CompressionOptions): Promise<string> {
+  const { algorithm = CompressionAlgorithm.LZ_STRING } = options;
 
-  if (algorithm === CompressionAlgorithm.ZLIB) {
-    const compress = pako.deflate(input);
-    if (format === CompressionFormat.BASE64) {
-      return fromByteArray(compress);
-    }
-    if (format === CompressionFormat.UTF16) {
-      return utf16Decoder.decode(compress);
-    }
-    if (format === CompressionFormat.UTF8) {
-      return utf8Decoder.decode(lzString.compressToUint8Array(input));
-    }
+  switch (algorithm) {
+    case CompressionAlgorithm.LZ_STRING:
+      return compressLZString(options);
+    case CompressionAlgorithm.ZLIB:
+      return compressZlib(options);
+    case CompressionAlgorithm.ZIP:
+      return compressZip(options);
   }
-
-  return "";
 }
 
-export function decompress(options: CompressionOptions): string {
-  const {
-    input,
-    algorithm = CompressionAlgorithm.LZ_STRING,
-    format = CompressionFormat.BASE64
-  } = options;
-  if (algorithm === CompressionAlgorithm.LZ_STRING) {
-    if (format === CompressionFormat.BASE64) {
-      return lzString.decompressFromEncodedURIComponent(input) ?? "";
-    }
-    if (format === CompressionFormat.UTF16) {
-      return lzString.decompressFromUTF16(input) ?? "";
-    }
-    if (format === CompressionFormat.UTF8) {
-      return (
-        lzString.decompressFromUint8Array(utf16Encoder.encode(input)) ?? ""
+async function compressLZString(options: CompressionOptions): Promise<string> {
+  const { input, format } = options;
+  switch (format) {
+    case CompressionFormat.BASE64:
+      return lzString.compressToEncodedURIComponent(input);
+    case CompressionFormat.BYTE_ARRAY:
+      return await uInt8ArrayToString(lzString.compressToUint8Array(input));
+  }
+}
+
+async function compressZlib(options: CompressionOptions): Promise<string> {
+  const { input, format } = options;
+  const compress = pako.deflate(input);
+  switch (format) {
+    case CompressionFormat.BASE64:
+      return fromByteArray(compress);
+    case CompressionFormat.BYTE_ARRAY:
+      return await uInt8ArrayToString(compress);
+  }
+}
+
+async function compressZip(options: CompressionOptions): Promise<string> {
+  const { input, format } = options;
+  const zipFile = new JSZip();
+  zipFile.file("input.txt", input);
+  switch (format) {
+    case CompressionFormat.BASE64:
+      return await zipFile.generateAsync({ type: "base64" });
+    case CompressionFormat.BYTE_ARRAY:
+      return await uInt8ArrayToString(
+        await zipFile.generateAsync({ type: "uint8array" })
       );
-    }
   }
+}
 
-  if (algorithm === CompressionAlgorithm.ZLIB) {
-    if (format === CompressionFormat.BASE64) {
+export async function decompress(options: CompressionOptions): Promise<string> {
+  const { algorithm = CompressionAlgorithm.LZ_STRING } = options;
+  switch (algorithm) {
+    case CompressionAlgorithm.LZ_STRING:
+      return decompressLZString(options);
+    case CompressionAlgorithm.ZLIB:
+      return decompressZlib(options);
+    case CompressionAlgorithm.ZIP:
+      return decompressZip(options);
+  }
+}
+
+async function decompressLZString(
+  options: CompressionOptions
+): Promise<string> {
+  const { input, format } = options;
+  switch (format) {
+    case CompressionFormat.BASE64:
+      return lzString.decompressFromEncodedURIComponent(input) ?? "";
+    case CompressionFormat.BYTE_ARRAY:
+      return (
+        lzString.decompressFromUint8Array(await stringToUInt8Array(input)) ?? ""
+      );
+  }
+}
+
+async function decompressZlib(options: CompressionOptions): Promise<string> {
+  const { input, format } = options;
+  switch (format) {
+    case CompressionFormat.BASE64:
       return pako.inflate(toByteArray(input), { to: "string" });
-    }
-    if (
-      format === CompressionFormat.UTF16 ||
-      format === CompressionFormat.UTF8
-    ) {
-      return pako.inflate(utf16Encoder.encode(input), { to: "string" });
-    }
+    case CompressionFormat.BYTE_ARRAY:
+      return pako.inflate(await stringToUInt8Array(input), { to: "string" });
   }
+}
 
-  return "";
+async function decompressZip(options: CompressionOptions): Promise<string> {
+  const { input, format } = options;
+  const baseZipFile = new JSZip();
+
+  switch (format) {
+    case CompressionFormat.BASE64:
+      return (
+        (await (await baseZipFile.loadAsync(input, { base64: true }))
+          ?.file("input.txt")
+          ?.async("string")) ?? ""
+      );
+    case CompressionFormat.BYTE_ARRAY:
+      return (
+        (await (await baseZipFile.loadAsync(await stringToUInt8Array(input)))
+          ?.file("input.txt")
+          ?.async("string")) ?? ""
+      );
+  }
+}
+
+async function uInt8ArrayToString(uint8arr: Uint8Array): Promise<string> {
+  return uint8arr.toString();
+}
+
+async function stringToUInt8Array(value: string): Promise<Uint8Array> {
+  return Uint8Array.from(value.split(","), (i) => parseInt(i, 10));
 }

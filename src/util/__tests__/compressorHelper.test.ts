@@ -38,13 +38,6 @@ describe("compress()", () => {
     );
     expect(result).toEqual("C4CwlgzgBJUIZQsATmAdgcyA");
   });
-
-  it("compresses the string for UTF16", async () => {
-    const result = compress(
-      getCompressorTestOptions({ format: CompressionFormat.UTF16 })
-    );
-    expect(result).toEqual("נⱅ䆼i⡣ᑌ¼怽䄆† ");
-  });
 });
 
 describe("decompress()", () => {

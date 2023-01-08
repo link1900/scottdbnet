@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import {
   Button,
@@ -74,23 +75,54 @@ export default function Compressor() {
 
   const handleCompress = async () => {
     updateStore({ loading: true });
+    try {
+      const result = await runCompression({
+        input,
+        operation: CompressorOperations.COMPRESS,
+        format: compressorStore.compressFormat,
+        algorithm: compressorStore.compressAlgorithm
+      });
+      const compressResult = {
+        compressAlgorithm: compressorStore.compressAlgorithm,
+        compressFormat: compressorStore.compressFormat,
+        time: result.time,
+        originalSize: formatBytes(result.originalSize),
+        compressedSize: formatBytes(result.compressedSize),
+        reductionSize: formatBytes(result.reductionSize)
+      };
+      updateStore({ loading: false, compressResult });
+      setOutput(result.output);
+    } catch (e) {
+      console.error(e);
+      updateStore({ loading: false });
+      setInput("Failed to compress input.");
+    }
+  };
 
-    const result = await runCompression({
-      input,
-      operation: CompressorOperations.COMPRESS,
-      format: compressorStore.compressFormat,
-      algorithm: compressorStore.compressAlgorithm
-    });
-    const compressResult = {
-      compressAlgorithm: compressorStore.compressAlgorithm,
-      compressFormat: compressorStore.compressFormat,
-      time: result.time,
-      originalSize: formatBytes(result.originalSize),
-      compressedSize: formatBytes(result.compressedSize),
-      reductionSize: formatBytes(result.reductionSize)
-    };
-    updateStore({ loading: false, compressResult });
-    setOutput(result.output);
+  const handleDecompress = async () => {
+    updateStore({ loading: true });
+    try {
+      const result = await runCompression({
+        input: output,
+        operation: CompressorOperations.DECOMPRESS,
+        format: compressorStore.compressFormat,
+        algorithm: compressorStore.compressAlgorithm
+      });
+      const compressResult = {
+        compressAlgorithm: compressorStore.compressAlgorithm,
+        compressFormat: compressorStore.compressFormat,
+        time: result.time,
+        originalSize: formatBytes(result.originalSize),
+        compressedSize: formatBytes(result.compressedSize),
+        reductionSize: formatBytes(result.reductionSize)
+      };
+      updateStore({ loading: false, compressResult });
+      setInput(result.output);
+    } catch (e) {
+      console.error(e);
+      updateStore({ loading: false });
+      setInput("Failed to decompress output.");
+    }
   };
 
   const handleFormatChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -128,6 +160,7 @@ export default function Compressor() {
                 value={input}
                 onChange={setInput}
                 placeholder={"Enter or paste text here"}
+                showSample
               />
             </Grid>
           </Grid>
@@ -163,6 +196,9 @@ export default function Compressor() {
                     <MenuItem value={CompressionAlgorithm.ZLIB}>
                       {compressionAlgorithmLabel(CompressionAlgorithm.ZLIB)}
                     </MenuItem>
+                    <MenuItem value={CompressionAlgorithm.ZIP}>
+                      {compressionAlgorithmLabel(CompressionAlgorithm.ZIP)}
+                    </MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -181,11 +217,8 @@ export default function Compressor() {
                     <MenuItem value={CompressionFormat.BASE64}>
                       {compressionFormatLabel(CompressionFormat.BASE64)}
                     </MenuItem>
-                    <MenuItem value={CompressionFormat.UTF16}>
-                      {compressionFormatLabel(CompressionFormat.UTF16)}
-                    </MenuItem>
-                    <MenuItem value={CompressionFormat.UTF8}>
-                      {compressionFormatLabel(CompressionFormat.UTF8)}
+                    <MenuItem value={CompressionFormat.BYTE_ARRAY}>
+                      {compressionFormatLabel(CompressionFormat.BYTE_ARRAY)}
                     </MenuItem>
                   </Select>
                 </FormControl>
@@ -213,6 +246,16 @@ export default function Compressor() {
                     onClick={() => handleCompress()}
                   >
                     Compress
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<ArrowUpwardIcon />}
+                    onClick={() => handleDecompress()}
+                  >
+                    Decompress
                   </Button>
                 </Grid>
               </Grid>

@@ -1,19 +1,23 @@
 import { useCallback, useEffect, useRef } from "react";
+import { uuid } from "../../util/stringHelper";
 import { WorkerFactory } from "./WorkerFactory";
+import { WorkRequest } from "./WorkRequest";
+import { WorkResponse } from "./WorkResponse";
+import { WorkResponseStatus } from "./WorkResponseStatus";
 
 type UseWorkerOptions = {
   workerFactory: WorkerFactory;
   name?: string;
 };
 
-type UseWorkerReturn<I, O> = {
-  runWorker: (input: I) => Promise<O>;
+type UseWorkerReturn<InputType, OutputType> = {
+  runWorker: (input: InputType) => Promise<OutputType>;
   worker: Worker | undefined;
 };
 
-export function useWorker<InputType, ReturnType>(
+export function useWorker<InputType, OutputType>(
   options: UseWorkerOptions
-): UseWorkerReturn<InputType, ReturnType> {
+): UseWorkerReturn<InputType, OutputType> {
   const { workerFactory, name } = options;
   const worker = useRef<Worker>();
 
@@ -25,21 +29,48 @@ export function useWorker<InputType, ReturnType>(
   }, [workerFactory, name, worker]);
 
   const runWorker = useCallback(
-    (input: InputType): Promise<ReturnType> => {
-      return new Promise<ReturnType>((resolve, reject) => {
+    (input: InputType): Promise<OutputType> => {
+      return new Promise<OutputType>((resolve, reject) => {
         if (!worker.current) {
           return reject(new Error(`worker ${name} has not been started`));
         }
 
-        worker.current.onmessage = (event: MessageEvent<ReturnType>) => {
-          resolve(event.data);
+        const requestId = uuid();
+
+        worker.current.onmessage = (
+          event: MessageEvent<WorkResponse<OutputType>>
+        ) => {
+          if (event.data.id === requestId) {
+            if (event.data.status === WorkResponseStatus.ERROR) {
+              reject(event.data.error);
+            } else {
+              if (!event.data.output) {
+                reject(
+                  new Error(
+                    "worker did not return output for successful response"
+                  )
+                );
+              } else {
+                resolve(event.data.output);
+              }
+            }
+          }
         };
 
         worker.current.onerror = (errorEvent) => {
           reject(errorEvent.error);
         };
 
-        worker.current.postMessage(input);
+        worker.current.onmessageerror = () => {
+          reject(new Error("provided message was invalid"));
+        };
+
+        const workRequest: WorkRequest<InputType> = {
+          id: requestId,
+          input
+        };
+
+        worker.current.postMessage(workRequest);
       });
     },
     [name, worker]
