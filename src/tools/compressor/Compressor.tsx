@@ -262,7 +262,7 @@ export default function Compressor() {
             </Grid>
             <Grid item>
               <LargeTextArea
-                id="compressed-input"
+                id="compressed-output"
                 value={output}
                 onChange={setOutput}
                 placeholder={"Output results"}
