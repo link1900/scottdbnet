@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import HighchartsReact from "highcharts-react-official";
-import Highcharts from "highcharts";
 import {
   Button,
   FormControl,
@@ -16,13 +13,16 @@ import {
   TextField,
   Typography
 } from "@material-ui/core";
-import ShuffleIcon from "@material-ui/icons/Shuffle";
-import SortIcon from "@material-ui/icons/Sort";
-import ShareIcon from "@material-ui/icons/Share";
+import ClearIcon from "@material-ui/icons/Clear";
 import CloseIcon from "@material-ui/icons/Close";
 import MoodIcon from "@material-ui/icons/Mood";
-import ClearIcon from "@material-ui/icons/Clear";
+import ShareIcon from "@material-ui/icons/Share";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
+import ShuffleIcon from "@material-ui/icons/Shuffle";
+import SortIcon from "@material-ui/icons/Sort";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import { copyArray, shuffle } from "../../util/arrayHelper";
@@ -58,7 +58,13 @@ const defaultListItems = [
   { value: "Item1", bias: 0, amount: 0 },
   { value: "Item2", bias: 0, amount: 0 },
   { value: "Item3", bias: 0, amount: 0 },
-  { value: "Item4", bias: 0, amount: 0 }
+  { value: "Item4", bias: 0, amount: 0 },
+  { value: "Item5", bias: 0, amount: 0 },
+  { value: "Item6", bias: 0, amount: 0 },
+  { value: "Item7", bias: 0, amount: 0 },
+  { value: "Item8", bias: 0, amount: 0 },
+  { value: "Item9", bias: 0, amount: 0 },
+  { value: "Item10", bias: 0, amount: 0 }
 ];
 const defaultStore: ListRandomizerStore = {
   mode: "text",
@@ -202,19 +208,14 @@ function listItemSort(a: ListItem, b: ListItem): number {
   return a.value.localeCompare(b.value);
 }
 
+function biasSort(a: ListItem, b: ListItem) {
+  const aBias = randomBoolean({ likelihood: Math.abs(a.bias) }) ? a.bias : 0;
+  const bBias = randomBoolean({ likelihood: Math.abs(b.bias) }) ? b.bias : 0;
+  return bBias - aBias;
+}
+
 function shuffleWithBias(list: ListItem[]) {
-  const shuffledItems = shuffle(list);
-  for (let i = 0; i < shuffledItems.length; i++) {
-    const checkItem = shuffledItems[i];
-    if (checkItem.bias > 0) {
-      if (randomBoolean({ likelihood: checkItem.bias })) {
-        const moved = shuffledItems[0];
-        shuffledItems[0] = checkItem;
-        shuffledItems[i] = moved;
-      }
-    }
-  }
-  return shuffledItems;
+  return shuffle(list).sort(biasSort);
 }
 
 function valueLabelFormat(value: number): string {
@@ -580,9 +581,9 @@ export default function ListRandomizer() {
                       onChange={(event: any, newValue: number | number[]) =>
                         handleBiasChange(item.value, newValue as number)
                       }
-                      step={10}
+                      step={20}
                       marks
-                      min={0}
+                      min={-100}
                       max={100}
                     />
                   </Grid>
