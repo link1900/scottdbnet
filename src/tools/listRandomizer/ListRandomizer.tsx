@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   FormControl,
   FormControlLabel,
@@ -22,7 +23,7 @@ import ShuffleIcon from "@material-ui/icons/Shuffle";
 import SortIcon from "@material-ui/icons/Sort";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import { copyArray, shuffle } from "../../util/arrayHelper";
@@ -31,6 +32,7 @@ import {
   base64DecodeString,
   base64EncodeString
 } from "../../util/stringHelper";
+import { ProgressWithLabel } from "../components/ProgressWithLabel";
 
 export interface ListItem {
   value: string;
@@ -45,6 +47,7 @@ export interface ListRandomizerStore {
   showSimulator: boolean;
   showBias: boolean;
   simulationAmount: number;
+  countdownEnabled: boolean;
 }
 
 export interface SimulationResult {
@@ -72,7 +75,8 @@ const defaultStore: ListRandomizerStore = {
   textValue: listItemsToString(defaultListItems),
   showSimulator: false,
   showBias: false,
-  simulationAmount: 10000
+  simulationAmount: 10000,
+  countdownEnabled: false
 };
 
 function listItemsToString(listItems: ListItem[]): string {
@@ -233,14 +237,56 @@ export default function ListRandomizer() {
   const [localStore, setLocalStore, removeLocalStore] = useLocalStorage<
     Partial<ListRandomizerStore>
   >("listRandomizer.store");
-  const [store, setStore] = React.useState<ListRandomizerStore>(
+  const [store, setStore] = useState<ListRandomizerStore>(
     flattenStores([urlStore, localStore])
   );
-  const [toastOpen, setToastOpen] = React.useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
   const [chartOptions, setChartOptions] = useState(undefined);
   const [chartDiffOptions, setChartDiffOptions] = useState(undefined);
   const [chartAverage, setChartAverage] = useState<number | undefined>(
     undefined
+  );
+
+  const [shuffleRunning, setShuffleRunning] = useState<boolean>(false);
+  const [autoCountdown, setAutoCountdown] = useState<number>(0);
+  const [autoProgress, setAutoProgress] = useState<number>(0);
+
+  useEffect(
+    () => {
+      const totalAutoMilliseconds = 3000;
+      const autoShuffleAmount = 10;
+      const step = Math.max(
+        Math.floor(totalAutoMilliseconds / autoShuffleAmount),
+        30
+      );
+      let interval: number | undefined;
+      let progress: number = 0;
+      if (store.countdownEnabled && shuffleRunning) {
+        clearInterval(interval);
+        progress = 0;
+        setAutoCountdown(Math.ceil((totalAutoMilliseconds - progress) / 1000));
+        setAutoProgress(0);
+        interval = window.setInterval(() => {
+          if (progress >= totalAutoMilliseconds) {
+            setShuffleRunning(false);
+            clearInterval(interval);
+          } else {
+            progress += step;
+            setAutoProgress(
+              Math.floor((progress / totalAutoMilliseconds) * 100)
+            );
+            setAutoCountdown(
+              Math.ceil((totalAutoMilliseconds - progress) / 1000)
+            );
+            updateList(shuffleWithBias(store.list));
+          }
+        }, step);
+      }
+
+      return () => clearInterval(interval);
+    },
+    // eslint-disable-next-line
+    [shuffleRunning]
   );
 
   const updateStore = (updatedStore: Partial<ListRandomizerStore>) => {
@@ -273,7 +319,11 @@ export default function ListRandomizer() {
   };
 
   const handleShuffle = () => {
-    updateList(shuffleWithBias(store.list));
+    if (store.countdownEnabled) {
+      setShuffleRunning(true);
+    } else {
+      updateList(shuffleWithBias(store.list));
+    }
   };
 
   const handleSort = () => {
@@ -403,6 +453,7 @@ export default function ListRandomizer() {
                     variant="contained"
                     size="small"
                     color="primary"
+                    disabled={shuffleRunning}
                     startIcon={<ShuffleIcon />}
                     onClick={() => handleShuffle()}
                   >
@@ -414,6 +465,7 @@ export default function ListRandomizer() {
                     variant="outlined"
                     size="small"
                     color="primary"
+                    disabled={shuffleRunning}
                     startIcon={<SortIcon />}
                     onClick={() => handleSort()}
                   >
@@ -425,6 +477,7 @@ export default function ListRandomizer() {
                     variant="outlined"
                     size="small"
                     color="primary"
+                    disabled={shuffleRunning}
                     startIcon={<ShareIcon />}
                     onClick={() => handleShare()}
                   >
@@ -436,6 +489,7 @@ export default function ListRandomizer() {
                     variant="outlined"
                     size="small"
                     color="primary"
+                    disabled={shuffleRunning}
                     startIcon={<MoodIcon />}
                     onClick={() => generateJoke()}
                   >
@@ -447,6 +501,7 @@ export default function ListRandomizer() {
                     variant="outlined"
                     size="small"
                     color="primary"
+                    disabled={shuffleRunning}
                     startIcon={<ClearIcon />}
                     onClick={() => handleReset()}
                   >
@@ -459,6 +514,7 @@ export default function ListRandomizer() {
                       <Switch
                         checked={store.showSimulator}
                         onChange={handleShowSimulatorChange}
+                        disabled={shuffleRunning}
                         name="showSimulatorSwitch"
                         color="primary"
                       />
@@ -472,6 +528,7 @@ export default function ListRandomizer() {
                       <Switch
                         checked={store.showBias}
                         onChange={handleShowBiasChange}
+                        disabled={shuffleRunning}
                         name="showBiasSwitch"
                         color="primary"
                       />
@@ -479,19 +536,55 @@ export default function ListRandomizer() {
                     label="Bias"
                   />
                 </Grid>
+                <Grid item>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={store.countdownEnabled}
+                        onChange={(e) =>
+                          updateStore({ countdownEnabled: e.target.checked })
+                        }
+                        disabled={shuffleRunning}
+                        name="countdownSwitch"
+                        color="primary"
+                      />
+                    }
+                    label="Auto"
+                  />
+                </Grid>
               </Grid>
             </Grid>
             <Grid item>
-              <TextField
-                id="simple-item-input"
-                label="Items"
-                multiline
-                fullWidth
-                minRows={20}
-                value={store.textValue}
-                onChange={handleTextChange}
-                variant="outlined"
-              />
+              <Box position="relative">
+                <TextField
+                  id="simple-item-input"
+                  label="Items"
+                  multiline
+                  fullWidth
+                  minRows={20}
+                  disabled={shuffleRunning}
+                  value={store.textValue}
+                  onChange={handleTextChange}
+                  variant="outlined"
+                />
+                {shuffleRunning ? (
+                  <Box
+                    top={0}
+                    left={0}
+                    bottom={0}
+                    right={0}
+                    position="absolute"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <ProgressWithLabel
+                      value={autoProgress}
+                      label={`${autoCountdown}`}
+                    />
+                  </Box>
+                ) : null}
+              </Box>
             </Grid>
           </Grid>
         </Grid>
@@ -510,6 +603,7 @@ export default function ListRandomizer() {
                       variant="contained"
                       size="small"
                       color="primary"
+                      disabled={shuffleRunning}
                       startIcon={<ShowChartIcon />}
                       onClick={() => runSimulation()}
                     >
@@ -526,6 +620,7 @@ export default function ListRandomizer() {
                   <Select
                     labelId="sim-amount-select-outlined-label"
                     id="sim-amount-select-outlined"
+                    disabled={shuffleRunning}
                     value={store.simulationAmount}
                     onChange={handleSimulationAmountChange}
                     label="Amount"
@@ -581,6 +676,7 @@ export default function ListRandomizer() {
                       onChange={(event: any, newValue: number | number[]) =>
                         handleBiasChange(item.value, newValue as number)
                       }
+                      disabled={shuffleRunning}
                       step={20}
                       marks
                       min={-100}
