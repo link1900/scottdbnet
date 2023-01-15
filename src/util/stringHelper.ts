@@ -1,5 +1,6 @@
 import prettyBytes from "pretty-bytes";
 import { v4 } from "uuid";
+import { isPresent } from "./arrayHelper";
 
 export function base64EncodeString(value: string | null | undefined): string {
   if (!value) {
@@ -27,4 +28,8 @@ export function getStringSizeInBytes(value: string): number {
 
 export function uuid(): string {
   return v4();
+}
+
+export function splitLines(input: string): string[] {
+  return input.split(/\r?\n/).filter(isPresent);
 }

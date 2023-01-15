@@ -248,13 +248,14 @@ export default function ListRandomizer() {
   );
 
   const [shuffleRunning, setShuffleRunning] = useState<boolean>(false);
+  const [showCounter, setShowCounter] = useState<boolean>(false);
   const [autoCountdown, setAutoCountdown] = useState<number>(0);
   const [autoProgress, setAutoProgress] = useState<number>(0);
 
   useEffect(
     () => {
       const totalAutoMilliseconds = 3000;
-      const autoShuffleAmount = 10;
+      const autoShuffleAmount = 30;
       const step = Math.max(
         Math.floor(totalAutoMilliseconds / autoShuffleAmount),
         30
@@ -266,9 +267,11 @@ export default function ListRandomizer() {
         progress = 0;
         setAutoCountdown(Math.ceil((totalAutoMilliseconds - progress) / 1000));
         setAutoProgress(0);
+        setShowCounter(true);
         interval = window.setInterval(() => {
           if (progress >= totalAutoMilliseconds) {
             setShuffleRunning(false);
+            setShowCounter(false);
             clearInterval(interval);
           } else {
             progress += step;
@@ -567,7 +570,7 @@ export default function ListRandomizer() {
                   onChange={handleTextChange}
                   variant="outlined"
                 />
-                {shuffleRunning ? (
+                {showCounter ? (
                   <Box
                     top={0}
                     left={0}

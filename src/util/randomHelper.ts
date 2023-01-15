@@ -59,3 +59,7 @@ export function randomDate(options: RandomDateOptions = {}): Date {
       daysFuture * randomInteger(0, 86400000)
   );
 }
+
+export function randomElement<T>(items: T[]): T {
+  return items[randomInteger(0, items.length - 1)];
+}
