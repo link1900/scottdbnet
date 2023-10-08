@@ -16,8 +16,8 @@
     "validate": "yarn test:format && yarn test:types && yarn test:coverage",
     "build": "tsc -p tsconfig.build.json",
     "format": "prettier -w .",
-    "config:upload": "aws s3 cp ./src/config/secret.json s3://scottdb-config/scottdbnet/secret.json",
-    "config:download": "aws s3 cp s3://scottdb-config/scottdbnet/secret.json ./src/config/secret.json"
+    "config:upload": "aws s3 sync ./src/config s3://scottdb-config/scottdbnet",
+    "config:download": "aws s3 sync s3://scottdb-config/scottdbnet ./src/config"
   },
   "devDependencies": {
     "@link1900/node-test-util": "0.2.1",
