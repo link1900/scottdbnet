@@ -57,12 +57,6 @@ commands:
       - client_install_cmd
       - save_cache_cmd
 
-  test_client:
-    steps:
-      - run:
-          command: yarn test
-          working_directory: ~/project/client
-
   test_server:
     steps:
       - run:
