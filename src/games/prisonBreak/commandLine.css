@@ -56,7 +56,9 @@
 
   background: #000000;
   color: rgb(199, 197, 189);
-  font: 14px "Roboto Mono", monospace;
+  font:
+    14px "Roboto Mono",
+    monospace;
 
   -webkit-border-bottom-right-radius: 3px;
   -webkit-border-bottom-left-radius: 3px;
@@ -69,7 +71,10 @@
 .green-text {
   background: #141414;
   color: #45d40c;
-  font: 0.8em "Andale Mono", Consolas, "Courier New";
+  font:
+    0.8em "Andale Mono",
+    Consolas,
+    "Courier New";
 }
 
 .vt-text {
@@ -85,9 +90,12 @@
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   border-left: 0.5em solid;
-  -webkit-animation: typing 12s steps(13, end) infinite,
+  -webkit-animation:
+    typing 12s steps(13, end) infinite,
     blinking 1s step-end infinite;
-  animation: typing 12s steps(13, end) infinite, blinking 1s step-end infinite;
+  animation:
+    typing 12s steps(13, end) infinite,
+    blinking 1s step-end infinite;
 }
 
 .commandRef {
