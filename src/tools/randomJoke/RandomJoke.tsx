@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Typography
-} from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
+import SettingIcon from "@material-ui/icons/Settings";
 import { DataZone } from "../../components/DataZone";
 import { makeValidJsonRequest } from "../../util/apiHelper";
 import { splitLines } from "../../util/stringHelper";
@@ -12,71 +8,62 @@ import { PageLayout } from "../components/PageLayout";
 import { Section } from "../components/Section";
 import { Stack } from "../components/Stack";
 import { useStore } from "../components/useStore";
+import RandomJokeOptions from "./RandomJokeOptions";
 
-export type JokeFlag = {
+export type JokeOption = {
   name: string;
+  label: string;
   enabled: boolean;
 };
 
 export type RandomJokeStore = {
-  flags: JokeFlag[];
+  options: JokeOption[];
 };
 
-const jokeFlags = [
+const jokeOptions = [
   {
     name: "nsfw",
+    label: "NSFW",
     enabled: false
   },
   {
-    name: "religious",
+    name: "dad",
+    label: "Dad",
     enabled: false
   },
   {
-    name: "political",
-    enabled: false
-  },
-  {
-    name: "racist",
-    enabled: false
-  },
-  {
-    name: "sexist",
-    enabled: false
-  },
-  {
-    name: "explicit",
+    name: "chuck",
+    label: "Chuck Norris",
     enabled: false
   }
 ];
 
 const defaultRandomJokeStore: RandomJokeStore = {
-  flags: jokeFlags
+  options: jokeOptions
+};
+
+const isOptionEnabled = (store: RandomJokeStore, name: string): boolean => {
+  const found = store.options.find((o) => o.name === name);
+  return found?.enabled ?? false;
 };
 
 export default function RandomJoke() {
   const [loading, setLoading] = useState<boolean>(false);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
   const [error, setError] = useState<Error | unknown>();
   const [joke, setJoke] = useState<string>("");
   const [store, setStore] = useStore<RandomJokeStore>({
     localStoreKey: "randomJoke.store",
     defaultStore: defaultRandomJokeStore
   });
-  const [categoryPos, setCategoryPos] = useState<number>(0);
 
-  const generateHazDadJoke = async () => {
-    try {
-      setError(undefined);
-      setJoke("");
-      setLoading(true);
-      const data = await makeValidJsonRequest<{ joke: string }>({
-        url: "https://icanhazdadjoke.com/"
-      });
-      setJoke(data.joke);
-    } catch (error) {
-      console.error(error);
-      setError(error);
-    } finally {
-      setLoading(false);
+  const generateJoke = async () => {
+    if (isOptionEnabled(store, "dad")) {
+      await generateHazDadJoke();
+    } else if (isOptionEnabled(store, "chuck")) {
+      await generateJokeChuck();
+    } else {
+      await generateJokeDev();
     }
   };
 
@@ -85,10 +72,16 @@ export default function RandomJoke() {
       setError(undefined);
       setJoke("");
       setLoading(true);
-      const blacklistFlags = store.flags
-        .filter(({ enabled }) => !enabled)
-        .map(({ name }) => name)
-        .join(",");
+      const blacklistFlags = isOptionEnabled(store, "nsfw")
+        ? ""
+        : [
+            "nsfw",
+            "religious",
+            "political",
+            "racist",
+            "sexist",
+            "explicit"
+          ].join(",");
       const params = new URLSearchParams({ format: "json", blacklistFlags });
       const url = `https://v2.jokeapi.dev/joke/Any?${params.toString()}`;
       const { type, setup, delivery, joke } = await makeValidJsonRequest<{
@@ -108,27 +101,29 @@ export default function RandomJoke() {
     }
   };
 
-  const generateJokeOne = async () => {
+  const generateHazDadJoke = async () => {
     try {
       setError(undefined);
       setJoke("");
       setLoading(true);
-      const category = ["jod", "animal", "blonde", "knock-knock"];
-      const params = new URLSearchParams({ category: category[categoryPos] });
-      const url = `https://api.jokes.one/jod?${params.toString()}`;
-      const data = await makeValidJsonRequest<{
-        contents: { jokes: { joke: { text: string } }[] };
-      }>({
-        url
+      const data = await makeValidJsonRequest<{ joke: string }>({
+        url: "https://icanhazdadjoke.com/"
       });
-      setJoke(data.contents.jokes[0].joke.text ?? "");
-      setCategoryPos(categoryPos >= category.length - 1 ? 0 : categoryPos + 1);
+      setJoke(data.joke);
     } catch (error) {
       console.error(error);
       setError(error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const openOptions = async () => {
+    setShowOptions(true);
+  };
+
+  const closeOptions = async () => {
+    setShowOptions(false);
   };
 
   const generateJokeChuck = async () => {
@@ -150,79 +145,35 @@ export default function RandomJoke() {
     }
   };
 
-  const updateFlag = (name: string, enabled: boolean) => {
-    const updateFlags = store.flags.map((flag) => {
-      if (flag.name === name) {
-        flag.enabled = enabled;
-        return flag;
-      } else {
-        return flag;
-      }
-    });
-    setStore({ flags: updateFlags });
-  };
-
   return (
     <PageLayout title="Random Joke Generator" md={10} lg={6}>
+      <RandomJokeOptions
+        open={showOptions}
+        onClose={closeOptions}
+        store={store}
+        setStore={setStore}
+      />
       <Stack spacing={4}>
-        <Section title="Included types">
-          <Stack direction="row">
-            {store.flags.map((flag) => {
-              return (
-                <FormControlLabel
-                  key={flag.name}
-                  control={
-                    <Checkbox
-                      checked={flag.enabled}
-                      onChange={(e) => updateFlag(flag.name, e.target.checked)}
-                      name={flag.name}
-                      color="primary"
-                    />
-                  }
-                  label={flag.name}
-                />
-              );
-            })}
-          </Stack>
-        </Section>
-        <Section title="Joke Generators">
-          <Stack direction="row">
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={loading}
-              onClick={() => generateHazDadJoke()}
-            >
-              icanhazdadjoke
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={loading}
-              onClick={() => generateJokeDev()}
-            >
-              jokeapi.dev
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={loading}
-              onClick={() => generateJokeOne()}
-            >
-              joke.one
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={loading}
-              onClick={() => generateJokeChuck()}
-            >
-              chucknorris.io
-            </Button>
-          </Stack>
-        </Section>
+        <Stack direction="row">
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={loading}
+            onClick={() => generateJoke()}
+          >
+            Generate Joke
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<SettingIcon />}
+            onClick={() => openOptions()}
+          >
+            Options
+          </Button>
+        </Stack>
         {joke.length > 0 || loading || error ? (
-          <Section title="Result">
+          <Section title="Joke">
             <DataZone loading={loading} error={error} minHeight={50}>
               <Stack>
                 {splitLines(joke)
