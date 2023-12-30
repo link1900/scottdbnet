@@ -3970,6 +3970,11 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
+bitecs@0.3.40:
+  version "0.3.40"
+  resolved "https://registry.yarnpkg.com/bitecs/-/bitecs-0.3.40.tgz#c7d9aedb844ee98e455b6db9ae804da7e8fb6805"
+  integrity sha512-wAylY4pNfX8IeIH5phtwt1lUNtHKrkoSNrArI7Ris2Y4nEQWFIVvXdgAuqprEg9bq8Wolmlj0gVfeG6MFmtI2Q==
+
 bluebird@^3.5.5:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
@@ -5598,6 +5603,11 @@ eventemitter3@^4.0.0:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
+eventemitter3@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.1.tgz#53f5ffd0a492ac800721bb42c66b841de96423c4"
+  integrity sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==
 
 events@^3.2.0:
   version "3.3.0"
@@ -8388,6 +8398,13 @@ performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
+
+phaser@3.70.0:
+  version "3.70.0"
+  resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.70.0.tgz#8d187308375171d268d5c509ecdd796aac164ab9"
+  integrity sha512-2g+gh+Jp9f/Ho9FOXOYbIJMGf3UZXyMbW2iLScFaLQw11e/LqVyxj/YmaBauWbHabeTnZjiWkPklDnxhesMH0g==
+  dependencies:
+    eventemitter3 "^5.0.1"
 
 picocolors@^0.2.1:
   version "0.2.1"

@@ -88,5 +88,15 @@ export const gameDefinitions: GameDefinition[] = [
     component: lazy(() => import("./gameOfLife/GameOfLife")),
     image: gameOfLifePreview,
     author: "Scott Brown"
+  },
+  {
+    name: "tanks",
+    title: "Tanks",
+    originalFramework: "Phaser + bitECS",
+    originalLanguage: "Typescript",
+    year: "2023",
+    component: lazy(() => import("./tanks/Tanks")),
+    image: gameOfLifePreview,
+    author: "Scott Brown"
   }
 ];
