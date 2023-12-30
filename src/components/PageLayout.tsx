@@ -1,6 +1,7 @@
 import React from "react";
-import { Grid, GridSize, Typography } from "@material-ui/core";
-import { ReactChild } from "./ReactChild";
+import { Grid, GridSize } from "@material-ui/core";
+import { ReactChild } from "../tools/components/ReactChild";
+import { PageTitle } from "./PageTitle";
 
 export type PageLayoutProps = {
   title: string;
@@ -19,9 +20,7 @@ export function PageLayout(props: PageLayoutProps) {
       <Grid item xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
         <Grid container direction={"column"} spacing={2}>
           <Grid item>
-            <Typography variant="h4" component="h1">
-              {title}
-            </Typography>
+            <PageTitle title={title} />
           </Grid>
           <Grid item>{children}</Grid>
         </Grid>

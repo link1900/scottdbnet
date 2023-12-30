@@ -1,4 +1,4 @@
-import { GridCell, GridCellProps } from "../gameEngine";
+import { GridCell, GridCellProps } from "../gameEngines/sdbCanvas2";
 
 export interface ConwayCellProps extends GridCellProps {
   living: boolean;

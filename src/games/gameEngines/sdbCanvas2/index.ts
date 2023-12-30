@@ -1,8 +1,8 @@
 export * from "./base/Entity";
 export * from "./base/World";
 
-export * from "../../util/arrayHelper";
-export * from "../../util/randomHelper";
+export * from "../../../util/arrayHelper";
+export * from "../../../util/randomHelper";
 
 export * from "./2d/GridCell";
 export * from "./2d/Rect";

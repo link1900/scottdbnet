@@ -1,4 +1,4 @@
-import Rect from "../sdbCanvas/Rect";
+import Rect from "../gameEngines/sdbCanvas/Rect";
 
 export default class Paddle extends Rect {
   simulate() {

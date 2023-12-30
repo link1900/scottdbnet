@@ -1,6 +1,7 @@
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
-import { ReactChild } from "./ReactChild";
+import { Grid } from "@material-ui/core";
+import { ReactChild } from "../tools/components/ReactChild";
+import { SectionTitle } from "./SectionTitle";
 
 export type SectionProps = {
   title: string;
@@ -12,9 +13,7 @@ export function Section(props: SectionProps) {
   return (
     <Grid container direction="column" spacing={2}>
       <Grid item>
-        <Typography variant="h6" component="h2">
-          {title}
-        </Typography>
+        <SectionTitle title={title} />
       </Grid>
       <Grid item>{children}</Grid>
     </Grid>

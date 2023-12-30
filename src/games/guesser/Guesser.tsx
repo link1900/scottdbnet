@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
 import thinkingImage from "./thinking.jpg";
-import { randomInteger } from "../gameEngine";
+import { randomInteger } from "../gameEngines/sdbCanvas2";
 
 interface State {
   guessCount: number;

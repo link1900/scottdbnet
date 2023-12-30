@@ -2,7 +2,7 @@ import { Grid } from "@material-ui/core";
 import { GridItemsAlignment, GridSpacing } from "@material-ui/core/Grid/Grid";
 import { isArray } from "lodash";
 import React from "react";
-import { ReactChild } from "./ReactChild";
+import { ReactChild } from "../tools/components/ReactChild";
 
 export type AlignType = "left" | "center" | "right";
 

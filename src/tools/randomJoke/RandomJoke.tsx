@@ -4,9 +4,9 @@ import SettingIcon from "@material-ui/icons/Settings";
 import { DataZone } from "../../components/DataZone";
 import { makeValidJsonRequest } from "../../util/apiHelper";
 import { splitLines } from "../../util/stringHelper";
-import { PageLayout } from "../components/PageLayout";
-import { Section } from "../components/Section";
-import { Stack } from "../components/Stack";
+import { PageLayout } from "../../components/PageLayout";
+import { Section } from "../../components/Section";
+import { Stack } from "../../components/Stack";
 import { useStore } from "../components/useStore";
 import RandomJokeOptions from "./RandomJokeOptions";
 

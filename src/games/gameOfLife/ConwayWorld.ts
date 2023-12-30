@@ -1,5 +1,5 @@
-import { GridCellProps, randomInteger } from "../gameEngine";
-import { WorldGrid, WorldGridProps } from "../gameEngine";
+import { GridCellProps, randomInteger } from "../gameEngines/sdbCanvas2";
+import { WorldGrid, WorldGridProps } from "../gameEngines/sdbCanvas2";
 import { ConwayCell } from "./ConwayCell";
 
 export interface ConwayWorldProps extends WorldGridProps {}

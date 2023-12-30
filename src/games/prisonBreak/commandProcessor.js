@@ -13,7 +13,7 @@ import { convertToDirection, flipDirection } from "./Location";
 import { createWorld, itemsAtLocation, monstersAtLocation } from "./World";
 import { equipmentTypes } from "./Item";
 import { getPlayerLocation, getPlayer, getPlayerScore } from "./Player";
-import { randomInteger } from "../gameEngine";
+import { randomInteger } from "../gameEngines/sdbCanvas2";
 
 const commandList = [
   { keys: ["look", "l", "where", "ls"], action: look },

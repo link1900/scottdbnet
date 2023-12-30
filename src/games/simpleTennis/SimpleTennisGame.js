@@ -1,8 +1,8 @@
-import Rect from "../sdbCanvas/Rect";
+import Rect from "../gameEngines/sdbCanvas/Rect";
 import Ball from "./Ball";
 import PlayerPaddle from "./PlayerPaddle";
 import Paddle from "./Paddle";
-import Text from "../sdbCanvas/Text";
+import Text from "../gameEngines/sdbCanvas/Text";
 
 export default class SimpleTennisGame {
   constructor(canvas) {
