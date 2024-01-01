@@ -16,10 +16,10 @@ export type PageLayoutProps = {
 export function PageLayout(props: PageLayoutProps) {
   const { title, children, xs, sm, md, lg, xl } = props;
   return (
-    <Grid container justifyContent="center" spacing={6}>
+    <Grid container justifyContent="center">
       <Grid item xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
-        <Grid container direction={"column"} spacing={2}>
-          <Grid item>
+        <Grid container direction={"column"} spacing={4}>
+          <Grid item style={{ alignSelf: "center" }}>
             <PageTitle title={title} />
           </Grid>
           <Grid item>{children}</Grid>

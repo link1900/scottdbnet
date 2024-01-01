@@ -26,6 +26,9 @@ import HighchartsReact from "highcharts-react-official";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
+import { Row } from "../../components/Row";
+import { PageLayout } from "../../components/PageLayout";
+import { Stack } from "../../components/Stack";
 import { copyArray, shuffle } from "../../util/arrayHelper";
 import { randomBoolean } from "../../util/randomHelper";
 import {
@@ -441,14 +444,9 @@ export default function ListRandomizer() {
           </IconButton>
         }
       />
-      <Grid container justifyContent="center" spacing={6}>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
+      <PageLayout title="List Randomizer" xs={12}>
+        <Row align={"center"} spacing={6} xs={12} sm={6} md={4} lg={3}>
           <Grid container direction={"column"} spacing={2}>
-            <Grid item>
-              <Typography variant="h5" component="h2">
-                List Randomizer
-              </Typography>
-            </Grid>
             <Grid item>
               <Grid container direction="row" spacing={1}>
                 <Grid item>
@@ -590,9 +588,7 @@ export default function ListRandomizer() {
               </Box>
             </Grid>
           </Grid>
-        </Grid>
-        {store.showSimulator ? (
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          {store.showSimulator ? (
             <Grid container direction={"column"} spacing={2}>
               <Grid item>
                 <Typography variant="h5" component="h2">
@@ -658,10 +654,8 @@ export default function ListRandomizer() {
                 </Grid>
               ) : null}
             </Grid>
-          </Grid>
-        ) : null}
-        {store.showBias ? (
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          ) : null}
+          {store.showBias ? (
             <Grid container direction={"column"} spacing={2}>
               <Grid item>
                 <Typography variant="h5" component="h2">
@@ -689,9 +683,9 @@ export default function ListRandomizer() {
                 );
               })}
             </Grid>
-          </Grid>
-        ) : null}
-      </Grid>
+          ) : null}
+        </Row>
+      </PageLayout>
     </React.Fragment>
   );
 }

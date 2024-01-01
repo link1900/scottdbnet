@@ -1,6 +1,18 @@
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import React from "react";
 import every from "lodash/every";
-import { Button, Grid, MenuItem, Select, Typography } from "@material-ui/core";
+import {
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography
+} from "@material-ui/core";
+import { PageLayout } from "../../components/PageLayout";
+import { Row } from "../../components/Row";
+import { Stack } from "../../components/Stack";
 import SimpleCanvas from "../simpleCanvas/SimpleCanvas";
 import LightOnRect from "./LightOnRect";
 
@@ -93,22 +105,19 @@ export default class LightOn extends React.Component<Props, State> {
 
   public render() {
     return (
-      <Grid container spacing={2} direction="column" alignItems="center">
-        <Grid item>Light On</Grid>
-        <Grid item>
+      <PageLayout title="Light On">
+        <Stack align="center">
           <SimpleCanvas
             width={CANVAS_SIZE}
             height={CANVAS_SIZE}
             elements={this.state.gridElements}
           />
-        </Grid>
-        <Grid item>
-          <Grid container direction="row" spacing={2}>
-            <Grid item>
-              <Typography>Difficultly</Typography>
-            </Grid>
-            <Grid item>
+          <Row spacing={4}>
+            <FormControl>
+              <InputLabel id="difficultly-label">Difficultly</InputLabel>
               <Select
+                labelId="difficultly-label"
+                id="difficultly-select"
                 value={this.state.value}
                 onChange={(event: any) => this.handleSizeChange(event)}
               >
@@ -116,29 +125,22 @@ export default class LightOn extends React.Component<Props, State> {
                 <MenuItem value={"medium"}>Medium</MenuItem>
                 <MenuItem value={"hard"}>Hard</MenuItem>
               </Select>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Grid container direction="row" spacing={2}>
-            <Grid item>
-              <Button
-                color="primary"
-                onClick={() => this.restart(this.state.gridSize)}
-              >
-                {this.state.hasWon ? "Again?" : "Restart"}
-              </Button>
-            </Grid>
-            <Grid item>
-              {this.state.hasWon ? (
-                <Typography> You won in {this.state.clicks} clicks</Typography>
-              ) : (
-                <Typography> Clicks: {this.state.clicks}</Typography>
-              )}
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+            </FormControl>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => this.restart(this.state.gridSize)}
+            >
+              {this.state.hasWon ? "Again?" : "Restart"}
+            </Button>
+          </Row>
+          {this.state.hasWon ? (
+            <Typography> You won in {this.state.clicks} clicks</Typography>
+          ) : (
+            <Typography> Clicks: {this.state.clicks}</Typography>
+          )}
+        </Stack>
+      </PageLayout>
     );
   }
 }

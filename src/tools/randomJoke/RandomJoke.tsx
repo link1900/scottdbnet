@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Typography } from "@material-ui/core";
 import SettingIcon from "@material-ui/icons/Settings";
+import { Row } from "../../components/Row";
 import { DataZone } from "../../components/DataZone";
 import { makeValidJsonRequest } from "../../util/apiHelper";
 import { splitLines } from "../../util/stringHelper";
@@ -153,8 +154,8 @@ export default function RandomJoke() {
         store={store}
         setStore={setStore}
       />
-      <Stack spacing={4}>
-        <Stack direction="row">
+      <Stack spacing={4} align="center">
+        <Row>
           <Button
             variant="contained"
             color="primary"
@@ -171,7 +172,7 @@ export default function RandomJoke() {
           >
             Options
           </Button>
-        </Stack>
+        </Row>
         {joke.length > 0 || loading || error ? (
           <Section title="Joke">
             <DataZone loading={loading} error={error} minHeight={50}>

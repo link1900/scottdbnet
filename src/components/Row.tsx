@@ -1,5 +1,9 @@
 import { Grid, GridSize } from "@material-ui/core";
-import { GridItemsAlignment, GridSpacing } from "@material-ui/core/Grid/Grid";
+import {
+  GridItemsAlignment,
+  GridJustification,
+  GridSpacing
+} from "@material-ui/core/Grid/Grid";
 import { isArray } from "lodash";
 import React from "react";
 import { ReactChild } from "../tools/components/ReactChild";
@@ -18,7 +22,7 @@ export type StackProps = {
   xl?: GridSize;
 };
 
-function alignmentConverter(align: AlignType): GridItemsAlignment {
+function alignmentConverter(align: AlignType): GridJustification {
   switch (align) {
     case "left":
       return "flex-start";
@@ -31,7 +35,7 @@ function alignmentConverter(align: AlignType): GridItemsAlignment {
   }
 }
 
-export function Stack(props: StackProps) {
+export function Row(props: StackProps) {
   const { children, align = "left", spacing = 2, xs, sm, md, lg, xl } = props;
   const childrenItems: React.ReactElement[] = (isArray(children)
     ? children
@@ -39,9 +43,9 @@ export function Stack(props: StackProps) {
   return (
     <Grid
       container
-      direction="column"
+      direction="row"
       spacing={spacing}
-      alignItems={alignmentConverter(align)}
+      justifyContent={alignmentConverter(align)}
     >
       {childrenItems.filter(isPresent).map((child, i) => {
         return (

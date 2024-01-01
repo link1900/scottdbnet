@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import last from "lodash/last";
 import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
+import { PageLayout } from "../../components/PageLayout";
+import { Stack } from "../../components/Stack";
 import thinkingImage from "./thinkingAI.png";
 
 interface GuessAttempt {
@@ -131,23 +133,19 @@ export default function GuesserAI() {
   };
 
   return (
-    <Grid container spacing={3} direction="column" alignItems="center">
-      <Grid item>
+    <PageLayout title="Guess the number AI">
+      <Stack>
         <img
           src={thinkingImage}
           alt="question mark"
           style={{ width: "320px", height: "226px" }}
         />
-      </Grid>
-      {targetNumber === undefined ? (
-        <>
-          <Grid item>
+        {targetNumber === undefined ? (
+          <Stack>
             <Typography>
               Think of a number between 1 and 100 and I will guess it within 10
               attempts.
             </Typography>
-          </Grid>
-          <Grid item xs={12}>
             <Box width={500}>
               <TextField
                 label="Enter a number between 1 and 100"
@@ -158,52 +156,44 @@ export default function GuesserAI() {
                 fullWidth
               />
             </Box>
-          </Grid>
-          <Grid item>
             <Button variant="contained" onClick={() => submitAnswer()}>
               Submit to AI
             </Button>
-          </Grid>
-        </>
-      ) : null}
-      {targetNumber !== undefined ? (
-        <React.Fragment>
-          {!finished ? (
-            <Grid item>
-              Attempting to guess number {targetNumber}
-              <Button variant="contained" onClick={() => restart()}>
-                Stop
-              </Button>
-            </Grid>
-          ) : null}
-          {guessAttempts.map((guessAttempt, i) => {
-            return (
-              <Grid item>
+          </Stack>
+        ) : null}
+        {targetNumber !== undefined ? (
+          <React.Fragment>
+            {!finished ? (
+              <div>
+                <span>Attempting to guess number {targetNumber}</span>
+                <Button variant="contained" onClick={() => restart()}>
+                  Stop
+                </Button>
+              </div>
+            ) : null}
+            {guessAttempts.map((guessAttempt, i) => {
+              return (
                 <Typography key={`${guessAttempt.guessNumber}.${i}`}>
                   Guessed {guessAttempt.guessNumber} it must be{" "}
                   {nameForResult(guessAttempt.result)}
                 </Typography>
-              </Grid>
-            );
-          })}
-        </React.Fragment>
-      ) : null}
-      {finished ? (
-        <React.Fragment>
-          <Grid item>
+              );
+            })}
+          </React.Fragment>
+        ) : null}
+        {finished ? (
+          <Stack>
             <Typography>
               {guessCount < guessLimit
                 ? `I solved it in ${guessCount} attempts`
                 : "I failed to solve it"}
             </Typography>
-          </Grid>
-          <Grid item>
             <Button variant="contained" onClick={() => restart()}>
               Again?
             </Button>
-          </Grid>
-        </React.Fragment>
-      ) : null}
-    </Grid>
+          </Stack>
+        ) : null}
+      </Stack>
+    </PageLayout>
   );
 }

@@ -1,7 +1,10 @@
 import React from "react";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import "./Tic.css";
 import Board from "./Board";
+import { PageLayout } from "../../components/PageLayout";
+import { Stack } from "../../components/Stack";
+import { Row } from "../../components/Row";
 
 export default class Tic extends React.Component {
   constructor() {
@@ -68,27 +71,24 @@ export default class Tic extends React.Component {
     }
 
     return (
-      <Grid container spacing={2} direction="column" alignItems="center">
-        <Grid item>
-          <Typography>Noughts and Crosses</Typography>
-        </Grid>
-        <Grid item>
+      <PageLayout title="Noughts and Crosses">
+        <Stack align="center">
           <Board
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
           />
-        </Grid>
-        <Grid item>
-          <Grid container spacing={2} direction="row">
-            <Grid item>{status}</Grid>
-            <Grid item>
-              <Button variant="contained" onClick={() => this.restart()}>
-                Restart
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+          <Row>
+            <div>{status}</div>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => this.restart()}
+            >
+              Restart
+            </Button>
+          </Row>
+        </Stack>
+      </PageLayout>
     );
   }
 }

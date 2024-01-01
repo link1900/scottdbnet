@@ -7,6 +7,7 @@ import ticPreview from "./tictactoe/ticPreview.png";
 import GuesserPreview from "./guesser/thinking.jpg";
 import GuesserAIPreview from "./guesserAI/thinkingAI.png";
 import gameOfLifePreview from "./gameOfLife/conway_game_of_life.png";
+import tankPreview from "./tanks/tankPreview.png";
 
 export interface GameDefinition {
   name: string;
@@ -96,7 +97,7 @@ export const gameDefinitions: GameDefinition[] = [
     originalLanguage: "Typescript",
     year: "2023",
     component: lazy(() => import("./tanks/Tanks")),
-    image: gameOfLifePreview,
+    image: tankPreview,
     author: "Scott Brown"
   }
 ];

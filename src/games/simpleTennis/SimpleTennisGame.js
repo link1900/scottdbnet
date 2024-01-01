@@ -29,7 +29,7 @@ export default class SimpleTennisGame {
           y: i,
           width: 2,
           height: 20,
-          color: "white"
+          color: "#45d40c"
         })
       );
     }
@@ -40,7 +40,7 @@ export default class SimpleTennisGame {
         name: "ball",
         speedX: 6,
         speedY: 0,
-        color: "white",
+        color: "#45d40c",
         x: (this.screen.getXCenter() - 20) / 2,
         y: (this.screen.getYCenter() - 20) / 2,
         radius: 10
@@ -55,7 +55,7 @@ export default class SimpleTennisGame {
         y: this.screen.getYCenter() - 50,
         height: 100,
         width: 10,
-        color: "white"
+        color: "#45d40c"
       })
     );
 
@@ -67,7 +67,7 @@ export default class SimpleTennisGame {
         y: this.screen.getYCenter() - 50,
         height: 100,
         width: 10,
-        color: "white"
+        color: "#45d40c"
       })
     );
 
@@ -79,7 +79,7 @@ export default class SimpleTennisGame {
         y: 100,
         text: 0,
         size: 20,
-        color: "white"
+        color: "#45d40c"
       })
     );
 
@@ -91,7 +91,7 @@ export default class SimpleTennisGame {
         y: 100,
         text: 0,
         size: 20,
-        color: "white"
+        color: "#45d40c"
       })
     );
 
@@ -104,7 +104,7 @@ export default class SimpleTennisGame {
         y: this.screen.getYCenter(),
         text: "Player wins! Click to continue!",
         visible: false,
-        color: "white"
+        color: "#45d40c"
       })
     );
 

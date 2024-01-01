@@ -9,6 +9,8 @@ import {
 } from "./PrisonBreakReducer";
 import MapContainer from "./MapContainer";
 import { Grid } from "@material-ui/core";
+import { PageLayout } from "../../components/PageLayout";
+import { Row } from "../../components/Row";
 
 const store = createStore(
   PrisonBreakRootReducer,
@@ -22,7 +24,7 @@ export default class PrisonBreak extends React.Component {
     this.state = { loaded: false };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     persistStore(
       store,
       { keyPrefix: "prisonBreak_", whitelist: ["world"] },
@@ -38,16 +40,14 @@ export default class PrisonBreak extends React.Component {
       return <div>Loading...</div>;
     }
     return (
-      <Provider store={store}>
-        <Grid container spacing={4} direction="row">
-          <Grid item>
+      <PageLayout title="Prison Break">
+        <Provider store={store}>
+          <Row spacing={4}>
             <MapContainer />
-          </Grid>
-          <Grid item>
             <PrisonBreakContainer name="Prison Break" />
-          </Grid>
-        </Grid>
-      </Provider>
+          </Row>
+        </Provider>
+      </PageLayout>
     );
   }
 }
