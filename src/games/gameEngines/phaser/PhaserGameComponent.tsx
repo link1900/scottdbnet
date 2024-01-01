@@ -16,7 +16,7 @@ export function PhaserGameComponent(
     const scene = getScenes(sceneNames);
     const game = new Phaser.Game({
       type: Phaser.AUTO,
-      backgroundColor: 0x000000,
+      backgroundColor: "#282c34",
       seed: [(Date.now() * Math.random()).toString()],
       scale: {
         mode: Phaser.Scale.FIT,
@@ -27,7 +27,10 @@ export function PhaserGameComponent(
       },
       scene,
       physics: {
-        default: "arcade"
+        default: "arcade",
+        arcade: {
+          gravity: { y: 0 }
+        }
       },
       pixelArt: true
     });

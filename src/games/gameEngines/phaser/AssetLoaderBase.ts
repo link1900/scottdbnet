@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-const titleText: string = "working";
+const titleText: string = "Loading...";
 const titleFont: string = "20px monospace";
 const progressFont: string = "18px monospace";
 const assetFont: string = "9px monospace";

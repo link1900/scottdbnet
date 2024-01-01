@@ -1,3 +1,11 @@
 import { defineComponent, Types } from "bitecs";
 
-export const Sprite = defineComponent({ texture: Types.ui8 });
+export enum SpriteType {
+  ARCADE,
+  STATIC
+}
+
+export const Sprite = defineComponent({
+  texture: Types.ui8,
+  type: Types.ui8
+});
