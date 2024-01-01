@@ -2,6 +2,7 @@ const sceneRegister = new Map<string, Class>();
 
 export function registerScene(name: string, clazz: Class) {
   sceneRegister.set(name, clazz);
+  return name;
 }
 
 export function getScene(name: string): Class {
