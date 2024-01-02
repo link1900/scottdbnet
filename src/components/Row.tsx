@@ -1,9 +1,5 @@
 import { Grid, GridSize } from "@material-ui/core";
-import {
-  GridItemsAlignment,
-  GridJustification,
-  GridSpacing
-} from "@material-ui/core/Grid/Grid";
+import { GridJustification, GridSpacing } from "@material-ui/core/Grid/Grid";
 import { isArray } from "lodash";
 import React from "react";
 import { ReactChild } from "../tools/components/ReactChild";

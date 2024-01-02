@@ -8,7 +8,6 @@ import {
   PrisonBreakRootReducer
 } from "./PrisonBreakReducer";
 import MapContainer from "./MapContainer";
-import { Grid } from "@material-ui/core";
 import { PageLayout } from "../../components/PageLayout";
 import { Row } from "../../components/Row";
 

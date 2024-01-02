@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { PageLayout } from "../../components/PageLayout";
 import { Stack } from "../../components/Stack";
 import { ConwayWorld } from "./ConwayWorld";

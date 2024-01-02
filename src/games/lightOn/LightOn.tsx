@@ -1,10 +1,8 @@
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import React from "react";
 import every from "lodash/every";
 import {
   Button,
   FormControl,
-  Grid,
   InputLabel,
   MenuItem,
   Select,

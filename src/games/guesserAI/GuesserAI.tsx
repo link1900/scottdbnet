@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import last from "lodash/last";
-import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
+import { Box, Button, TextField, Typography } from "@material-ui/core";
 import { PageLayout } from "../../components/PageLayout";
 import { Stack } from "../../components/Stack";
 import thinkingImage from "./thinkingAI.png";
@@ -134,7 +134,7 @@ export default function GuesserAI() {
 
   return (
     <PageLayout title="Guess the number AI">
-      <Stack>
+      <Stack align="center">
         <img
           src={thinkingImage}
           alt="question mark"

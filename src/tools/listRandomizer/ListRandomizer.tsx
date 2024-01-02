@@ -28,7 +28,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalStorage } from "react-use";
 import { Row } from "../../components/Row";
 import { PageLayout } from "../../components/PageLayout";
-import { Stack } from "../../components/Stack";
 import { copyArray, shuffle } from "../../util/arrayHelper";
 import { randomBoolean } from "../../util/randomHelper";
 import {
