@@ -90,13 +90,23 @@ export const gameDefinitions: GameDefinition[] = [
     image: gameOfLifePreview,
     author: "Scott Brown"
   },
+  // {
+  //   name: "tanks",
+  //   title: "Tanks",
+  //   originalFramework: "Phaser + bitECS",
+  //   originalLanguage: "Typescript",
+  //   year: "2023",
+  //   component: lazy(() => import("./tanks/Tanks")),
+  //   image: tankPreview,
+  //   author: "Scott Brown"
+  // },
   {
-    name: "tanks",
-    title: "Tanks",
-    originalFramework: "Phaser + bitECS",
+    name: "balloonBurst",
+    title: "Balloon Burst",
+    originalFramework: "Pixi.js + bitECS",
     originalLanguage: "Typescript",
     year: "2023",
-    component: lazy(() => import("./tanks/Tanks")),
+    component: lazy(() => import("./balloonBurst/BalloonBurst")),
     image: tankPreview,
     author: "Scott Brown"
   }
