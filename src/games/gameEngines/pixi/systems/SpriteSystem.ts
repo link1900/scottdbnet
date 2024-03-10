@@ -3,6 +3,7 @@ import { Sprite as PixiSprite } from "pixi.js";
 import { buildQuery, QueryType } from "../../bitECS/queryHelper";
 import { Position } from "../components/Position";
 import { Rotation } from "../components/Rotation";
+import { Size } from "../components/Size";
 import { Sprite } from "../components/Sprite";
 import { PixiGame } from "../PixiGame";
 
@@ -11,20 +12,23 @@ export function createSpriteSystem(game: PixiGame) {
   const spriteQueryEnter = buildQuery(
     {
       sprite: Sprite,
-      position: Position
+      position: Position,
+      size: Size,
+      rotation: Rotation
     },
     QueryType.ENTER
   );
 
-  const rotatingSpriteQuery = buildQuery({
+  const spriteQueryRender = buildQuery({
     sprite: Sprite,
+    position: Position,
+    size: Size,
     rotation: Rotation
   });
 
   const spriteQueryExit = buildQuery(
     {
-      sprite: Sprite,
-      position: Position
+      sprite: Sprite
     },
     QueryType.EXIT
   );
@@ -32,17 +36,25 @@ export function createSpriteSystem(game: PixiGame) {
   return (world: IWorld) => {
     spriteQueryEnter(world, (entity) => {
       const sprite = PixiSprite.from(
-        game.stringMap.findValueById(entity.sprite.texture) ?? ""
+        game.getAssetString(entity.sprite.texture)
       );
+      sprite.anchor.set(0.5, 0.5);
       sprite.x = entity.position.x;
       sprite.y = entity.position.y;
-      game.app.stage.addChild(sprite);
+      sprite.width = entity.size.width;
+      sprite.height = entity.size.height;
+      sprite.angle = entity.rotation.angle;
+      game.pixiApp.stage.addChild(sprite);
       sprites.set(entity.id, sprite);
     });
 
-    rotatingSpriteQuery(world, (entity) => {
+    spriteQueryRender(world, (entity) => {
       const sprite = sprites.get(entity.id);
       if (sprite) {
+        sprite.x = entity.position.x;
+        sprite.y = entity.position.y;
+        sprite.width = entity.size.width;
+        sprite.height = entity.size.height;
         sprite.angle = entity.rotation.angle;
       }
     });
@@ -50,7 +62,7 @@ export function createSpriteSystem(game: PixiGame) {
     spriteQueryExit(world, (entity) => {
       const sprite = sprites.get(entity.id);
       if (sprite) {
-        game.app.stage.removeChild(sprite);
+        game.pixiApp.stage.removeChild(sprite);
         sprites.delete(entity.id);
       }
     });

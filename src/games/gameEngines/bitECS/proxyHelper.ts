@@ -1,6 +1,6 @@
-import { Component } from "bitecs";
+import { ComponentType, ISchema } from "bitecs";
 
-export type ComponentStructure = { [key: string]: Component };
+export type ComponentStructure = { [key: string]: ComponentType<ISchema> };
 
 export type EntityProxy<CS extends ComponentStructure> = {
   id: number;
@@ -8,11 +8,15 @@ export type EntityProxy<CS extends ComponentStructure> = {
   [key in keyof CS]: ComponentProxy<CS[key]>;
 };
 
-export type ComponentProxy<C extends Component> = {
+export type ComponentProxy<C extends ComponentType<ISchema>> = {
   [key in keyof C]: number;
 };
 
-export function componentProxyBuilder<C extends Component>(
+export type ComponentOptions<C extends ComponentType<ISchema>> = {
+  [key in keyof C]?: number;
+};
+
+export function componentProxyBuilder<C extends ComponentType<ISchema>>(
   component: C
 ): ComponentProxy<C> {
   const componentProxy: unknown = {

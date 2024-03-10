@@ -1,4 +1,5 @@
 import {
+  Component,
   defineQuery,
   enterQuery,
   exitQuery,
@@ -40,7 +41,7 @@ export function runQuery<CS extends ComponentStructure>(
 export function buildQuery<CS extends ComponentStructure>(
   componentStructure: CS,
   type: QueryType = QueryType.STANDARD,
-  modifiers: QueryModifier[] = []
+  modifiers: (Component | QueryModifier)[] = []
 ): QueryIterator<CS> {
   const components = Object.values(componentStructure);
   const query = defineQuery([...components, ...modifiers]);

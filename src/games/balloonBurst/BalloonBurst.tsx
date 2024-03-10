@@ -1,12 +1,16 @@
 import React from "react";
 import { PageLayout } from "../../components/PageLayout";
 import { PixiGameComponent } from "../gameEngines/pixi/PixiGameComponent";
-import { runBalloonBurst } from "./BalloonBurstGame";
+import { setupBalloonBurst } from "./BalloonBurstGame";
 
 export default function BalloonBurst() {
   return (
     <PageLayout title="Balloon Burst">
-      <PixiGameComponent width={500} height={500} runPixi={runBalloonBurst} />
+      <PixiGameComponent
+        width={500}
+        height={500}
+        setupPixi={setupBalloonBurst}
+      />
     </PageLayout>
   );
 }

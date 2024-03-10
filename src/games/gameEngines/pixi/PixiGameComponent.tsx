@@ -2,13 +2,13 @@ import React, { useRef, useEffect } from "react";
 import { createPixiGame, PixiGame } from "./PixiGame";
 
 export interface PixiGameComponentProps {
-  runPixi: (app: PixiGame) => void;
+  setupPixi: (app: PixiGame) => Promise<void>;
   width: number;
   height: number;
 }
 
 export function PixiGameComponent(props: PixiGameComponentProps) {
-  const { runPixi, width, height } = props;
+  const { setupPixi, width, height } = props;
   const pixiContainer = useRef(null);
 
   useEffect(() => {
@@ -16,24 +16,27 @@ export function PixiGameComponent(props: PixiGameComponentProps) {
     if (!container) return;
 
     // Create a Pixi application
-    const game = createPixiGame({
-      appOptions: {
+    const game = createPixiGame(container, {
+      pixiOptions: {
         width,
         height,
         backgroundColor: "#1099bb"
       }
     });
 
-    // @ts-ignore
-    container.appendChild(game.app.view);
+    const loadGame = async () => {
+      await setupPixi(game);
+      game.start();
+    };
 
-    runPixi(game);
+    loadGame();
 
     return () => {
       // Cleanup when component unmounts
-      game.app.destroy(true);
+      game.stop();
+      game.kill();
     };
-  }, [runPixi, width, height]);
+  }, [setupPixi, width, height]);
 
   return <div ref={pixiContainer}></div>;
 }

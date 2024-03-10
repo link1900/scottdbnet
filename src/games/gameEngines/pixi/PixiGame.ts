@@ -4,50 +4,74 @@ import {
   IWorld,
   System,
   addEntity as addEcsEntity,
+  removeEntity as removeEcsEntity,
   addComponent as addEcsComponent
 } from "bitecs";
+import { Engine } from "matter-js";
 import { Application, Assets, Ticker } from "pixi.js";
 import {
   ComponentStructure,
   EntityProxy,
   entityProxyBuilder
 } from "../bitECS/proxyHelper";
-import { StringMap } from "../bitECS/StringMap";
+import { StringMap } from "./helpers/StringMap";
 
 export type PixiGame = {
   world: IWorld;
-  app: Application;
+  pixiApp: Application;
   systems: System[];
   gameLoopTicker: Ticker;
-  stringMap: StringMap;
-  setup: () => void;
+  matterEngine: Engine;
+
   start: () => void;
   stop: () => void;
+  kill: () => void;
   update: () => void;
-  createEntity: () => number;
+  createBaseEntity: () => number;
+  createEntity: <CS extends ComponentStructure>(
+    componentStructure: CS
+  ) => EntityProxy<CS>;
+  killEntity: (eid: number) => void;
   addComponents: <CS extends ComponentStructure>(
     eid: number,
     componentStructure: CS
   ) => EntityProxy<CS>;
   loadSpriteSheet: (assetUrl: string) => Promise<void>;
+  getColorValue: (colorString?: string) => number;
+  getColorString: (colorValue: number) => string;
+  getAssetValue: (assetString?: string) => number;
+  getAssetString: (assetValue: number) => string;
+
+  settings: PixiGameSettings;
+};
+
+export type PixiGameSettings = {
+  physicsWireframe: boolean;
 };
 
 export type PixiGameOptions = {
-  appOptions?: Partial<IApplicationOptions>;
+  pixiOptions?: Partial<IApplicationOptions>;
   init?: () => void;
-  setup?: () => void;
+  settings?: Partial<PixiGameSettings>;
 };
 
-export function noOp() {}
+const defaultSettings: PixiGameSettings = {
+  physicsWireframe: false
+};
 
-export function createPixiGame(options: PixiGameOptions): PixiGame {
+export function createPixiGame(
+  container: any,
+  options: PixiGameOptions
+): PixiGame {
   const world = createWorld();
-  const app = new Application(options.appOptions);
+  const pixiApp = new Application(options.pixiOptions);
   const systems: System[] = [];
   const gameLoopTicker = new Ticker();
-  const stringMap = new StringMap();
+  const matterEngine = Engine.create();
+  const colorMap = new StringMap();
+  const assetMap = new StringMap();
 
-  const setup = options.setup ?? noOp;
+  container.appendChild(pixiApp.view);
 
   const start = () => {
     gameLoopTicker.start();
@@ -57,16 +81,26 @@ export function createPixiGame(options: PixiGameOptions): PixiGame {
     gameLoopTicker.stop();
   };
 
+  const kill = () => {
+    Engine.clear(matterEngine);
+    pixiApp.destroy(true);
+  };
+
   const update = () => {
     systems.forEach((system) => system(world));
   };
 
   gameLoopTicker.add((delta) => {
+    Engine.update(matterEngine);
     update();
   });
 
-  const createEntity = () => {
+  const createBaseEntity = () => {
     return addEcsEntity(world);
+  };
+
+  const killEntity = (eid: number) => {
+    return removeEcsEntity(world, eid);
   };
 
   const addComponents = <CS extends ComponentStructure>(
@@ -84,24 +118,57 @@ export function createPixiGame(options: PixiGameOptions): PixiGame {
     return entityProxy;
   };
 
+  const createEntity = <CS extends ComponentStructure>(
+    componentStructure: CS
+  ): EntityProxy<CS> => {
+    const newEid = createBaseEntity();
+    return addComponents(newEid, componentStructure);
+  };
+
   const loadSpriteSheet = async (assetUrl: string) => {
-    const spriteSheet = await Assets.load(assetUrl);
-    stringMap.addEntries(Object.keys(spriteSheet.textures));
+    await Assets.load(assetUrl);
+  };
+
+  const getColorValue = (colorString?: string): number => {
+    return colorMap.addValue(colorString ?? "#ffffff");
+  };
+
+  const getColorString = (colorValue: number): string => {
+    return colorMap.getValue(colorValue) ?? "#ffffff";
+  };
+
+  const getAssetValue = (assetString?: string): number => {
+    return assetMap.addValue(assetString ?? "");
+  };
+
+  const getAssetString = (assetValue: number): string => {
+    return assetMap.getValue(assetValue) ?? "";
   };
 
   return {
     world,
-    app,
+    pixiApp: pixiApp,
     systems,
     gameLoopTicker,
-    stringMap,
+    matterEngine,
 
-    setup,
     start,
     stop,
+    kill,
     update,
+    createBaseEntity,
     createEntity,
+    killEntity,
     addComponents,
-    loadSpriteSheet
+    loadSpriteSheet,
+    getColorValue,
+    getColorString,
+    getAssetValue,
+    getAssetString,
+
+    settings: {
+      ...defaultSettings,
+      ...options.settings
+    }
   };
 }
