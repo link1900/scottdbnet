@@ -1,20 +1,34 @@
 import { defineComponent, Types } from "bitecs";
-import { ComponentProxy, EntityProxy } from "../../bitECS/proxyHelper";
-import { PixiGame } from "../PixiGame";
+import { ComponentProxy } from "../../bitECS/ComponentProxy";
+import { Sprite as PixiSprite } from "pixi.js";
+import { DataField } from "../../bitECS/DataField";
 
 export const Sprite = defineComponent({
-  texture: Types.ui32
+  texture: Types.ui32,
+  sprite: Types.ui32
 });
 
-export interface SpriteOptions {
-  texture: string;
-}
+export class SpriteProxy extends ComponentProxy<typeof Sprite> {
+  textureData = new DataField<string>();
+  spriteData = new DataField<PixiSprite>();
 
-export function spriteBuilder(
-  game: PixiGame,
-  spriteEntity: EntityProxy<{ sprite: ComponentProxy<typeof Sprite> }>,
-  options: SpriteOptions
-): EntityProxy<{ sprite: ComponentProxy<typeof Sprite> }> {
-  spriteEntity.sprite.texture = game.getAssetValue(options.texture);
-  return spriteEntity;
+  constructor() {
+    super("sprite", Sprite);
+  }
+
+  get texture(): string | null {
+    return this.getDataValue(this.textureData, this.component.texture);
+  }
+
+  set texture(val: string | null) {
+    this.setDataValue(this.textureData, this.component.texture, val);
+  }
+
+  get sprite(): PixiSprite | null {
+    return this.getDataValue(this.spriteData, this.component.sprite);
+  }
+
+  set sprite(val: PixiSprite | null) {
+    this.setDataValue(this.spriteData, this.component.sprite, val);
+  }
 }

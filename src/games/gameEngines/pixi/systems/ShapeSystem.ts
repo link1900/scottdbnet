@@ -1,31 +1,37 @@
-import { IWorld } from "bitecs";
 import { Graphics } from "pixi.js";
-import { EntityProxy } from "../../bitECS/proxyHelper";
-import { buildQuery, QueryType } from "../../bitECS/queryHelper";
-import { Position } from "../components/Position";
-import { Shape, ShapeType } from "../components/Shape";
-import { Size } from "../components/Size";
+import {
+  EntityProxy,
+  getComponents,
+  QueryType
+} from "../../bitECS/entityHelper";
+import { SystemBase } from "../../bitECS/SystemBase";
+import { pixiComponents } from "../components/pixiComponents";
+import { ShapeType } from "../components/Shape";
 import { PixiGame } from "../PixiGame";
 
-const shapeStructure = {
-  shape: Shape,
-  position: Position,
-  size: Size
-};
+const shapeStructure = getComponents(pixiComponents, [
+  "shape",
+  "position",
+  "size"
+]);
 
-function renderShape(
-  game: PixiGame,
-  shape: Graphics,
-  entity: EntityProxy<typeof shapeStructure>
-) {
-  shape.lineStyle(
-    entity.shape.lineSize,
-    game.getColorString(entity.shape.lineColor)
-  );
-  shape.beginFill(game.getColorString(entity.shape.fillColor));
+export type Shape = typeof shapeStructure;
+
+function createGraphic(entity: EntityProxy<Shape>, game: PixiGame) {
+  const graphic = new Graphics();
+  entity.shape.graphic = graphic;
+  renderGraphic(entity, game);
+  game.pixiApp.stage.addChild(graphic);
+}
+
+function renderGraphic(entity: EntityProxy<Shape>, game: PixiGame) {
+  const graphic = entity.shape.graphic;
+  if (!graphic) {
+    return;
+  }
   switch (entity.shape.type) {
     case ShapeType.RECT:
-      shape.drawRect(
+      graphic.rect(
         entity.position.x,
         entity.position.y,
         entity.size.width,
@@ -33,42 +39,31 @@ function renderShape(
       );
       break;
     case ShapeType.CIRCLE:
-      shape.drawCircle(entity.position.x, entity.position.y, entity.size.width);
+      graphic.circle(entity.position.x, entity.position.y, entity.size.width);
       break;
   }
-  shape.endFill();
+  graphic.fill(entity.shape.fillColor ?? "#FFFFFF");
+  graphic.stroke({
+    width: entity.shape.lineSize,
+    color: entity.shape.lineColor ?? "#000000"
+  });
 }
 
-export function createShapeSystem(game: PixiGame) {
-  const shapes = new Map<number, Graphics>();
-  const shapeQueryEnter = buildQuery(shapeStructure, QueryType.ENTER);
-  const shapeQuerySimulate = buildQuery(shapeStructure, QueryType.STANDARD);
-  const shapeQueryExit = buildQuery(shapeStructure, QueryType.EXIT);
+function deleteGraphic(entity: EntityProxy<Shape>, game: PixiGame) {
+  const graphic = entity.shape.graphic;
+  if (!graphic) {
+    return;
+  }
+  game.pixiApp.stage.removeChild(graphic);
+  graphic.destroy();
+  entity.shape.graphic = null;
+}
 
-  return (world: IWorld) => {
-    shapeQueryEnter(world, (entity) => {
-      const shape = new Graphics();
-      renderShape(game, shape, entity);
-      game.pixiApp.stage.addChild(shape);
-      shapes.set(entity.id, shape);
-    });
-
-    shapeQuerySimulate(world, (entity) => {
-      const shape = shapes.get(entity.id);
-      if (shape) {
-        renderShape(game, shape, entity);
-      }
-    });
-
-    shapeQueryExit(world, (entity) => {
-      const shape = shapes.get(entity.id);
-      if (shape) {
-        game.pixiApp.stage.removeChild(shape);
-        shape.destroy();
-        shapes.delete(entity.id);
-      }
-    });
-
-    return world;
-  };
+export class ShapeSystem extends SystemBase<Shape> {
+  constructor(game: PixiGame) {
+    super(game, shapeStructure);
+    this.addQuery(createGraphic, QueryType.ENTER);
+    // this.addQuery(renderGraphic, QueryType.STANDARD);
+    this.addQuery(deleteGraphic, QueryType.EXIT);
+  }
 }

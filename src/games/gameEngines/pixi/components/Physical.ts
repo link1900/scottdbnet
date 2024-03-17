@@ -1,9 +1,7 @@
 import { defineComponent, Types } from "bitecs";
-import {
-  ComponentOptions,
-  ComponentProxy,
-  EntityProxy
-} from "../../bitECS/proxyHelper";
+import { Body } from "matter-js";
+import { ComponentProxy } from "../../bitECS/ComponentProxy";
+import { DataField } from "../../bitECS/DataField";
 
 export enum PhysicalMovementType {
   STATIC,
@@ -11,6 +9,7 @@ export enum PhysicalMovementType {
 }
 
 export const Physical = defineComponent({
+  body: Types.ui32,
   movement: Types.ui32,
   density: Types.f32,
   friction: Types.f32,
@@ -18,20 +17,58 @@ export const Physical = defineComponent({
   restitution: Types.f32
 });
 
-export interface PhysicalOptions
-  extends Omit<ComponentOptions<typeof Physical>, "movement"> {
-  movement?: PhysicalMovementType;
-}
+export class PhysicalProxy extends ComponentProxy<typeof Physical> {
+  bodyData = new DataField<Body>();
 
-export function physicalBuilder(
-  physicalEntity: EntityProxy<{ physical: ComponentProxy<typeof Physical> }>,
-  options: PhysicalOptions
-): EntityProxy<{ physical: ComponentProxy<typeof Physical> }> {
-  physicalEntity.physical.density = options.density ?? 0.001;
-  physicalEntity.physical.friction = options.friction ?? 0.1;
-  physicalEntity.physical.frictionAir = options.frictionAir ?? 0.01;
-  physicalEntity.physical.restitution = options.restitution ?? 0;
-  physicalEntity.physical.movement =
-    options.movement ?? PhysicalMovementType.DYNAMIC;
-  return physicalEntity;
+  constructor() {
+    super("physical", Physical);
+  }
+
+  get body(): Body | null {
+    return this.getDataValue(this.bodyData, this.component.body);
+  }
+
+  set body(val: Body | null) {
+    this.setDataValue(this.bodyData, this.component.body, val);
+  }
+
+  get density(): number {
+    return this.component.density[this.id];
+  }
+
+  set density(val: number) {
+    this.component.density[this.id] = val;
+  }
+
+  get friction(): number {
+    return this.component.friction[this.id];
+  }
+
+  set friction(val: number) {
+    this.component.friction[this.id] = val;
+  }
+
+  get frictionAir(): number {
+    return this.component.frictionAir[this.id];
+  }
+
+  set frictionAir(val: number) {
+    this.component.frictionAir[this.id] = val;
+  }
+
+  get restitution(): number {
+    return this.component.restitution[this.id];
+  }
+
+  set restitution(val: number) {
+    this.component.restitution[this.id] = val;
+  }
+
+  get movement(): number {
+    return this.component.movement[this.id];
+  }
+
+  set movement(val: number) {
+    this.component.movement[this.id] = val;
+  }
 }

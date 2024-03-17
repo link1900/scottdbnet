@@ -1,19 +1,26 @@
 import { defineComponent, Types } from "bitecs";
-import {
-  ComponentOptions,
-  ComponentProxy,
-  EntityProxy
-} from "../../bitECS/proxyHelper";
+import { ComponentProxy } from "../../bitECS/ComponentProxy";
 
 export const Size = defineComponent({ width: Types.f32, height: Types.f32 });
 
-export interface SizeOptions extends ComponentOptions<typeof Size> {}
+export class SizeProxy extends ComponentProxy<typeof Size> {
+  constructor() {
+    super("size", Size);
+  }
 
-export function sizeBuilder(
-  sizeEntity: EntityProxy<{ size: ComponentProxy<typeof Size> }>,
-  options: SizeOptions
-): EntityProxy<{ size: ComponentProxy<typeof Size> }> {
-  sizeEntity.size.width = options.width ?? 50;
-  sizeEntity.size.height = options.height ?? 50;
-  return sizeEntity;
+  get width(): number {
+    return this.component.width[this.id];
+  }
+
+  set width(val: number) {
+    this.component.width[this.id] = val;
+  }
+
+  get height(): number {
+    return this.component.height[this.id];
+  }
+
+  set height(val: number) {
+    this.component.height[this.id] = val;
+  }
 }

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { createPixiGame, PixiGame } from "./PixiGame";
+import { PixiGame } from "./PixiGame";
 
 export interface PixiGameComponentProps {
   setupPixi: (app: PixiGame) => Promise<void>;
@@ -16,7 +16,7 @@ export function PixiGameComponent(props: PixiGameComponentProps) {
     if (!container) return;
 
     // Create a Pixi application
-    const game = createPixiGame(container, {
+    const game = new PixiGame({
       pixiOptions: {
         width,
         height,
@@ -25,6 +25,8 @@ export function PixiGameComponent(props: PixiGameComponentProps) {
     });
 
     const loadGame = async () => {
+      await game.init();
+      (container as any).appendChild(game.pixiApp.canvas);
       await setupPixi(game);
       game.start();
     };

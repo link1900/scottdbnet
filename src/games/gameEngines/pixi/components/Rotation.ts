@@ -1,18 +1,18 @@
 import { defineComponent, Types } from "bitecs";
-import {
-  ComponentOptions,
-  ComponentProxy,
-  EntityProxy
-} from "../../bitECS/proxyHelper";
+import { ComponentProxy } from "../../bitECS/ComponentProxy";
 
 export const Rotation = defineComponent({ angle: Types.f32 });
 
-export interface RotationOptions extends ComponentOptions<typeof Rotation> {}
+export class RotationProxy extends ComponentProxy<typeof Rotation> {
+  constructor() {
+    super("rotation", Rotation);
+  }
 
-export function rotationBuilder(
-  rotationEntity: EntityProxy<{ rotation: ComponentProxy<typeof Rotation> }>,
-  options: RotationOptions
-): EntityProxy<{ rotation: ComponentProxy<typeof Rotation> }> {
-  rotationEntity.rotation.angle = options.angle ?? 0;
-  return rotationEntity;
+  get angle(): number {
+    return this.component.angle[this.id];
+  }
+
+  set angle(val: number) {
+    this.component.angle[this.id] = val;
+  }
 }

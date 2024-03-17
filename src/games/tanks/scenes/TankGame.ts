@@ -7,7 +7,6 @@ import { createTree } from "../entities/TreeBuilder";
 import { createBotSystem } from "../systems/BotSystem";
 import { createMovementSystem } from "../systems/MovementSystem";
 import { createPlayerSystem } from "../systems/PlayerSystem";
-import { createSpriteSystem } from "../systems/SpriteSystem";
 import { TextureKeys, Textures } from "../util/textureHelper";
 
 export class TankGame extends Phaser.Scene {
@@ -63,8 +62,6 @@ export class TankGame extends Phaser.Scene {
     systems.push(createBotSystem(this));
 
     systems.push(createMovementSystem());
-
-    systems.push(createSpriteSystem(spriteGroup, TextureKeys));
   }
 
   update() {

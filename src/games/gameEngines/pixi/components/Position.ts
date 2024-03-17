@@ -1,19 +1,26 @@
 import { defineComponent, Types } from "bitecs";
-import {
-  ComponentOptions,
-  ComponentProxy,
-  EntityProxy
-} from "../../bitECS/proxyHelper";
+import { ComponentProxy } from "../../bitECS/ComponentProxy";
 
 export const Position = defineComponent({ x: Types.f32, y: Types.f32 });
 
-export interface PositionOptions extends ComponentOptions<typeof Position> {}
+export class PositionProxy extends ComponentProxy<typeof Position> {
+  constructor() {
+    super("position", Position);
+  }
 
-export function positionBuilder(
-  positionEntity: EntityProxy<{ position: ComponentProxy<typeof Position> }>,
-  options: PositionOptions
-): EntityProxy<{ position: ComponentProxy<typeof Position> }> {
-  positionEntity.position.x = options.x ?? 0;
-  positionEntity.position.y = options.y ?? 0;
-  return positionEntity;
+  get x(): number {
+    return this.component.x[this.id];
+  }
+
+  set x(val: number) {
+    this.component.x[this.id] = val;
+  }
+
+  get y(): number {
+    return this.component.x[this.id];
+  }
+
+  set y(val: number) {
+    this.component.x[this.id] = val;
+  }
 }

@@ -1,56 +1,31 @@
-import { IApplicationOptions } from "@pixi/app/lib/Application";
 import {
   createWorld,
   IWorld,
-  System,
   addEntity as addEcsEntity,
   removeEntity as removeEcsEntity,
-  addComponent as addEcsComponent
+  addComponent as addEcsComponent,
+  removeComponent as removeEcsComponent,
+  ComponentType,
+  ISchema
 } from "bitecs";
 import { Engine } from "matter-js";
 import { Application, Assets, Ticker } from "pixi.js";
+import { ApplicationOptions } from "pixi.js/lib/app/Application";
+import { ComponentProxy } from "../bitECS/ComponentProxy";
 import {
-  ComponentStructure,
+  EntityStructure,
   EntityProxy,
-  entityProxyBuilder
-} from "../bitECS/proxyHelper";
-import { StringMap } from "./helpers/StringMap";
-
-export type PixiGame = {
-  world: IWorld;
-  pixiApp: Application;
-  systems: System[];
-  gameLoopTicker: Ticker;
-  matterEngine: Engine;
-
-  start: () => void;
-  stop: () => void;
-  kill: () => void;
-  update: () => void;
-  createBaseEntity: () => number;
-  createEntity: <CS extends ComponentStructure>(
-    componentStructure: CS
-  ) => EntityProxy<CS>;
-  killEntity: (eid: number) => void;
-  addComponents: <CS extends ComponentStructure>(
-    eid: number,
-    componentStructure: CS
-  ) => EntityProxy<CS>;
-  loadSpriteSheet: (assetUrl: string) => Promise<void>;
-  getColorValue: (colorString?: string) => number;
-  getColorString: (colorValue: number) => string;
-  getAssetValue: (assetString?: string) => number;
-  getAssetString: (assetValue: number) => string;
-
-  settings: PixiGameSettings;
-};
+  entityProxyBuilder,
+  EntityProxyProps
+} from "../bitECS/entityHelper";
+import { SystemBase } from "../bitECS/SystemBase";
 
 export type PixiGameSettings = {
   physicsWireframe: boolean;
 };
 
 export type PixiGameOptions = {
-  pixiOptions?: Partial<IApplicationOptions>;
+  pixiOptions?: Partial<ApplicationOptions>;
   init?: () => void;
   settings?: Partial<PixiGameSettings>;
 };
@@ -59,116 +34,114 @@ const defaultSettings: PixiGameSettings = {
   physicsWireframe: false
 };
 
-export function createPixiGame(
-  container: any,
-  options: PixiGameOptions
-): PixiGame {
-  const world = createWorld();
-  const pixiApp = new Application(options.pixiOptions);
-  const systems: System[] = [];
-  const gameLoopTicker = new Ticker();
-  const matterEngine = Engine.create();
-  const colorMap = new StringMap();
-  const assetMap = new StringMap();
+export class PixiGame {
+  world: IWorld;
+  pixiApp: Application;
+  private systems: SystemBase<any>[];
+  gameLoopTicker: Ticker;
+  matterEngine: Engine;
+  settings: PixiGameSettings;
+  pixiOptions?: Partial<ApplicationOptions>;
 
-  container.appendChild(pixiApp.view);
+  constructor(options: PixiGameOptions) {
+    this.world = createWorld();
+    this.pixiApp = new Application();
+    this.systems = [];
+    this.gameLoopTicker = new Ticker();
+    this.matterEngine = Engine.create();
+    this.settings = {
+      ...defaultSettings,
+      ...options.settings
+    };
+    this.pixiOptions = options.pixiOptions;
 
-  const start = () => {
-    gameLoopTicker.start();
-  };
+    this.gameLoopTicker.add((delta) => {
+      Engine.update(this.matterEngine);
+      this.update();
+    });
+  }
 
-  const stop = () => {
-    gameLoopTicker.stop();
-  };
+  async init() {
+    await this.pixiApp.init(this.pixiOptions);
+  }
 
-  const kill = () => {
-    Engine.clear(matterEngine);
-    pixiApp.destroy(true);
-  };
+  start() {
+    this.gameLoopTicker.start();
+  }
 
-  const update = () => {
-    systems.forEach((system) => system(world));
-  };
+  stop() {
+    this.gameLoopTicker.stop();
+  }
 
-  gameLoopTicker.add((delta) => {
-    Engine.update(matterEngine);
-    update();
-  });
+  kill() {
+    Engine.clear(this.matterEngine);
+    this.pixiApp.destroy(true);
+  }
 
-  const createBaseEntity = () => {
-    return addEcsEntity(world);
-  };
+  update() {
+    this.systems.forEach((system) => system.run(this.world));
+  }
 
-  const killEntity = (eid: number) => {
-    return removeEcsEntity(world, eid);
-  };
+  addComponent<CS extends EntityStructure>(
+    entity: EntityProxy<CS>,
+    componentProxy: ComponentProxy<ComponentType<ISchema>>
+  ) {
+    addEcsComponent(this.world, componentProxy.component, entity.id);
+  }
 
-  const addComponents = <CS extends ComponentStructure>(
+  removeComponent<CS extends EntityStructure>(
+    entity: EntityProxy<CS>,
+    componentProxy: ComponentProxy<ComponentType<ISchema>>
+  ) {
+    removeEcsComponent(this.world, componentProxy.component, entity.id);
+  }
+
+  createBaseEntity() {
+    return addEcsEntity(this.world);
+  }
+
+  killEntity(eid: number) {
+    return removeEcsEntity(this.world, eid);
+  }
+
+  addComponents<CS extends EntityStructure>(
     eid: number,
-    componentStructure: CS
-  ): EntityProxy<CS> => {
+    componentStructure: CS,
+    props?: EntityProxyProps<CS>
+  ): EntityProxy<CS> {
     const components = Object.values(componentStructure);
     const entityProxy = entityProxyBuilder(componentStructure);
     components.forEach((c) => {
-      addEcsComponent(world, c, eid);
+      addEcsComponent(this.world, c.component, eid);
     });
 
     entityProxy.id = eid;
 
-    return entityProxy;
-  };
-
-  const createEntity = <CS extends ComponentStructure>(
-    componentStructure: CS
-  ): EntityProxy<CS> => {
-    const newEid = createBaseEntity();
-    return addComponents(newEid, componentStructure);
-  };
-
-  const loadSpriteSheet = async (assetUrl: string) => {
-    await Assets.load(assetUrl);
-  };
-
-  const getColorValue = (colorString?: string): number => {
-    return colorMap.addValue(colorString ?? "#ffffff");
-  };
-
-  const getColorString = (colorValue: number): string => {
-    return colorMap.getValue(colorValue) ?? "#ffffff";
-  };
-
-  const getAssetValue = (assetString?: string): number => {
-    return assetMap.addValue(assetString ?? "");
-  };
-
-  const getAssetString = (assetValue: number): string => {
-    return assetMap.getValue(assetValue) ?? "";
-  };
-
-  return {
-    world,
-    pixiApp: pixiApp,
-    systems,
-    gameLoopTicker,
-    matterEngine,
-
-    start,
-    stop,
-    kill,
-    update,
-    createBaseEntity,
-    createEntity,
-    killEntity,
-    addComponents,
-    loadSpriteSheet,
-    getColorValue,
-    getColorString,
-    getAssetValue,
-    getAssetString,
-
-    settings: {
-      ...defaultSettings,
-      ...options.settings
+    for (const prop in props) {
+      if (
+        Object.prototype.hasOwnProperty.call(props, prop) &&
+        Object.prototype.hasOwnProperty.call(entityProxy, prop)
+      ) {
+        Object.assign(entityProxy[prop], props[prop]);
+      }
     }
-  };
+
+    return entityProxy;
+  }
+
+  createEntity<CS extends EntityStructure>(
+    componentStructure: CS,
+    props?: EntityProxyProps<CS>
+  ): EntityProxy<CS> {
+    const newEid = this.createBaseEntity();
+    return this.addComponents(newEid, componentStructure, props);
+  }
+
+  addSystem(system: any) {
+    this.systems.push(system);
+  }
+
+  async loadSpriteSheet(assetUrl: string) {
+    await Assets.load(assetUrl);
+  }
 }

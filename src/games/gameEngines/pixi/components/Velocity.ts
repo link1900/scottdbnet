@@ -1,18 +1,26 @@
 import { defineComponent, Types } from "bitecs";
-import { ComponentProxy, EntityProxy } from "../../bitECS/proxyHelper";
+import { ComponentProxy } from "../../bitECS/ComponentProxy";
 
 export const Velocity = defineComponent({ x: Types.f32, y: Types.f32 });
 
-export interface VelocityOptions {
-  velocityX?: number;
-  velocityY?: number;
-}
+export class VelocityProxy extends ComponentProxy<typeof Velocity> {
+  constructor() {
+    super("velocity", Velocity);
+  }
 
-export function velocityBuilder(
-  velocityEntity: EntityProxy<{ velocity: ComponentProxy<typeof Velocity> }>,
-  options: VelocityOptions
-): EntityProxy<{ velocity: ComponentProxy<typeof Velocity> }> {
-  velocityEntity.velocity.x = options.velocityX ?? 0;
-  velocityEntity.velocity.y = options.velocityY ?? 0;
-  return velocityEntity;
+  get x(): number {
+    return this.component.x[this.id];
+  }
+
+  set x(val: number) {
+    this.component.x[this.id] = val;
+  }
+
+  get y(): number {
+    return this.component.x[this.id];
+  }
+
+  set y(val: number) {
+    this.component.x[this.id] = val;
+  }
 }
