@@ -81,17 +81,3 @@ export class MatterSystem extends SystemBase<Matter> {
 //     graphics.closePath();
 //   }
 // }
-
-// function clearOutOfBoundBodies(
-//   game: PixiGame,
-//   entity: EntityProxy<typeof matterStructure>
-// ) {
-//   if (
-//     entity.position.x < game.pixiApp.screen.width * -1 ||
-//     entity.position.y < game.pixiApp.screen.height * -1 ||
-//     entity.position.x > game.pixiApp.screen.width * 2 ||
-//     entity.position.y > game.pixiApp.screen.height * 2
-//   ) {
-//     game.killEntity(entity.id);
-//   }
-// }

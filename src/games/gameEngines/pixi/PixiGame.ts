@@ -8,6 +8,7 @@ import {
   ComponentType,
   ISchema
 } from "bitecs";
+import { defaultsDeep } from "lodash";
 import { Engine } from "matter-js";
 import { Application, Assets, Ticker } from "pixi.js";
 import { ApplicationOptions } from "pixi.js/lib/app/Application";
@@ -101,13 +102,15 @@ export class PixiGame {
   }
 
   killEntity(eid: number) {
+    console.log(`killed entity ${eid}`);
     return removeEcsEntity(this.world, eid);
   }
 
   addComponents<CS extends EntityStructure>(
     eid: number,
     componentStructure: CS,
-    props?: EntityProxyProps<CS>
+    props?: EntityProxyProps<CS>,
+    defaults?: EntityProxyProps<CS>
   ): EntityProxy<CS> {
     const components = Object.values(componentStructure);
     const entityProxy = entityProxyBuilder(componentStructure);
@@ -117,12 +120,14 @@ export class PixiGame {
 
     entityProxy.id = eid;
 
-    for (const prop in props) {
+    const merged = defaultsDeep(props, defaults);
+
+    for (const prop in merged) {
       if (
-        Object.prototype.hasOwnProperty.call(props, prop) &&
+        Object.prototype.hasOwnProperty.call(merged, prop) &&
         Object.prototype.hasOwnProperty.call(entityProxy, prop)
       ) {
-        Object.assign(entityProxy[prop], props[prop]);
+        Object.assign(entityProxy[prop], merged[prop]);
       }
     }
 
@@ -131,10 +136,11 @@ export class PixiGame {
 
   createEntity<CS extends EntityStructure>(
     componentStructure: CS,
-    props?: EntityProxyProps<CS>
+    props?: EntityProxyProps<CS>,
+    defaults?: EntityProxyProps<CS>
   ): EntityProxy<CS> {
     const newEid = this.createBaseEntity();
-    return this.addComponents(newEid, componentStructure, props);
+    return this.addComponents(newEid, componentStructure, props, defaults);
   }
 
   addSystem(system: any) {

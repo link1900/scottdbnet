@@ -6,14 +6,20 @@ import {
 import { SystemBase } from "../../gameEngines/bitECS/SystemBase";
 import { pixiComponents } from "../../gameEngines/pixi/components/pixiComponents";
 import { PixiGame } from "../../gameEngines/pixi/PixiGame";
+import { createBalloonBits } from "../entities/BalloonBitBuilder";
 
-const clickedStructure = getComponents(pixiComponents, ["clicked", "position"]);
+const clickedStructure = getComponents(pixiComponents, [
+  "clicked",
+  "sprite",
+  "position",
+  "size"
+]);
 
 export type Clicked = typeof clickedStructure;
 
 function createClicked(entity: EntityProxy<Clicked>, game: PixiGame) {
-  console.log("clicked", entity.id);
-  game.removeComponent(entity, pixiComponents.clicked);
+  game.killEntity(entity.id);
+  createBalloonBits(game, entity);
 }
 
 export class PopSystem extends SystemBase<Clicked> {

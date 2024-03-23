@@ -24,9 +24,14 @@ export abstract class ComponentProxy<T extends ComponentType<ISchema>> {
     field: TypedArray,
     val: T | null
   ): void {
-    fieldData.removeValue(field[this.id]);
+    const oldId = field[this.id];
     if (val !== null) {
       field[this.id] = fieldData.setValue(val);
+    } else {
+      field[this.id] = 0;
+    }
+    if (oldId !== 0) {
+      fieldData.removeValue(oldId);
     }
   }
 }

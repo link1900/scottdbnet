@@ -19,6 +19,8 @@ export class ReusableIdGenerator {
 
   recycleId(id: number): void {
     // Recycle the used ID
-    this.recycledIds.push(id);
+    if (id !== 0) {
+      this.recycledIds.push(id);
+    }
   }
 }

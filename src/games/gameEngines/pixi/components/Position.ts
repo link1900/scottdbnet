@@ -17,10 +17,10 @@ export class PositionProxy extends ComponentProxy<typeof Position> {
   }
 
   get y(): number {
-    return this.component.x[this.id];
+    return this.component.y[this.id];
   }
 
   set y(val: number) {
-    this.component.x[this.id] = val;
+    this.component.y[this.id] = val;
   }
 }
