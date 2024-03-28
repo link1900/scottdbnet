@@ -2323,6 +2323,19 @@
   resolved "https://registry.npmjs.org/@pixi/colord/-/colord-2.9.6.tgz"
   integrity sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA==
 
+"@pixi/sound@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@pixi/sound/-/sound-6.0.0.tgz#1545ce8dc9096a96c749a0ec3b4e552399057f3a"
+  integrity sha512-fEaCs2JmyYT1qqouFS3DydSccI35dyYD0pKK2hEbIGVDKUTvl224x0p4qme2YU9l465WRtM7gspLzP5fFf1mxQ==
+
+"@pixi/ui@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@pixi/ui/-/ui-2.0.0.tgz#c67003bd8f5142979342d2f79917bf4562a0dd2a"
+  integrity sha512-5RvAGSUFSFskU53gcPAkHvFlzqkzmS2hwjP2XPSn8+aE97ztW3YNnMXlx3tV0YAIXSQlfJyJevAImAxDGmn9oA==
+  dependencies:
+    tweedle.js "^2.1.0"
+    typed-signals "^2.5.0"
+
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.10"
   resolved "https://registry.npmjs.org/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.5.10.tgz"
@@ -10653,6 +10666,11 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
+tweedle.js@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tweedle.js/-/tweedle.js-2.1.0.tgz#523f5d50e5223c3c809b1aa627c6e9648e576d93"
+  integrity sha512-0ReQgVjepoZkE6t0upWNgCRbplHkQJQYk1LStXugwSR728GLFmGDRuaQJlxeC/iBlxud6+P1RdODjaO25vHAqw==
+
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
   resolved "https://registry.npmjs.org/type-check/-/type-check-0.4.0.tgz"
@@ -10694,6 +10712,11 @@ type-is@~1.6.18:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.24"
+
+typed-signals@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/typed-signals/-/typed-signals-2.5.0.tgz#7be73505c2ee0dc4e43f1c4ee002c855796bd89a"
+  integrity sha512-m9lHc3eBCJerXYdx+G0uWZihyUXdqTzzgOdqiDDsoUo75WjhFJH6vP5/6w/xhyu04zoxHUqgYhf9FEt85dk/Ng==
 
 typedarray-to-buffer@^3.1.5:
   version "3.1.5"

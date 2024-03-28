@@ -1,0 +1,37 @@
+{
+  "bundles": [
+    {
+      "name": "main",
+      "assets": [
+        {
+          "alias": "image_pack",
+          "src": "images/image_pack.json"
+        },
+        {
+          "alias": "clouds.mp3",
+          "src": "sounds/clouds.mp3"
+        },
+        {
+          "alias": "drip.wav",
+          "src": "sounds/drip.wav"
+        },
+        {
+          "alias": "forest.mp3",
+          "src": "sounds/forest.mp3"
+        },
+        {
+          "alias": "pop.wav",
+          "src": "sounds/pop.wav"
+        },
+        {
+          "alias": "poploud.wav",
+          "src": "sounds/poploud.wav"
+        },
+        {
+          "alias": "popquite.wav",
+          "src": "sounds/popquite.wav"
+        }
+      ]
+    }
+  ]
+}

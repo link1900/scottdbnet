@@ -10,8 +10,9 @@ import {
 } from "bitecs";
 import { defaultsDeep } from "lodash";
 import { Engine } from "matter-js";
-import { Application, Assets, Ticker } from "pixi.js";
+import { Application, Ticker, Assets } from "pixi.js";
 import { ApplicationOptions } from "pixi.js/lib/app/Application";
+import { AssetInitOptions } from "pixi.js/lib/assets/Assets";
 import { ComponentProxy } from "../bitECS/ComponentProxy";
 import {
   EntityStructure,
@@ -20,19 +21,19 @@ import {
   EntityProxyProps
 } from "../bitECS/entityHelper";
 import { SystemBase } from "../bitECS/SystemBase";
-
-export type PixiGameSettings = {
-  physicsWireframe: boolean;
-};
+import { SoundLibrary } from "@pixi/sound";
 
 export type PixiGameOptions = {
   pixiOptions?: Partial<ApplicationOptions>;
-  init?: () => void;
-  settings?: Partial<PixiGameSettings>;
+  physicsWireframe?: boolean;
 };
 
-const defaultSettings: PixiGameSettings = {
-  physicsWireframe: false
+const defaultSettings: PixiGameOptions = {
+  physicsWireframe: false,
+  pixiOptions: {
+    width: 640,
+    height: 480
+  }
 };
 
 export class PixiGame {
@@ -41,8 +42,8 @@ export class PixiGame {
   private systems: SystemBase<any>[];
   gameLoopTicker: Ticker;
   matterEngine: Engine;
-  settings: PixiGameSettings;
-  pixiOptions?: Partial<ApplicationOptions>;
+  settings: PixiGameOptions;
+  audio: SoundLibrary = undefined as any;
 
   constructor(options: PixiGameOptions) {
     this.world = createWorld();
@@ -50,11 +51,7 @@ export class PixiGame {
     this.systems = [];
     this.gameLoopTicker = new Ticker();
     this.matterEngine = Engine.create();
-    this.settings = {
-      ...defaultSettings,
-      ...options.settings
-    };
-    this.pixiOptions = options.pixiOptions;
+    this.settings = defaultsDeep(options, defaultSettings);
 
     this.gameLoopTicker.add((delta) => {
       Engine.update(this.matterEngine);
@@ -63,7 +60,25 @@ export class PixiGame {
   }
 
   async init() {
-    await this.pixiApp.init(this.pixiOptions);
+    await this.pixiApp.init(this.settings.pixiOptions);
+
+    // importing global sound will immediately create auto contexts
+    // we need to dynamically import it during init
+    this.audio = (await import("@pixi/sound")).sound;
+
+    // to prevent the page getting clicks through the canvas
+    this.pixiApp.stage.eventMode = "static";
+    this.pixiApp.stage.on("pointerdown", (e) => {
+      e.preventDefault();
+    });
+  }
+
+  async readManifest(options?: AssetInitOptions) {
+    return await Assets.init(options);
+  }
+
+  async loadBundle(name: string) {
+    return await Assets.loadBundle(name);
   }
 
   start() {
@@ -76,6 +91,7 @@ export class PixiGame {
 
   kill() {
     Engine.clear(this.matterEngine);
+    this.audio.removeAll();
     this.pixiApp.destroy(true);
   }
 
@@ -145,9 +161,5 @@ export class PixiGame {
 
   addSystem(system: any) {
     this.systems.push(system);
-  }
-
-  async loadSpriteSheet(assetUrl: string) {
-    await Assets.load(assetUrl);
   }
 }

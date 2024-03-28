@@ -7,9 +7,15 @@ import { createBalloon } from "./entities/BalloonBuilder";
 import { PopSystem } from "./systems/PopSystem";
 
 export async function setupBalloonBurst(game: PixiGame) {
-  await game.loadSpriteSheet("/assets/balloon/balloon_pack.json");
+  console.log("loading assets");
+  await game.readManifest({
+    basePath: "/assets/balloon",
+    manifest: "manifest.json"
+  });
+  await game.loadBundle("main");
 
   // setup systems
+  console.log("setting up systems");
   game.addSystem(new BoundCullingSystem(game));
   game.addSystem(new SpriteSystem(game));
   game.addSystem(new InteractionSystem(game));
@@ -17,5 +23,9 @@ export async function setupBalloonBurst(game: PixiGame) {
   game.addSystem(new MotionSystem(game));
 
   // setup entities
+  console.log("creating entities");
+
   createBalloon(game);
 }
+
+export async function runBalloonBurst(game: PixiGame) {}
