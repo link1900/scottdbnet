@@ -3,12 +3,10 @@ import { DataField, DataFieldType } from "./DataField";
 
 export abstract class ComponentProxy<T extends ComponentType<ISchema>> {
   id: number;
-  componentName: string;
   component: T;
 
-  protected constructor(componentName: string, component: T) {
+  protected constructor(component: T) {
     this.id = 0;
-    this.componentName = componentName;
     this.component = component;
   }
 

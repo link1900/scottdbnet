@@ -1,11 +1,12 @@
-import { defineComponent, Types } from "bitecs";
+import { ComponentType, defineComponent, Types } from "bitecs";
 import { ComponentProxy } from "../../bitECS/ComponentProxy";
 
-export const Size = defineComponent({ width: Types.f32, height: Types.f32 });
+export const SizeSchema = { width: Types.f32, height: Types.f32 };
+export type SizeSchemaType = ComponentType<typeof SizeSchema>;
 
-export class SizeProxy extends ComponentProxy<typeof Size> {
+export class SizeProxy extends ComponentProxy<SizeSchemaType> {
   constructor() {
-    super("size", Size);
+    super(defineComponent(SizeSchema));
   }
 
   get width(): number {

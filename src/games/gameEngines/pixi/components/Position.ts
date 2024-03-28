@@ -1,11 +1,12 @@
-import { defineComponent, Types } from "bitecs";
+import { ComponentType, defineComponent, Types } from "bitecs";
 import { ComponentProxy } from "../../bitECS/ComponentProxy";
 
-export const Position = defineComponent({ x: Types.f32, y: Types.f32 });
+export const PositionSchema = { x: Types.f32, y: Types.f32 };
+export type PositionSchemaType = ComponentType<typeof PositionSchema>;
 
-export class PositionProxy extends ComponentProxy<typeof Position> {
+export class PositionProxy extends ComponentProxy<PositionSchemaType> {
   constructor() {
-    super("position", Position);
+    super(defineComponent(PositionSchema));
   }
 
   get x(): number {

@@ -1,11 +1,12 @@
-import { defineComponent, Types } from "bitecs";
+import { ComponentType, defineComponent, Types } from "bitecs";
 import { ComponentProxy } from "../../bitECS/ComponentProxy";
 
-export const Rotation = defineComponent({ angle: Types.f32 });
+export const RotationSchema = { angle: Types.f32 };
+export type RotationSchemaType = ComponentType<typeof RotationSchema>;
 
-export class RotationProxy extends ComponentProxy<typeof Rotation> {
+export class RotationProxy extends ComponentProxy<RotationSchemaType> {
   constructor() {
-    super("rotation", Rotation);
+    super(defineComponent(RotationSchema));
   }
 
   get angle(): number {

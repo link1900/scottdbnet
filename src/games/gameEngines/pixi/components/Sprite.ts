@@ -1,19 +1,20 @@
-import { defineComponent, Types } from "bitecs";
+import { ComponentType, defineComponent, Types } from "bitecs";
 import { ComponentProxy } from "../../bitECS/ComponentProxy";
 import { Sprite as PixiSprite } from "pixi.js";
 import { DataField } from "../../bitECS/DataField";
 
-export const Sprite = defineComponent({
+export const SpriteSchema = {
   texture: Types.ui32,
   sprite: Types.ui32
-});
+};
+export type SpriteSchemaType = ComponentType<typeof SpriteSchema>;
 
-export class SpriteProxy extends ComponentProxy<typeof Sprite> {
+export class SpriteProxy extends ComponentProxy<SpriteSchemaType> {
   textureData = new DataField<string>();
   spriteData = new DataField<PixiSprite>();
 
   constructor() {
-    super("sprite", Sprite);
+    super(defineComponent(SpriteSchema));
   }
 
   get texture(): string | null {

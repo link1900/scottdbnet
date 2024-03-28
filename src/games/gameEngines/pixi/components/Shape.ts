@@ -1,4 +1,4 @@
-import { defineComponent, Types } from "bitecs";
+import { ComponentType, defineComponent, Types } from "bitecs";
 import { Graphics } from "pixi.js";
 import { ComponentProxy } from "../../bitECS/ComponentProxy";
 import { DataField } from "../../bitECS/DataField";
@@ -8,21 +8,22 @@ export enum ShapeType {
   RECT
 }
 
-export const Shape = defineComponent({
+export const ShapeSchema = {
   graphic: Types.ui32,
   type: Types.ui8,
   fillColor: Types.ui32,
   lineColor: Types.ui32,
   lineSize: Types.ui16
-});
+};
+export type ShapeSchemaType = ComponentType<typeof ShapeSchema>;
 
-export class ShapeProxy extends ComponentProxy<typeof Shape> {
+export class ShapeProxy extends ComponentProxy<ShapeSchemaType> {
   graphicData = new DataField<Graphics>();
   fillColorData = new DataField<string>();
   lineColorData = new DataField<string>();
 
   constructor() {
-    super("shape", Shape);
+    super(defineComponent(ShapeSchema));
   }
 
   get graphic(): Graphics | null {

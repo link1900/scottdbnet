@@ -1,4 +1,4 @@
-import { defineComponent, Types } from "bitecs";
+import { ComponentType, defineComponent, Types } from "bitecs";
 import { Body } from "matter-js";
 import { ComponentProxy } from "../../bitECS/ComponentProxy";
 import { DataField } from "../../bitECS/DataField";
@@ -8,20 +8,21 @@ export enum PhysicalMovementType {
   DYNAMIC
 }
 
-export const Physical = defineComponent({
+export const PhysicalSchema = {
   body: Types.ui32,
   movement: Types.ui32,
   density: Types.f32,
   friction: Types.f32,
   frictionAir: Types.f32,
   restitution: Types.f32
-});
+};
+export type PhysicalSchemaType = ComponentType<typeof PhysicalSchema>;
 
-export class PhysicalProxy extends ComponentProxy<typeof Physical> {
+export class PhysicalProxy extends ComponentProxy<PhysicalSchemaType> {
   bodyData = new DataField<Body>();
 
   constructor() {
-    super("physical", Physical);
+    super(defineComponent(PhysicalSchema));
   }
 
   get body(): Body | null {

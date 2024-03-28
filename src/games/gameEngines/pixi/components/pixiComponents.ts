@@ -6,7 +6,6 @@ import { RotationProxy } from "./Rotation";
 import { ShapeProxy } from "./Shape";
 import { SizeProxy } from "./Size";
 import { SpriteProxy } from "./Sprite";
-import { VelocityProxy } from "./Velocity";
 
 export const pixiComponents = {
   clicked: new ClickedProxy(),
@@ -16,6 +15,6 @@ export const pixiComponents = {
   shape: new ShapeProxy(),
   position: new PositionProxy(),
   size: new SizeProxy(),
-  velocity: new VelocityProxy(),
+  velocity: new PositionProxy(),
   rotation: new RotationProxy()
 };

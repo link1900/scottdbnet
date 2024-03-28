@@ -1,10 +1,8 @@
 import { defineComponent } from "bitecs";
 import { ComponentProxy } from "../../bitECS/ComponentProxy";
 
-export const Clicked = defineComponent();
-
-export class ClickedProxy extends ComponentProxy<typeof Clicked> {
+export class ClickedProxy extends ComponentProxy<{}> {
   constructor() {
-    super("clicked", Clicked);
+    super(defineComponent());
   }
 }

@@ -19,6 +19,7 @@ export type Clicked = typeof clickedStructure;
 
 function createClicked(entity: EntityProxy<Clicked>, game: PixiGame) {
   game.killEntity(entity.id);
+  game.audio.play("pop.wav");
   createBalloonBits(game, entity);
 }
 
