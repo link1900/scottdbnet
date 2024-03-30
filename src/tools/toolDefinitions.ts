@@ -32,5 +32,10 @@ export const toolDefinitions: ToolDefinition[] = [
     name: "sample",
     title: "Sample Generator",
     component: lazy(() => import("./sampleGenerator/SampleGenerator"))
+  },
+  {
+    name: "benchMarker",
+    title: "Bench Marker",
+    component: lazy(() => import("./benchMarker/BenchMarker"))
   }
 ];
