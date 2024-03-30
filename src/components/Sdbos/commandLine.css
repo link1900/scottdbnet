@@ -64,10 +64,11 @@
 
 .log {
   margin-top: 3px;
+  margin-right: 8px;
 }
 
 .cursor {
-  background: black;
+  background: #45d40c;
   box-sizing: border-box;
   border-left: 0.5em solid;
   -webkit-animation:
