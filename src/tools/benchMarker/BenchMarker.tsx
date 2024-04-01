@@ -4,7 +4,14 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
-  Select
+  Paper,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
 } from "@material-ui/core";
 import { PageLayout } from "../../components/PageLayout";
 import { Row } from "../../components/Row";
@@ -22,19 +29,93 @@ import {
   createSampleWorker
 } from "../workers/workerFactories";
 import { runBenchMarkSuite } from "./benchMarkHelper";
+import { BenchmarkSuiteResult } from "./BenchmarkSuiteResult";
 import { getCompressionBenchMarkSuite } from "./compressionSuite";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+
+function buildChartOptions(result: BenchmarkSuiteResult<any, any>) {
+  const series = Object.entries(result.groupedResults).map(
+    ([key, dataSetGroup]) => {
+      return {
+        name: key,
+        data: dataSetGroup.map((result) => {
+          return Math.round(result.performance.millisecondsDifference);
+        })
+      };
+    }
+  );
+
+  return {
+    chart: {
+      type: "bar"
+    },
+    title: {
+      text: "Benchmark Results"
+    },
+    xAxis: {
+      categories: result.results.map((result) => result.name),
+      title: {
+        text: null
+      },
+      gridLineWidth: 1,
+      lineWidth: 0
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: "Performance (ms)",
+        align: "high"
+      },
+      labels: {
+        overflow: "justify"
+      },
+      gridLineWidth: 0,
+      tooltip: {
+        valueSuffix: "ms"
+      },
+      plotOptions: {
+        bar: {
+          dataLabels: {
+            enabled: true
+          },
+          groupPadding: 0.1
+        }
+      },
+      legend: {
+        layout: "vertical",
+        align: "right",
+        verticalAlign: "top",
+        x: -40,
+        y: 80,
+        floating: true,
+        borderWidth: 1,
+        backgroundColor: "#FFFFFF",
+        shadow: true
+      }
+    },
+    series,
+    credits: {
+      enabled: false
+    }
+  };
+}
 
 export default function BenchMarker() {
   const [suite, setSuite] = useState<string>("compression");
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [suiteResult, setSuiteResult] = useState<
+    BenchmarkSuiteResult<any, any> | undefined
+  >(undefined);
   const { addOutput } = useLog();
   const { addCommand, processInput } = useCommands();
 
   const runSuite = async (suiteName: string) => {
     if (suiteName === "compression") {
-      await runBenchMarkSuite(
+      const runResults = await runBenchMarkSuite(
         getCompressionBenchMarkSuite(addOutput, generateSample, runCompression)
       );
+      setSuiteResult(runResults);
     }
   };
 
@@ -106,6 +187,42 @@ export default function BenchMarker() {
         <Row>
           <SdbosCommandLine name="Bench Mark" width={800} height={480} />
         </Row>
+        {suiteResult ? (
+          <Row>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={buildChartOptions(suiteResult)}
+            />
+          </Row>
+        ) : null}
+        {suiteResult ? (
+          <Row>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="right">Data Set</TableCell>
+                    <TableCell>Test Name</TableCell>
+                    <TableCell align="right">Performance (ms)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {suiteResult.results.map((result) => (
+                    <TableRow key={result.name}>
+                      <TableCell align="right">{result.dataSet}</TableCell>
+                      <TableCell component="th" scope="row">
+                        {result.name}
+                      </TableCell>
+                      <TableCell align="right">
+                        {Math.round(result.performance.millisecondsDifference)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Row>
+        ) : null}
       </Stack>
     </PageLayout>
   );

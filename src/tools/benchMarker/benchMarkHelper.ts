@@ -6,27 +6,29 @@ import {
 import { BenchMark } from "./BenchMark";
 import { BenchMarkResult } from "./BenchMarkResult";
 import { BenchMarkSuite } from "./BenchMarkSuite";
+import { BenchmarkSuiteResult } from "./BenchmarkSuiteResult";
 import { DataSet } from "./DataSet";
 
 export async function runBenchMarkSuite<BenchMarkSetupResult, DataSetupResult>(
   benchMarkSuite: BenchMarkSuite<BenchMarkSetupResult, DataSetupResult>
-): Promise<void> {
+): Promise<BenchmarkSuiteResult<BenchMarkSetupResult, DataSetupResult>> {
   benchMarkSuite.logger(
     `starting running bench mark suite "${benchMarkSuite.name}"`
   );
   const { benchMarks, dataSets } = benchMarkSuite;
   const results = await runBenchMarks(benchMarkSuite, benchMarks, dataSets);
-  benchMarkSuite.logger("");
-  benchMarkSuite.logger("### results ###");
+  const sortedResults = results.sort(sortBenchMarkResult);
   const dataSetGroups = groupBy(results, "dataSet");
-  Object.entries(dataSetGroups).forEach(([key, dataSetGroup]) => {
-    benchMarkSuite.logger(`## data set ${key} ##`);
-    reportBenchMarkResults(benchMarkSuite, dataSetGroup);
-    benchMarkSuite.logger("");
-  });
-  benchMarkSuite.logger(
-    `finished running bench mark suite "${benchMarkSuite.name}"`
-  );
+  const suiteResult: BenchmarkSuiteResult<
+    BenchMarkSetupResult,
+    DataSetupResult
+  > = {
+    suite: benchMarkSuite,
+    results: sortedResults,
+    groupedResults: dataSetGroups
+  };
+  reportBenchMarkResults(suiteResult);
+  return suiteResult;
 }
 
 export async function runBenchMarks<BenchMarkSetupResult, DataSetupResult>(
@@ -89,17 +91,39 @@ export function sortBenchMarkResult(
   if (a.dataSet > b.dataSet) {
     return 1;
   }
+  if (a.name < b.name) {
+    return -1;
+  }
+  if (a.name > b.name) {
+    return 1;
+  }
   return (
     a.performance.millisecondsDifference - b.performance.millisecondsDifference
   );
 }
 
 export function reportBenchMarkResults<BenchMarkSetupResult, DataSetupResult>(
+  result: BenchmarkSuiteResult<BenchMarkSetupResult, DataSetupResult>
+): void {
+  const logger = result.suite.logger;
+  logger("");
+  logger("### results ###");
+  Object.entries(result.groupedResults).forEach(([key, dataSetGroup]) => {
+    logger(`## data set ${key} ##`);
+    reportBenchMarkDataSetResults(result.suite, dataSetGroup);
+    logger("");
+  });
+  logger(`finished running bench mark suite "${result.suite.name}"`);
+}
+
+export function reportBenchMarkDataSetResults<
+  BenchMarkSetupResult,
+  DataSetupResult
+>(
   benchMarkSuite: BenchMarkSuite<BenchMarkSetupResult, DataSetupResult>,
   results: BenchMarkResult[]
 ): void {
-  const sortedResults = results.sort(sortBenchMarkResult);
-  sortedResults.forEach((r) => {
+  results.forEach((r) => {
     benchMarkSuite.logger(`${r.name} = ${r.performance.displayDifference}`);
   });
 }
