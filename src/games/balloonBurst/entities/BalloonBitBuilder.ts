@@ -1,18 +1,17 @@
 import {
-  EntityProxy,
   EntityProxyProps,
   getComponents
 } from "../../gameEngines/bitECS/entityHelper";
 import { pixiComponents } from "../../gameEngines/pixi/components/pixiComponents";
-import { PositionProxy } from "../../gameEngines/pixi/components/Position";
+import {
+  spriteComponents,
+  SpriteEntity
+} from "../../gameEngines/pixi/entities/SpriteEntity";
 import { PixiGame } from "../../gameEngines/pixi/PixiGame";
 
 const balloonBitComponents = getComponents(pixiComponents, [
-  "sprite",
-  "position",
-  "size",
+  ...spriteComponents,
   "velocity",
-  "rotation",
   "physical"
 ]);
 
@@ -36,14 +35,14 @@ const defaultBalloonBitProps: BalloonBitOptions = {
   }
 };
 
-export function createBalloonBits(
-  game: PixiGame,
-  balloon: EntityProxy<{ position: PositionProxy }>
-) {
+export function createBalloonBits(game: PixiGame, balloon: SpriteEntity) {
   const options: BalloonBitOptions = {
     position: {
       x: balloon.position.x,
       y: balloon.position.y
+    },
+    parent: {
+      ref: balloon.parent.ref
     }
   };
 

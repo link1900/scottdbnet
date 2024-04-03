@@ -1,4 +1,7 @@
+import { DisplayProxy } from "./Display";
 import { ClickedProxy } from "./Clicked";
+import { ContainerProxy } from "./Container";
+import { EntityRefProxy } from "./EntityRef";
 import { InteractionProxy } from "./Interaction";
 import { PhysicalProxy } from "./Physical";
 import { PositionProxy } from "./Position";
@@ -16,5 +19,10 @@ export const pixiComponents = {
   position: new PositionProxy(),
   size: new SizeProxy(),
   velocity: new PositionProxy(),
-  rotation: new RotationProxy()
+  rotation: new RotationProxy(),
+  parent: new EntityRefProxy(),
+  container: new ContainerProxy(),
+  display: new DisplayProxy()
 };
+
+export type PixiComponentsTypes = keyof typeof pixiComponents;

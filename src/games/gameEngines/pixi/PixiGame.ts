@@ -71,6 +71,9 @@ export class PixiGame {
     this.pixiApp.stage.on("pointerdown", (e) => {
       e.preventDefault();
     });
+
+    // create empty entity to reserve the first entity id
+    this.createEntity({});
   }
 
   async readManifest(options?: AssetInitOptions) {
@@ -128,8 +131,9 @@ export class PixiGame {
     props?: EntityProxyProps<CS>,
     defaults?: EntityProxyProps<CS>
   ): EntityProxy<CS> {
-    const components = Object.values(componentStructure);
     const entityProxy = entityProxyBuilder(componentStructure);
+
+    const components = Object.values(componentStructure);
     components.forEach((c) => {
       addEcsComponent(this.world, c.component, eid);
     });

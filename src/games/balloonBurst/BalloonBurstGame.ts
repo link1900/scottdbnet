@@ -1,7 +1,9 @@
+import { createSceneEntity } from "../gameEngines/pixi/entities/SceneEntity";
 import { PixiGame } from "../gameEngines/pixi/PixiGame";
 import { BoundCullingSystem } from "../gameEngines/pixi/systems/BoundCullingSystem";
 import { InteractionSystem } from "../gameEngines/pixi/systems/InteractionSystem";
 import { MotionSystem } from "../gameEngines/pixi/systems/MotionSystem";
+import { SceneSystem } from "../gameEngines/pixi/systems/SceneSystem";
 import { SpriteSystem } from "../gameEngines/pixi/systems/SpriteSystem";
 import { createBalloon } from "./entities/BalloonBuilder";
 import { PopSystem } from "./systems/PopSystem";
@@ -17,6 +19,7 @@ export async function setupBalloonBurst(game: PixiGame) {
   // setup systems
   console.log("setting up systems");
   game.addSystem(new BoundCullingSystem(game));
+  game.addSystem(new SceneSystem(game));
   game.addSystem(new SpriteSystem(game));
   game.addSystem(new InteractionSystem(game));
   game.addSystem(new PopSystem(game));
@@ -25,6 +28,14 @@ export async function setupBalloonBurst(game: PixiGame) {
   // setup entities
   console.log("creating entities");
 
+  const menuScene = createSceneEntity(game);
+  // createBalloon(game, {
+  //   parent: { ref: menuScene.id },
+  //   sprite: { texture: "greenb.gif" }
+  // });
+
+  const gameScene = createSceneEntity(game, { display: { visible: false } });
+  // createBalloon(game, { parent: { ref: gameScene.id } });
   createBalloon(game);
 }
 

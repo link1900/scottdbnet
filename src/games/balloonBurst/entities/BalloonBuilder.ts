@@ -1,25 +1,29 @@
 import {
-  EntityProxy,
   EntityProxyProps,
   getComponents
 } from "../../gameEngines/bitECS/entityHelper";
-import { pixiComponents } from "../../gameEngines/pixi/components/pixiComponents";
+import { spriteComponents } from "../../gameEngines/pixi/entities/SpriteEntity";
 import { PixiGame } from "../../gameEngines/pixi/PixiGame";
+import {
+  BalloonBurstComponents,
+  balloonBurstComponents
+} from "../components/balloonBurstComponents";
 
-const balloonComponents = getComponents(pixiComponents, [
-  "sprite",
-  "position",
-  "size",
+export const balloonComponents: BalloonBurstComponents[] = [
+  ...spriteComponents,
   "velocity",
-  "rotation",
-  "interaction"
-]);
-
-export type BalloonOptions = EntityProxyProps<typeof balloonComponents>;
+  "interaction",
+  "balloonTag"
+];
+export const balloonFields = getComponents(
+  balloonBurstComponents,
+  balloonComponents
+);
+export type BalloonOptions = EntityProxyProps<typeof balloonFields>;
 
 const defaultBalloonProps = {
   sprite: {
-    texture: "blackb.gif"
+    texture: "blueb.png"
   },
   position: {
     x: 50,
@@ -36,5 +40,8 @@ const defaultBalloonProps = {
 };
 
 export function createBalloon(game: PixiGame, options: BalloonOptions = {}) {
-  return game.createEntity(balloonComponents, options, defaultBalloonProps);
+  const defaultContainer: BalloonOptions = {
+    ...defaultBalloonProps
+  };
+  return game.createEntity(balloonFields, options, defaultContainer);
 }

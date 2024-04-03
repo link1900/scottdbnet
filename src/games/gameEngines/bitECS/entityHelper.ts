@@ -113,3 +113,12 @@ export function getComponents<T, K extends keyof T>(
     {} as Pick<T, K>
   );
 }
+
+export function getEntity<CS extends EntityStructure>(
+  eid: number,
+  entityStructure: CS
+): EntityProxy<CS> {
+  const proxy = entityProxyBuilder(entityStructure);
+  proxy.id = eid;
+  return proxy;
+}
