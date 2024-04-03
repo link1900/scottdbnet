@@ -9,9 +9,9 @@ import { BenchMarkSuite } from "./BenchMarkSuite";
 import { BenchmarkSuiteResult } from "./BenchmarkSuiteResult";
 import { DataSet } from "./DataSet";
 
-export async function runBenchMarkSuite<BenchMarkSetupResult, DataSetupResult>(
-  benchMarkSuite: BenchMarkSuite<BenchMarkSetupResult, DataSetupResult>
-): Promise<BenchmarkSuiteResult<BenchMarkSetupResult, DataSetupResult>> {
+export async function runBenchMarkSuite<DataSetupResult>(
+  benchMarkSuite: BenchMarkSuite<DataSetupResult>
+): Promise<BenchmarkSuiteResult<DataSetupResult>> {
   benchMarkSuite.logger(
     `starting running bench mark suite "${benchMarkSuite.name}"`
   );
@@ -19,10 +19,7 @@ export async function runBenchMarkSuite<BenchMarkSetupResult, DataSetupResult>(
   const results = await runBenchMarks(benchMarkSuite, benchMarks, dataSets);
   const sortedResults = results.sort(sortBenchMarkResult);
   const dataSetGroups = groupBy(results, "dataSet");
-  const suiteResult: BenchmarkSuiteResult<
-    BenchMarkSetupResult,
-    DataSetupResult
-  > = {
+  const suiteResult: BenchmarkSuiteResult<DataSetupResult> = {
     suite: benchMarkSuite,
     results: sortedResults,
     groupedResults: dataSetGroups
@@ -31,9 +28,9 @@ export async function runBenchMarkSuite<BenchMarkSetupResult, DataSetupResult>(
   return suiteResult;
 }
 
-export async function runBenchMarks<BenchMarkSetupResult, DataSetupResult>(
-  benchMarkSuite: BenchMarkSuite<BenchMarkSetupResult, DataSetupResult>,
-  benchMarks: BenchMark<BenchMarkSetupResult, DataSetupResult>[],
+export async function runBenchMarks<DataSetupResult>(
+  benchMarkSuite: BenchMarkSuite<DataSetupResult>,
+  benchMarks: BenchMark<DataSetupResult>[],
   dataSets: DataSet<DataSetupResult>[]
 ): Promise<BenchMarkResult[]> {
   const results: BenchMarkResult[] = [];
@@ -54,9 +51,9 @@ export async function runBenchMarks<BenchMarkSetupResult, DataSetupResult>(
   return results;
 }
 
-export async function runBenchMark<BenchMarkSetupResult, DataSetupResult>(
-  benchMarkSuite: BenchMarkSuite<BenchMarkSetupResult, DataSetupResult>,
-  benchMark: BenchMark<BenchMarkSetupResult, DataSetupResult>,
+export async function runBenchMark<DataSetupResult>(
+  benchMarkSuite: BenchMarkSuite<DataSetupResult>,
+  benchMark: BenchMark<DataSetupResult>,
   dataSet: DataSet<DataSetupResult>
 ): Promise<BenchMarkResult | null> {
   if (!benchMark.enabled || !dataSet.enabled) {
@@ -65,10 +62,9 @@ export async function runBenchMark<BenchMarkSetupResult, DataSetupResult>(
   benchMarkSuite.logger(
     `started running bench mark "${benchMark.name}" with data set "${dataSet.name}"`
   );
-  const benchMarkSetupResult = await benchMark.setup();
   const dataSetupResult = await dataSet.setup();
   const startTime = getBenchmarkStartTime();
-  await benchMark.test(benchMarkSetupResult, dataSetupResult);
+  await benchMark.test(dataSetupResult);
   const performance = getPerformanceMeasure(startTime);
   benchMarkSuite.logger(
     `finished running bench mark "${benchMark.name}" with data set "${dataSet.name}" in ${performance.displayDifference}`
@@ -102,8 +98,8 @@ export function sortBenchMarkResult(
   );
 }
 
-export function reportBenchMarkResults<BenchMarkSetupResult, DataSetupResult>(
-  result: BenchmarkSuiteResult<BenchMarkSetupResult, DataSetupResult>
+export function reportBenchMarkResults<DataSetupResult>(
+  result: BenchmarkSuiteResult<DataSetupResult>
 ): void {
   const logger = result.suite.logger;
   logger("");
@@ -116,11 +112,8 @@ export function reportBenchMarkResults<BenchMarkSetupResult, DataSetupResult>(
   logger(`finished running bench mark suite "${result.suite.name}"`);
 }
 
-export function reportBenchMarkDataSetResults<
-  BenchMarkSetupResult,
-  DataSetupResult
->(
-  benchMarkSuite: BenchMarkSuite<BenchMarkSetupResult, DataSetupResult>,
+export function reportBenchMarkDataSetResults<DataSetupResult>(
+  benchMarkSuite: BenchMarkSuite<DataSetupResult>,
   results: BenchMarkResult[]
 ): void {
   results.forEach((r) => {

@@ -1,9 +1,5 @@
-export interface BenchMark<BenchMarkSetupResult, DataSetupResult> {
+export interface BenchMark<DataSetupResult> {
   enabled: boolean;
   name: string;
-  test: (
-    setupResult: BenchMarkSetupResult,
-    dataSetupResult: DataSetupResult
-  ) => Promise<void>;
-  setup: () => Promise<BenchMarkSetupResult>;
+  test: (dataSetupResult: DataSetupResult) => Promise<void>;
 }

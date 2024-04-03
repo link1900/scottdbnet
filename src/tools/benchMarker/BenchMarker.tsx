@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   FormControl,
@@ -33,8 +33,9 @@ import { BenchmarkSuiteResult } from "./BenchmarkSuiteResult";
 import { getCompressionBenchMarkSuite } from "./compressionSuite";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { getConwayBenchMarkSuite } from "./conwaySuite";
 
-function buildChartOptions(result: BenchmarkSuiteResult<any, any>) {
+function buildChartOptions(result: BenchmarkSuiteResult<any>) {
   const series = Object.entries(result.groupedResults).map(
     ([key, dataSetGroup]) => {
       return {
@@ -104,8 +105,9 @@ function buildChartOptions(result: BenchmarkSuiteResult<any, any>) {
 export default function BenchMarker() {
   const [suite, setSuite] = useState<string>("compression");
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [suiteResult, setSuiteResult] = useState<
-    BenchmarkSuiteResult<any, any> | undefined
+    BenchmarkSuiteResult<any> | undefined
   >(undefined);
   const { addOutput } = useLog();
   const { addCommand, processInput } = useCommands();
@@ -114,6 +116,12 @@ export default function BenchMarker() {
     if (suiteName === "compression") {
       const runResults = await runBenchMarkSuite(
         getCompressionBenchMarkSuite(addOutput, generateSample, runCompression)
+      );
+      setSuiteResult(runResults);
+    }
+    if (suiteName === "conway" && canvasRef.current !== null) {
+      const runResults = await runBenchMarkSuite(
+        getConwayBenchMarkSuite(addOutput, canvasRef.current)
       );
       setSuiteResult(runResults);
     }
@@ -173,6 +181,7 @@ export default function BenchMarker() {
               label="Format"
             >
               <MenuItem value="compression">Compression</MenuItem>
+              <MenuItem value="conway">Conway</MenuItem>
             </Select>
           </FormControl>
           <Button
@@ -223,6 +232,7 @@ export default function BenchMarker() {
             </TableContainer>
           </Row>
         ) : null}
+        <canvas ref={canvasRef} style={{ display: "none" }} />
       </Stack>
     </PageLayout>
   );

@@ -12,7 +12,7 @@ export function getCompressionBenchMarkSuite(
   logger: (output: string) => void,
   generateSample: (input: SampleGeneratorOptions) => Promise<string>,
   runCompression: (input: CompressionOptions) => Promise<CompressionResult>
-): BenchMarkSuite<void, string> {
+): BenchMarkSuite<string> {
   return {
     name: "compression",
     logger,
@@ -20,8 +20,7 @@ export function getCompressionBenchMarkSuite(
       {
         enabled: true,
         name: "LZ_STRING base64 compression",
-        setup: noOp,
-        test: async (setupResult, dataSetupResult) => {
+        test: async (dataSetupResult: string) => {
           await runCompression({
             input: dataSetupResult,
             operation: CompressorOperations.COMPRESS,
@@ -33,8 +32,7 @@ export function getCompressionBenchMarkSuite(
       {
         enabled: true,
         name: "LZ_STRING byte array compression",
-        setup: noOp,
-        test: async (setupResult, dataSetupResult) => {
+        test: async (dataSetupResult: string) => {
           await runCompression({
             input: dataSetupResult,
             operation: CompressorOperations.COMPRESS,
