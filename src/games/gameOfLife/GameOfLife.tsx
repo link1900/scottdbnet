@@ -1,6 +1,9 @@
 import React from "react";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
+import { PageLayout } from "../../components/PageLayout";
+import { Stack } from "../../components/Stack";
 import { ConwayWorld } from "./ConwayWorld";
+import { Row } from "../../components/Row";
 
 interface Props {}
 
@@ -16,69 +19,56 @@ export default class GameOfLife extends React.Component<Props> {
       canvas,
       height: CANVAS_SIZE,
       width: CANVAS_SIZE,
-      gridSize: 100,
+      gridSize: 200,
       boundType: "wrap",
       cellBorder: false,
-      framesPerSecond: 15
+      framesPerSecond: 60
     });
     this.world.start();
   }
 
   public render() {
     return (
-      <Grid container spacing={2} direction="column" alignItems="center">
-        <Grid item>
-          <Typography>Conways Game of Life</Typography>
-        </Grid>
-        <Grid item>
+      <PageLayout title="Conways Game of Life">
+        <Stack align="center" spacing={2}>
           <canvas
             ref="gameCanvas"
             width={CANVAS_SIZE}
             height={CANVAS_SIZE}
             style={{ border: "black solid 1px" }}
           />
-        </Grid>
-        <Grid item>
-          <Grid container spacing={2} direction="row">
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => this.world.start()}
-              >
-                Start
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => this.world.stop()}
-              >
-                Stop
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => this.world.step()}
-              >
-                Step
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => this.world.reset()}
-              >
-                Restart
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+          <Row spacing={2}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.world.start()}
+            >
+              Start
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.world.stop()}
+            >
+              Stop
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.world.step()}
+            >
+              Step
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.world.reset()}
+            >
+              Restart
+            </Button>
+          </Row>
+        </Stack>
+      </PageLayout>
     );
   }
 }

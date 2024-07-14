@@ -3,6 +3,8 @@ import { ThemeProvider } from "@material-ui/core";
 import { BrowserRouter } from "react-router-dom";
 import { AppContextProvider } from "./components/AppContext";
 import { ErrorZone } from "./components/ErrorZone";
+import { LoadingSpinner } from "./components/LoadingSpinner";
+import { SdbosContextProvider } from "./components/Sdbos/SdbosContext";
 import { PageRoutes } from "./PageRoutes";
 import { theme } from "./scottdbTheme";
 
@@ -11,11 +13,13 @@ export function App() {
     <ErrorZone>
       <AppContextProvider>
         <ThemeProvider theme={theme}>
-          <BrowserRouter>
-            <Suspense fallback={<div>Loading...</div>}>
-              <PageRoutes />
-            </Suspense>
-          </BrowserRouter>
+          <SdbosContextProvider>
+            <BrowserRouter>
+              <Suspense fallback={<LoadingSpinner message="Loading..." />}>
+                <PageRoutes />
+              </Suspense>
+            </BrowserRouter>
+          </SdbosContextProvider>
         </ThemeProvider>
       </AppContextProvider>
     </ErrorZone>

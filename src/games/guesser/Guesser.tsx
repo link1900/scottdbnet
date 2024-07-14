@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
+import { Box, Button, TextField, Typography } from "@material-ui/core";
+import { PageLayout } from "../../components/PageLayout";
+import { Row } from "../../components/Row";
+import { Stack } from "../../components/Stack";
 import thinkingImage from "./thinking.jpg";
-import { randomInteger } from "../gameEngine";
+import { randomInteger } from "../gameEngines/sdbCanvas2";
 
 interface State {
   guessCount: number;
@@ -91,19 +94,15 @@ export default function Guesser() {
   };
 
   return (
-    <Grid container spacing={3} direction="column" alignItems="center">
-      <Grid item>
+    <PageLayout title="Guess the number">
+      <Stack align="center">
         <img
           src={thinkingImage}
           alt="question mark"
           style={{ width: "320px", height: "226px" }}
         />
-      </Grid>
-      <Grid item>
         <Typography>Can you guess the number I am thinking of?</Typography>
-      </Grid>
-      {!finished ? (
-        <Grid item xs={12}>
+        {!finished ? (
           <Box width={500}>
             <TextField
               label="Enter a number between 1 and 100"
@@ -112,27 +111,19 @@ export default function Guesser() {
               fullWidth
             />
           </Box>
-        </Grid>
-      ) : null}
-      <Grid item xs={12}>
+        ) : null}
         <Typography>{history}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Grid container direction="row" spacing={2}>
+        <Row spacing={2}>
           {!finished ? (
-            <Grid item>
-              <Button variant="contained" onClick={() => submitGuess()}>
-                Submit
-              </Button>
-            </Grid>
-          ) : null}
-          <Grid item>
-            <Button variant="contained" onClick={() => restart()}>
-              {!finished ? "Restart" : "Again?"}
+            <Button variant="contained" onClick={() => submitGuess()}>
+              Submit
             </Button>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
+          ) : null}
+          <Button variant="contained" onClick={() => restart()}>
+            {!finished ? "Restart" : "Again?"}
+          </Button>
+        </Row>
+      </Stack>
+    </PageLayout>
   );
 }

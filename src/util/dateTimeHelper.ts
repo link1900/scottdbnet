@@ -4,6 +4,7 @@ export interface PerformanceMeasure {
   start: DOMHighResTimeStamp;
   end: DOMHighResTimeStamp;
   millisecondsDifference: number;
+  displayDifference: string;
 }
 
 export function getBenchmarkStartTime(): DOMHighResTimeStamp {
@@ -15,7 +16,12 @@ export function getPerformanceMeasure(
 ): PerformanceMeasure {
   const end = performance.now();
   const millisecondsDifference = end - start;
-  return { start, end, millisecondsDifference };
+  return {
+    start,
+    end,
+    millisecondsDifference,
+    displayDifference: convertMillisecondsToString(millisecondsDifference)
+  };
 }
 
 export function convertMillisecondsToString(milliseconds: number): string {

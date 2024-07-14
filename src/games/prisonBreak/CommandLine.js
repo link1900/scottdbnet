@@ -66,7 +66,7 @@ export default class CommandLine extends React.Component {
               style: {
                 padding: 0,
                 width: "95%",
-                marginTop: 3,
+                marginTop: 0,
                 height: "inherit",
                 lineHeight: "inherit"
               }
@@ -75,7 +75,8 @@ export default class CommandLine extends React.Component {
               style: {
                 background: "#00000",
                 color: "rgb(199, 197,189)",
-                font: "14px 'Roboto Mono', monospace"
+                font: "14px 'Roboto Mono', monospace",
+                padding: 0
               }
             }}
             value={currentInput}
