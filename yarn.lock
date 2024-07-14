@@ -2318,24 +2318,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@pixi/colord@^2.9.6":
-  version "2.9.6"
-  resolved "https://registry.npmjs.org/@pixi/colord/-/colord-2.9.6.tgz"
-  integrity sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA==
-
-"@pixi/sound@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@pixi/sound/-/sound-6.0.0.tgz#1545ce8dc9096a96c749a0ec3b4e552399057f3a"
-  integrity sha512-fEaCs2JmyYT1qqouFS3DydSccI35dyYD0pKK2hEbIGVDKUTvl224x0p4qme2YU9l465WRtM7gspLzP5fFf1mxQ==
-
-"@pixi/ui@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@pixi/ui/-/ui-2.0.0.tgz#c67003bd8f5142979342d2f79917bf4562a0dd2a"
-  integrity sha512-5RvAGSUFSFskU53gcPAkHvFlzqkzmS2hwjP2XPSn8+aE97ztW3YNnMXlx3tV0YAIXSQlfJyJevAImAxDGmn9oA==
-  dependencies:
-    tweedle.js "^2.1.0"
-    typed-signals "^2.5.0"
-
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.10"
   resolved "https://registry.npmjs.org/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.5.10.tgz"
@@ -2677,16 +2659,6 @@
   integrity sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==
   dependencies:
     "@types/node" "*"
-
-"@types/css-font-loading-module@^0.0.12":
-  version "0.0.12"
-  resolved "https://registry.npmjs.org/@types/css-font-loading-module/-/css-font-loading-module-0.0.12.tgz"
-  integrity sha512-x2tZZYkSxXqWvTDgveSynfjq/T2HyiZHXb00j/+gy19yp70PHCizM48XFdjBCWH7eHBD0R5i/pw9yMBP/BH5uA==
-
-"@types/earcut@^2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@types/earcut/-/earcut-2.1.4.tgz#5811d7d333048f5a7573b22ddc84923e69596da6"
-  integrity sha512-qp3m9PPz4gULB9MhjGID7wpo3gJ4bTGXm7ltNDsmOvsPduTeHp8wSW9YckBj3mljeOh4F0m2z/0JKAALRKbmLQ==
 
 "@types/eslint-scope@^3.7.3":
   version "3.7.4"
@@ -3247,16 +3219,6 @@
   dependencies:
     "@webassemblyjs/ast" "1.11.1"
     "@xtuc/long" "4.2.2"
-
-"@webgpu/types@^0.1.40":
-  version "0.1.40"
-  resolved "https://registry.yarnpkg.com/@webgpu/types/-/types-0.1.40.tgz#cf72d1df6f9f8adc5d39556041f20ff2e8a58885"
-  integrity sha512-/BBkHLS6/eQjyWhY2H7Dx5DHcVrS2ICj9owvSRdgtQT6KcafLZA86tPze0xAOsd4FbsYKCUBUQyNi87q7gV7kw==
-
-"@xmldom/xmldom@^0.8.10":
-  version "0.8.10"
-  resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99"
-  integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
 
 "@xobotyi/scrollbar-width@^1.9.5":
   version "1.9.5"
@@ -5001,11 +4963,6 @@ duplexer@^0.1.2:
   resolved "https://registry.npmjs.org/duplexer/-/duplexer-0.1.2.tgz"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
 
-earcut@^2.2.4:
-  version "2.2.4"
-  resolved "https://registry.npmjs.org/earcut/-/earcut-2.2.4.tgz"
-  integrity sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==
-
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz"
@@ -6600,11 +6557,6 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
-
-ismobilejs@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ismobilejs/-/ismobilejs-1.1.1.tgz#c56ca0ae8e52b24ca0f22ba5ef3215a2ddbbaa0e"
-  integrity sha512-VaFW53yt8QO61k2WJui0dHf4SlL8lxBofUuUmwBo0ljPk0Drz2TiuDW4jo3wDcv41qy/SxrJ+VAzJ/qYqsmzRw==
 
 isobject@^3.0.1:
   version "3.0.1"
@@ -8229,11 +8181,6 @@ parse-ms@^2.1.0:
   resolved "https://registry.npmjs.org/parse-ms/-/parse-ms-2.1.0.tgz"
   integrity sha512-kHt7kzLoS9VBZfUsiKjv43mr91ea+U05EyKkEtqp7vNbHxmaVuEqN7XxeEVnGrMtYOAxGrDElSi96K7EgO1zCA==
 
-parse-svg-path@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/parse-svg-path/-/parse-svg-path-0.1.2.tgz#7a7ec0d1eb06fa5325c7d3e009b859a09b5d49eb"
-  integrity sha512-JyPSBnkTJ0AI8GGJLfMXvKq42cj5c006fnLz6fXy6zfoVjJizi8BNTpu8on8ziI1cKy9d9DGNuY17Ce7wuejpQ==
-
 parse5@6.0.1:
   version "6.0.1"
   resolved "https://registry.npmjs.org/parse5/-/parse5-6.0.1.tgz"
@@ -8343,21 +8290,6 @@ pirates@^4.0.4:
   version "4.0.5"
   resolved "https://registry.npmjs.org/pirates/-/pirates-4.0.5.tgz"
   integrity sha512-8V9+HQPupnaXMA23c5hvl69zXvTwTzyAYasnkb0Tts4XvO4CliqONMOnvlq26rkhLC3nWDFBJf73LU1e1VZLaQ==
-
-pixi.js@8.0.2:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/pixi.js/-/pixi.js-8.0.2.tgz#3424abab8ffa9ca811ad6abab1e65d4851d633ad"
-  integrity sha512-E4oHF+cIkHB1BUHka8jKRih3ywDAKt/uRaTNIm4+7rEWMX5LhZZVryp8bcx516ZyQ8VrpBOs5ohrEViqYhCDAw==
-  dependencies:
-    "@pixi/colord" "^2.9.6"
-    "@types/css-font-loading-module" "^0.0.12"
-    "@types/earcut" "^2.1.4"
-    "@webgpu/types" "^0.1.40"
-    "@xmldom/xmldom" "^0.8.10"
-    earcut "^2.2.4"
-    eventemitter3 "^5.0.1"
-    ismobilejs "^1.1.1"
-    parse-svg-path "^0.1.2"
 
 pkg-dir@^4.1.0, pkg-dir@^4.2.0:
   version "4.2.0"
@@ -10705,11 +10637,6 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
-tweedle.js@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/tweedle.js/-/tweedle.js-2.1.0.tgz#523f5d50e5223c3c809b1aa627c6e9648e576d93"
-  integrity sha512-0ReQgVjepoZkE6t0upWNgCRbplHkQJQYk1LStXugwSR728GLFmGDRuaQJlxeC/iBlxud6+P1RdODjaO25vHAqw==
-
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
   resolved "https://registry.npmjs.org/type-check/-/type-check-0.4.0.tgz"
@@ -10751,11 +10678,6 @@ type-is@~1.6.18:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.24"
-
-typed-signals@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/typed-signals/-/typed-signals-2.5.0.tgz#7be73505c2ee0dc4e43f1c4ee002c855796bd89a"
-  integrity sha512-m9lHc3eBCJerXYdx+G0uWZihyUXdqTzzgOdqiDDsoUo75WjhFJH6vP5/6w/xhyu04zoxHUqgYhf9FEt85dk/Ng==
 
 typedarray-to-buffer@^3.1.5:
   version "3.1.5"
