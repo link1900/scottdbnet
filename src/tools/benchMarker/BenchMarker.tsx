@@ -165,7 +165,7 @@ export default function BenchMarker() {
         return 0;
       }
     });
-  }, []);
+  });
 
   return (
     <PageLayout title="BenchMarker" xs={12} sm={8}>
