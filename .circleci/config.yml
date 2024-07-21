@@ -78,6 +78,18 @@ commands:
           command: npm run deploy
           working_directory: ~/project/cdk
 
+  build_cmd:
+    steps:
+      - run:
+          command: ./scripts/build.sh
+          working_directory: ~/project/server
+      - run:
+          command: yarn build
+          working_directory: ~/project
+      - run:
+          command: npm run build
+          working_directory: ~/project/cdk
+
 jobs:
   test:
     executor: default
@@ -92,6 +104,11 @@ jobs:
       - test_server
       - test_cmd
       - deploy_cmd
+  just-build:
+    executor: default
+    steps:
+      - setup_cmd
+      - build_cmd
 
 workflows:
   build:
@@ -106,3 +123,10 @@ workflows:
           filters:
             branches:
               only: master
+      - just-build:
+          context:
+            - scottdb
+          filters:
+            branches:
+              only:
+                fix-build
