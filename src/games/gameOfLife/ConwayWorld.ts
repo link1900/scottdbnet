@@ -7,7 +7,7 @@ export interface ConwayWorldProps extends WorldGridProps {}
 export class ConwayWorld extends WorldGrid {
   public cellBuilder(defaultProps: GridCellProps): ConwayCell {
     return new ConwayCell({
-      living: randomInteger(1, 10) === 1,
+      living: randomInteger(1, 10) <= 3,
       ...defaultProps
     });
   }

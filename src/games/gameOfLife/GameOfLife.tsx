@@ -19,10 +19,10 @@ export default class GameOfLife extends React.Component<Props> {
       canvas,
       height: CANVAS_SIZE,
       width: CANVAS_SIZE,
-      gridSize: 100,
+      gridSize: 200,
       boundType: "wrap",
       cellBorder: false,
-      framesPerSecond: 15
+      framesPerSecond: 60
     });
     this.world.start();
   }

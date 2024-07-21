@@ -10,7 +10,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Page } from "../components/Page";
 import { useGreyBody } from "../home/useBackgroundColor";
-import { gameDefinitions } from "./gameDefinitons";
+import { gameDefinitions, GameLinkType } from "./gameDefinitons";
 import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -28,8 +28,15 @@ export function GameList() {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const goToPage = async (location: string) => {
-    navigate(location);
+  const goToPage = async (
+    location: string,
+    linkType: GameLinkType = "react"
+  ) => {
+    if (linkType === "unity") {
+      window.location.href = "/unity/" + location;
+    } else {
+      navigate(location);
+    }
   };
 
   return (
@@ -54,7 +61,9 @@ export function GameList() {
                 <Grid key={gameDefinition.name} item>
                   <Card className={classes.card}>
                     <CardActionArea
-                      onClick={() => goToPage(gameDefinition.name)}
+                      onClick={() =>
+                        goToPage(gameDefinition.name, gameDefinition.linkType)
+                      }
                     >
                       <CardMedia
                         className={classes.cardMedia}
