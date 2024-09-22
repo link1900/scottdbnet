@@ -4,6 +4,9 @@
   "bin": {
     "cdk": "bin/cdk.js"
   },
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",

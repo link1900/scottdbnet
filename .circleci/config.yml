@@ -8,34 +8,15 @@ executors:
       - image: cimg/node:20.10.0
 
 commands:
-  restore_cache_cmd:
-    steps:
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
-
-  save_cache_cmd:
-    steps:
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
-
   client_install_cmd:
     steps:
-      - run:
-          name: Install Client Dependencies
-          working_directory: ~/project
-          command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+      - node/install-packages:
+          app-dir: ~/project
 
   server_install_cmd:
     steps:
-      - run:
-          name: Install Server Dependencies
-          working_directory: ~/project/server
-          command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+      - node/install-packages:
+          app-dir: ~/project/server
 
   cdk_install_cmd:
     steps:
@@ -45,22 +26,20 @@ commands:
   test_cmd:
     steps:
       - run:
-          command: yarn test
+          command: npm run test
 
   setup_cmd:
     steps:
       - checkout
       - aws-cli/install
-      - restore_cache_cmd
       - cdk_install_cmd
       - server_install_cmd
       - client_install_cmd
-      - save_cache_cmd
 
   test_server:
     steps:
       - run:
-          command: yarn test:ci
+          command: npm run test:ci
           working_directory: ~/project/server
 
   deploy_cmd:
@@ -69,7 +48,7 @@ commands:
           command: ./scripts/build.sh
           working_directory: ~/project/server
       - run:
-          command: yarn build
+          command: npm run build
           working_directory: ~/project
       - run:
           command: npm run build
@@ -84,7 +63,7 @@ commands:
           command: ./scripts/build.sh
           working_directory: ~/project/server
       - run:
-          command: yarn build
+          command: npm run build
           working_directory: ~/project
       - run:
           command: npm run build

@@ -8,7 +8,7 @@ echo "Building in progress...."
 echo "building source"
 rm -rf dist/
 mkdir -p dist
-yarn build
+npm run build
 
 echo "preparing build folder"
 rm -rf build/
@@ -16,15 +16,15 @@ mkdir -p build
 
 echo "moving files"
 cp -r dist build/src
-yarn config:download
+npm run config:download
 cp -r ./src/config ./build/src/config
 cp ./package.json build/package.json
-cp ./yarn.lock build/yarn.lock
+cp ./package-lock.json build/package-lock.json
 cp ./.npmrc build/.npmrc
 
 echo "installing dependencies"
 cd build
-yarn install --frozen-lockfile --non-interactive --production --cache-folder ~/.cache/yarn
+npm install --omit=dev
 
 echo "Build successful!"
 

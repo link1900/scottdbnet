@@ -1,7 +1,7 @@
 {
   "ignore": ["**/*.test.ts", "**/*.spec.ts", ".git", "node_modules"],
   "watch": ["src"],
-  "exec": "yarn start:express",
+  "exec": "npm run start:express",
   "ext": "ts",
   "env": {
     "EXECUTION_ENVIRONMENT": "local"
