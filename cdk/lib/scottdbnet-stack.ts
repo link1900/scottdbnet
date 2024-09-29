@@ -12,12 +12,12 @@ export class ScottdbnetStack extends Stack {
       name: "scottdbnet",
       hostDomain: "scottdb.net",
       apiDomainPrefix: "api",
-      codePath: "../server/build"
+      codePath: "../server/artifact"
     });
 
     const staticSite = new StaticSite(this, `Site`, {
       domainName: "scottdb.net",
-      codePath: "../build"
+      codePath: "../client/build"
     });
   }
 }

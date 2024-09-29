@@ -1,7 +1,7 @@
 .PHONY: all build test deploy clean
 
 # Default target
-all: build
+all: setup build
 
 # Setup targets
 setup:
@@ -23,6 +23,7 @@ test:
 
 # Deploy targets
 deploy:
+	$(MAKE) -C server package
 	$(MAKE) -C cdk deploy
 
 # Clean target

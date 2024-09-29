@@ -1,4 +1,4 @@
-.PHONY: all setup build test clean
+.PHONY: all setup build test package clean
 
 # Default target
 all: build
@@ -16,6 +16,11 @@ build:
 test:
 	@echo "Testing server..."
 	npm run test
+
+# Package target
+package:
+	@echo "Packaging server..."
+	./scripts/package.sh
 
 # Clean target
 clean:

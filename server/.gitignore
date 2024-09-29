@@ -3,3 +3,4 @@ coverage
 dist
 src/config
 build
+artifact

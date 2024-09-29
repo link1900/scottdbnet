@@ -5,17 +5,12 @@ trap "exit" INT
 
 echo "Artifact packing in progress...."
 
-echo "building source"
-rm -rf dist/
-mkdir -p dist
-npm run build
-
 echo "preparing artifact folder"
 rm -rf artifact/
 mkdir -p artifact
 
 echo "moving files"
-cp -r dist build/src
+cp -r dist ./artifact/src
 npm run config:download
 cp -r ./src/config ./artifact/src/config
 cp ./package.json artifact/package.json
