@@ -1,4 +1,4 @@
-import CanvasRect from "../simpleCanvas/CanvasRect";
+import CanvasRect from "./CanvasRect";
 import { CanvasRectProps } from "./CanvasRect";
 
 export interface GridRectProps extends CanvasRectProps {
