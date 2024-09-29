@@ -5,15 +5,18 @@
   "license": "MIT",
   "private": true,
   "main": "src/index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "start": "nodemon",
     "start:express": "ts-node src/test/runLocalServer.ts",
     "test": "jest",
-    "test:ci": "yarn test:types && yarn test:coverage",
+    "test:ci": "npm run test:types && npm run test:coverage",
     "test:coverage": "jest --coverage",
     "test:types": "tsc --noEmit",
     "test:format": "prettier -l .",
-    "validate": "yarn test:format && yarn test:types && yarn test:coverage",
+    "validate": "npm run test:format && npm run test:types && npm run test:coverage",
     "build": "tsc -p tsconfig.build.json",
     "format": "prettier -w .",
     "config:upload": "aws s3 sync ./src/config s3://scottdb-config/scottdbnet",
