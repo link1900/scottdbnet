@@ -12,7 +12,8 @@ mkdir -p artifact
 echo "moving files"
 cp -r dist ./artifact/src
 npm run config:download
-cp -r ./src/config ./artifact/src/config
+mkdir -p ./artifact/resource/config
+cp -r ./resource/config ./artifact/resource/config
 cp ./package.json artifact/package.json
 cp ./package-lock.json artifact/package-lock.json
 cp ./.npmrc artifact/.npmrc

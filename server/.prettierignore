@@ -2,6 +2,8 @@ node_modules/
 coverage/
 dist/
 build/
+artifact/
 out/
 .next/
 package.json
+.eslintrc.js
