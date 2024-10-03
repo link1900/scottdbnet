@@ -1,17 +1,11 @@
-import { NestFactory } from "@nestjs/core";
 import serverlessExpress from "@codegenie/serverless-express";
 import { Callback, Context, Handler } from "aws-lambda";
-import { AppModule } from "./app.module";
+import { createNestApp } from "./common-main";
 
 let server: Handler;
 
 async function bootstrap(): Promise<Handler> {
-  const app = await NestFactory.create(AppModule);
-  const apiPrefix = process.env.API_PREFIX;
-  if (apiPrefix) {
-    app.setGlobalPrefix("/api");
-  }
-
+  const app = await createNestApp();
   await app.init();
 
   const expressApp = app.getHttpAdapter().getInstance();
