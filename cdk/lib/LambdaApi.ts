@@ -8,7 +8,9 @@ import {
   OriginRequestPolicy,
   OriginRequestQueryStringBehavior
 } from "aws-cdk-lib/aws-cloudfront";
-import {AssetCode, Function, Runtime} from "aws-cdk-lib/aws-lambda";
+import {Vpc} from "aws-cdk-lib/aws-ec2";
+import {AccessPoint, FileSystem} from "aws-cdk-lib/aws-efs";
+import {AssetCode, Function, Runtime, FileSystem as LambdaFileSystem } from "aws-cdk-lib/aws-lambda";
 import {Construct} from "constructs";
 
 interface LambdaApiProps {
@@ -21,13 +23,39 @@ interface LambdaApiProps {
 
 export class HttpLambdaApi extends Construct {
   private httpApi: HttpApi;
-  private lambdaFunction: Function;
+  public lambdaFunction: Function;
 
   constructor(scope: Construct, id: string, props: LambdaApiProps) {
     super(scope, id);
 
-    const prefix = props.prefixPath ? props.prefixPath : "api";
+    // setup vpc
+    const vpc = new Vpc(this, 'Vpc', {
+      maxAzs: 2
+    });
 
+    // setup efs file system
+    const fileSystem = new FileSystem(this, 'FileSystem', {
+      vpc,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+
+    // setup access point
+    const accessPoint = new AccessPoint(this, 'AccessPoint', {
+      fileSystem,
+      path: '/export/lambda',
+      posixUser: {
+        uid: '1001',
+        gid: '1001'
+      },
+      createAcl: {
+        ownerGid: '1001',
+        ownerUid: '1001',
+        permissions: '750'
+      }
+    });
+
+
+    const prefix = props.prefixPath ? props.prefixPath : "api";
     // setup lambda
     this.lambdaFunction = new Function(this, "Lambda", {
       functionName: `${props.name}-api`,
@@ -36,6 +64,8 @@ export class HttpLambdaApi extends Construct {
       code: new AssetCode(props.codePath),
       memorySize: 1024,
       timeout: cdk.Duration.seconds(30),
+      vpc,
+      filesystem: LambdaFileSystem.fromEfsAccessPoint(accessPoint, '/mnt/data'),
       environment: {
         EXECUTION_ENVIRONMENT: "prod",
         API_PREFIX: prefix
