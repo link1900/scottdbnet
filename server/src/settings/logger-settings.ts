@@ -1,7 +1,7 @@
 import * as process from "node:process";
 import winston from "winston";
 import { utilities } from "nest-winston";
-import { ApplicationInfoService } from "./application-info/application-info.service";
+import { ApplicationInfoService } from "../application-info/application-info.service";
 
 export function getWinstonSettings() {
   if (process.env.EXECUTION_ENVIRONMENT === "prod") {

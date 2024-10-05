@@ -1,7 +1,7 @@
 import { WinstonModule } from "nest-winston";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { getWinstonSettings } from "./logger-settings";
+import { getWinstonSettings } from "./settings/logger-settings";
 
 export async function createNestApp() {
   const app = await NestFactory.create(AppModule, {
