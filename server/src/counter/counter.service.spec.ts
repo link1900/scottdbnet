@@ -1,18 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CounterService } from './counter.service';
+import { TestingModule } from "@nestjs/testing";
+import { buildTestModuleScaffold } from "../../test/test-util";
+import { CounterRepository } from "./counter.repository";
+import { CounterService } from "./counter.service";
 
-describe('CounterService', () => {
+describe("CounterService", () => {
   let service: CounterService;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await buildTestModuleScaffold({
       providers: [CounterService],
-    }).compile();
+      mockProviders: [CounterRepository],
+    });
 
     service = module.get<CounterService>(CounterService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });
