@@ -17,6 +17,7 @@ interface LambdaApiProps {
   name: string;
   domainName: string;
   codePath: string;
+  migrationCodePath: string;
   prefixPath?: string;
   distribution?: cloudfront.Distribution;
 }
@@ -24,6 +25,7 @@ interface LambdaApiProps {
 export class HttpLambdaApi extends Construct {
   private httpApi: HttpApi;
   public lambdaFunction: Function;
+  public migrationFunction: Function;
 
   constructor(scope: Construct, id: string, props: LambdaApiProps) {
     super(scope, id);
@@ -55,8 +57,20 @@ export class HttpLambdaApi extends Construct {
     });
 
 
+    // setup migration lambda
+    this.migrationFunction = new Function(this, "MigrationLambda", {
+      functionName: `${props.name}-migration`,
+      handler: "migrator.handler",
+      runtime: Runtime.NODEJS_20_X,
+      code: new AssetCode(props.migrationCodePath),
+      memorySize: 256,
+      timeout: cdk.Duration.minutes(2),
+      vpc,
+      filesystem: LambdaFileSystem.fromEfsAccessPoint(accessPoint, '/mnt/data'),
+    });
+
+    // setup api lambda
     const prefix = props.prefixPath ? props.prefixPath : "api";
-    // setup lambda
     this.lambdaFunction = new Function(this, "Lambda", {
       functionName: `${props.name}-api`,
       handler: "index.handler",

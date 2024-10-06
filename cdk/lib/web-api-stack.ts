@@ -1,5 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
+import {Trigger} from "aws-cdk-lib/triggers";
 import { Construct } from "constructs";
 import { HttpLambdaApi } from "./LambdaApi";
 import { StaticSite } from "./StaticSite";
@@ -24,8 +25,13 @@ export class WebApiStack extends cdk.Stack {
     const lambdaApi = new HttpLambdaApi(this, `Api`, {
       name,
       domainName: props.domainName,
-      codePath: "../server/artifact",
+      codePath: "../server/artifact/api",
+      migrationCodePath: "../server/artifact/migrator",
       distribution: website.distribution
+    });
+
+    const trigger = new Trigger(this, "MigrationTrigger", {
+      handler: lambdaApi.migrationFunction,
     });
   }
 }

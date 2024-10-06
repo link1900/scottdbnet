@@ -1,0 +1,15 @@
+{
+  "name": "scottdbnet-migrator",
+  "version": "1.0.0",
+  "author": "Scott Brown",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "prisma": "5.20.0"
+  },
+  "devDependencies": {
+  }
+}
