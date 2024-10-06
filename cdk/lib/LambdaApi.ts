@@ -59,7 +59,7 @@ export class HttpLambdaApi extends Construct {
     // setup lambda
     this.lambdaFunction = new Function(this, "Lambda", {
       functionName: `${props.name}-api`,
-      handler: "src/lambda.handler",
+      handler: "index.handler",
       runtime: Runtime.NODEJS_20_X,
       code: new AssetCode(props.codePath),
       memorySize: 1024,

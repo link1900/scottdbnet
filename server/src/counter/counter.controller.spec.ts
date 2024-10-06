@@ -1,7 +1,6 @@
-import { Test, TestingModule } from "@nestjs/testing";
+import { TestingModule } from "@nestjs/testing";
 import { buildTestModuleScaffold } from "../../test/test-util";
 import { CounterController } from "./counter.controller";
-import { CounterRepository } from "./counter.repository";
 import { CounterService } from "./counter.service";
 
 describe("CounterController", () => {
