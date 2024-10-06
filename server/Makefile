@@ -10,17 +10,14 @@ setup:
 # Build target
 build:
 	@echo "Building server..."
+	npm run db:generate:client
 	npm run build
+	./scripts/package.sh
 
 # Test target
 test:
 	@echo "Testing server..."
 	npm run test:all
-
-# Package target
-package:
-	@echo "Packaging server..."
-	./scripts/package.sh
 
 # Clean target
 clean:

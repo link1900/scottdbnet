@@ -23,7 +23,6 @@ test:
 
 # Deploy targets
 deploy:
-	$(MAKE) -C server package
 	$(MAKE) -C cdk deploy
 
 # Clean target
