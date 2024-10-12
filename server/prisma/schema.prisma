@@ -13,5 +13,6 @@ datasource db {
 
 model Counter {
   id Int @default(autoincrement()) @id
-  value Int
+  userId String?
+  value Int?
 }

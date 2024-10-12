@@ -39,4 +39,9 @@ export class CounterController {
   remove(@Param("id") id: string) {
     return this.counterService.remove(+id);
   }
+
+  @Delete()
+  removeAll() {
+    return this.counterService.removeAll();
+  }
 }

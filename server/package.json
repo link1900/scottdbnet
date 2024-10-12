@@ -21,8 +21,9 @@
     "test:all": "npm run test:format && npm run lint && npm run test:types && npm run test:cov && npm run test:e2e",
     "config:upload": "aws s3 sync ./resource/config s3://scottdb-config/scottdbnet",
     "config:download": "aws s3 sync s3://scottdb-config/scottdbnet ./resource/config",
-    "db:generate:migration": "dotenvx run -f ./resource/config/.env.local -- prisma migrate dev --no-hints",
-    "db:generate:client": "dotenvx run -f ./resource/config/.env.local -- prisma generate --no-hints"
+    "db:generate:migration": "dotenvx run -f ./resource/config/.env.local -- prisma migrate dev --name update",
+    "db:generate:client": "dotenvx run -f ./resource/config/.env.local -- prisma generate --no-hints",
+    "db:up": "npm run db:generate:migration && npm run db:generate:client"
   },
   "dependencies": {
     "@codegenie/serverless-express": "4.15.0",

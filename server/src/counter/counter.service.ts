@@ -13,8 +13,8 @@ export class CounterService {
 
   findAll() {
     return this.counterRepository.counters({
-      take: 50,
-      orderBy: { value: "desc" },
+      take: 200,
+      orderBy: { id: "desc" },
     });
   }
 
@@ -31,5 +31,10 @@ export class CounterService {
 
   remove(id: number) {
     return this.counterRepository.deleteCounter({ id });
+  }
+
+  async removeAll(): Promise<{ count: number }> {
+    const count = await this.counterRepository.deleteAllCounter();
+    return { count };
   }
 }

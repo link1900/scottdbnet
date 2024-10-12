@@ -48,7 +48,12 @@ export class CounterRepository {
     });
   }
 
-  deleteCounter(where: Prisma.CounterWhereUniqueInput): Promise<Counter> {
+  async deleteCounter(where: Prisma.CounterWhereUniqueInput): Promise<Counter> {
     return this.prisma.counter.delete({ where });
+  }
+
+  async deleteAllCounter(): Promise<number> {
+    const result = await this.prisma.counter.deleteMany();
+    return result.count;
   }
 }

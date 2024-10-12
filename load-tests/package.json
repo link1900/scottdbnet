@@ -1,0 +1,13 @@
+{
+  "name": "scottdbnet-load-tests",
+  "version": "1.0.0",
+  "author": "Scott Brown",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "artillery run main.yaml"
+  },
+  "dependencies": {
+    "artillery": "^2.0.20"
+  }
+}
