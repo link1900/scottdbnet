@@ -5,7 +5,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "artillery run main.yaml"
+    "start": "artillery run main.yaml",
+    "local": "artillery run local.yaml"
   },
   "dependencies": {
     "artillery": "^2.0.20"

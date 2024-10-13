@@ -1,5 +1,5 @@
 config:
-  target: https://scottdb.net/api
+  target: http://localhost:3000
   phases:
     - name: Standard
       duration: 30
