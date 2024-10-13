@@ -9,6 +9,5 @@ out/
 
 .eslintrc.js
 package.json
-migrator/package.json
-migrator/tsconfig.json
+migrator/
 package-lock.json

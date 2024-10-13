@@ -67,6 +67,7 @@ export class HttpLambdaApi extends Construct {
       timeout: cdk.Duration.minutes(2),
       vpc,
       filesystem: LambdaFileSystem.fromEfsAccessPoint(accessPoint, '/mnt/data'),
+      reservedConcurrentExecutions: 1
     });
 
     // setup api lambda
@@ -83,7 +84,8 @@ export class HttpLambdaApi extends Construct {
       environment: {
         EXECUTION_ENVIRONMENT: "prod",
         API_PREFIX: prefix
-      }
+      },
+      reservedConcurrentExecutions: 1
     });
 
     // setup api gateway HTTP API
