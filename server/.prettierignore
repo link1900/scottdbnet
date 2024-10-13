@@ -5,6 +5,10 @@ build/
 artifact/
 out/
 .next/
-package.json
+
+
 .eslintrc.js
+package.json
+migrator/package.json
+migrator/tsconfig.json
 package-lock.json

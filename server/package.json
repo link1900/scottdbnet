@@ -22,6 +22,8 @@
     "config:upload": "aws s3 sync ./resource/config s3://scottdb-config/scottdbnet",
     "config:download": "aws s3 sync s3://scottdb-config/scottdbnet ./resource/config",
     "db:generate:migration": "dotenvx run -f ./resource/config/.env.local -- prisma migrate dev --name update",
+    "db:generate:migration:fresh": "dotenvx run -f ./resource/config/.env.local -- prisma migrate dev --create-only --name update",
+    "db:migration:apply": "dotenvx run -f ./resource/config/.env.local -- prisma migrate dev",
     "db:generate:client": "dotenvx run -f ./resource/config/.env.local -- prisma generate --no-hints",
     "db:up": "npm run db:generate:migration && npm run db:generate:client"
   },
